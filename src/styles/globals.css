@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Nav Bar configuration */
+.megaBG {
+  background-color: #8095a8;
+}
+
+.navLink {
+  border: 1px solid white;
+  display: grid;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  justify-content: center;
+  color: white;
+}
+
+.navLink:hover {
+  background-color: rgb(55 65 81);
+}
+
+.modeSwitch {
+  position: absolute;
+  bottom: 0;
+}
+
+/* General Header */
+header h1 {
+  font-size: 2rem;
+}
+
+header h3 {
+  font-size: 1.75rem;
+}
+
+/* Home Page Top Cards */
+.topCards {
+  display: flex;
+  align-items: center;
+  width: 22%;
+  height: 6rem;
+  padding: 0 1%;
+}
+
+.topCards div {
+  padding: 0.75rem;
+}
+
+.savingCard {
+  display: flex;
+  align-items: center;
+  width: 25%;
+  height: 6rem;
+  padding: 0 1%;
+}
+
+.savingCard div {
+  padding: 0.75rem;
+}
+
+/* Testing */
+.cool {
+  display: flex;
+  padding-top: 1.25rem;
+  justify-content: space-around;
+}
+
+/* Graficas y Calendario */
+.provisionalComp {
+  background-color: #777575;
+  width: 30%;
+  height: 12rem;
+}
+
+.monthGraphs {
+  background-color: #f3baba;
+  width: 32%;
+  height: auto;
+}
+
+.incExp {
+  display: grid;
+  align-items: center;
+  padding: 1rem;
+}
