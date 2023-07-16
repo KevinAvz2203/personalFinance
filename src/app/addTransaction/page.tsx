@@ -13,42 +13,40 @@ export default function AddTransaction() {
 
   return (
     <>
-      <div className="testing addTransaction">
-        <header>
-          <h1>Add Income</h1>
-        </header>
+      <div className="addTransClass">
+        <div className="addTransaction">
+          <header>
+            <h1>Add Income</h1>
+          </header>
 
-        <div>
-          <input
-            type="radio"
-            name="transaction"
-            value="Income"
-            id="income"
-            checked={transaction === "Income"}
-            onChange={onOptionChange}
-          />
-          <label htmlFor="income" className="pr-5">
-            Income
-          </label>
+          <div className="p-2">
+            <input
+              type="radio"
+              name="transaction"
+              value="Income"
+              id="income"
+              checked={transaction === "Income"}
+              onChange={onOptionChange}
+            />
+            <label htmlFor="income" className="pr-5">
+              Income
+            </label>
 
-          <input
-            type="radio"
-            name="transaction"
-            value="Expense"
-            id="expense"
-            checked={transaction === "Expense"}
-            onChange={onOptionChange}
-          />
-          <label htmlFor="expense" className="pr-5">
-            Expense
-          </label>
+            <input
+              type="radio"
+              name="transaction"
+              value="Expense"
+              id="expense"
+              checked={transaction === "Expense"}
+              onChange={onOptionChange}
+            />
+            <label htmlFor="expense" className="pr-5">
+              Expense
+            </label>
+          </div>
+
+          {transaction === "Income" ? <AddIncome /> : <AddExpense />}
         </div>
-
-        {transaction === "Income" ? <AddIncome /> : <AddExpense />}
-
-        <p>
-          Select transaction <strong>{transaction}</strong>
-        </p>
       </div>
     </>
   );

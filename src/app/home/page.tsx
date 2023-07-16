@@ -13,47 +13,49 @@ import Card from "../../components/Card";
 export default function Home() {
   return (
     <>
-      <header className="flex items-center">
-        <h1>Welcome back, Nombre Apellido!</h1>
-        <h3 className="absolute right-8">Month,2023</h3>
-      </header>
-
       <div>
-        <section className="genSummary">
-          {/* Componente Incomes */}
-          <IncomeCard />
+        <header className="flex items-center">
+          <h1>Welcome back, Nombre Apellido!</h1>
+          <h3 className="absolute right-8">Month,2023</h3>
+        </header>
+        
+        <div>
+          <section className="genSummary">
+            {/* Componente Incomes */}
+            <IncomeCard />
 
-          {/* Componente Expenses */}
-          <ExpenseCard />
+            {/* Componente Expenses */}
+            <ExpenseCard />
 
-          {/* Componente Total Balance */}
-          <TotalBalanceCard />
+            {/* Componente Total Balance */}
+            <TotalBalanceCard />
 
-          {/* Componente Total Saving Goals */}
-          <TotalSavingCard />
-        </section>
+            {/* Componente Total Saving Goals */}
+            <TotalSavingCard />
+          </section>
 
-        <section className="genSummary">
-          {/* Componente grafica PIE summary Month */}
-          <MonthSummary />
+          <section className="genSummary">
+            {/* Componente grafica PIE summary Month */}
+            <MonthSummary />
 
-          {/* Componente grafica Curva summary Month */}
-          <MonthCashFlow />
+            {/* Componente grafica Curva summary Month */}
+            <MonthCashFlow />
 
-          {/* Componente Calendario Month */}
-          <Calendar />
-        </section>
+            {/* Componente Calendario Month */}
+            <Calendar />
+          </section>
 
-        <section className="genSummary">
-          {/* Componente grafica PIE summary Month */}
-          <RecentActivity />
+          <section className="genSummary">
+            {/* Componente grafica PIE summary Month */}
+            <RecentActivity />
 
-          {/* Componente grafica Curva summary Month */}
-          <SavingGoals />
+            {/* Componente grafica Curva summary Month */}
+            <SavingGoals />
 
-          {/* Componente Calendario Month */}
-          <Card />
-        </section>
+            {/* Componente Calendario Month */}
+            <Card />
+          </section>
+        </div>
       </div>
     </>
   );

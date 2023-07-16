@@ -124,6 +124,35 @@ header h3 {
 /* ================================ */
 
 /* Add Transaction - Income & Expense */
+.addTransClass {
+  padding: 15% 0%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .addTransaction {
   background-color: #efefef;
+  width: 50%;
+  border-radius: 10px;
+  padding: 2rem;
+}
+
+.labelForm {
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  font-size: 0.75rem /* 12px */;
+  line-height: 1rem /* 16px */;
+  font-weight: 700;
+  margin-bottom: 0.5rem /* 8px */;
+}
+
+.inputForm {
+  width: 100%;
+  border: 1px solid rgb(229 231 235);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  line-height: 1.25;
+  margin-bottom: 1rem;
 }

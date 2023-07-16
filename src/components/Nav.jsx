@@ -19,7 +19,7 @@ export default function Nav() {
             </Link>
           </li>
           <li>
-            <Link href="#" className="navLink">
+            <Link href={"/home"} className="navLink">
               <Image src={homeIcon} alt="Home Icon" width="80" height="80" />
               <span className="text-center pt-0">Home</span>
             </Link>

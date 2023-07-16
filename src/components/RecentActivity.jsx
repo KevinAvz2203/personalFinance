@@ -1,6 +1,7 @@
 import Image from "next/image";
 import ChargeActivity from "./ChargeActivity";
 import addChargeIcon from "/public/assets/icons/addChargeIcon.png";
+import Link from "next/link";
 
 export default function RecentActivity() {
   return (
@@ -8,7 +9,9 @@ export default function RecentActivity() {
       <div className="recentAct">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl">Recent Activity</h1>
-          <Image src={addChargeIcon} alt="add charge icon" />
+          <Link href={"/addTransaction"}>
+            <Image src={addChargeIcon} alt="add charge icon" />
+          </Link>
         </div>
 
         <div className="mb-10">
