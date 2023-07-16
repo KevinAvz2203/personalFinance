@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.testing {
+  border: 1px solid black;
+}
+
 /* Nav Bar configuration */
 .megaBG {
   background-color: #8095a8;
@@ -24,6 +28,7 @@
   position: absolute;
   bottom: 0;
 }
+/* ================================ */
 
 /* General Header */
 header h1 {
@@ -33,44 +38,33 @@ header h1 {
 header h3 {
   font-size: 1.75rem;
 }
+/* ================================ */
 
 /* Home Page Top Cards */
 .topCards {
   display: flex;
   align-items: center;
   width: 22%;
-  height: 6rem;
-  padding: 0 1%;
+  height: 6rem; /* Tal vez quitar esta */
+  padding: 0 1.5%;
+  border-radius: 10px;
 }
 
 .topCards div {
-  padding: 0.75rem;
+  padding: 1rem;
 }
 
-.savingCard {
-  display: flex;
-  align-items: center;
-  width: 25%;
-  height: 6rem;
-  padding: 0 1%;
+.topCards div p {
+  font-size: large;
 }
 
-.savingCard div {
-  padding: 0.75rem;
-}
+/* ================================ */
 
 /* Testing */
-.cool {
+.genSummary {
   display: flex;
-  padding-top: 1.25rem;
-  justify-content: space-around;
-}
-
-/* Graficas y Calendario */
-.provisionalComp {
-  background-color: #777575;
-  width: 30%;
-  height: 12rem;
+  padding-top: 2rem;
+  justify-content: space-between;
 }
 
 .monthGraphs {
@@ -83,4 +77,53 @@ header h3 {
   display: grid;
   align-items: center;
   padding: 1rem;
+}
+/* ================================ */
+
+/* Tercera fila pagina Home */
+.recentAct {
+  background-color: #8095a8;
+  width: 40%;
+  padding: 0.5rem;
+}
+
+.savingGoals {
+  background-color: #8095a8;
+  padding: 0 2rem;
+}
+
+.creditCard {
+  background-color: #8095a8;
+  padding: 0.5rem;
+}
+/* ================================ */
+
+/* Transaction/Charge Activity */
+.charge {
+  padding: 0 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.chargeData {
+  width: 40%;
+}
+
+.chargeCat {
+  width: 20%;
+}
+
+.chargeAmount {
+  width: 40%;
+  text-align: right;
+}
+
+/* ================================ */
+
+/* Add Transaction - Income & Expense */
+.addTransaction {
+  background-color: #efefef;
 }

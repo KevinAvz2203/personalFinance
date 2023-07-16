@@ -4,7 +4,7 @@ import totalSavingsIcon from "/public/assets/icons/totalSavingsIcon.png";
 export default function TotalSavingCard() {
   return (
     <>
-      <div className="savingCard bg-amber-300	">
+      <div className="topCards bg-amber-300	">
         <Image
           src={totalSavingsIcon}
           alt="T Savings Icon Icon"

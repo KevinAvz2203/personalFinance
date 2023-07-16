@@ -6,6 +6,9 @@ import TotalSavingCard from "../../components/TotalSavingCard";
 import MonthSummary from "../../components/MonthSummary";
 import MonthCashFlow from "../../components/MonthCashFlow";
 import Calendar from "../../components/Calendar";
+import RecentActivity from "../../components/RecentActivity";
+import SavingGoals from "../../components/SavingGoals";
+import Card from "../../components/Card";
 
 export default function Home() {
   return (
@@ -15,41 +18,43 @@ export default function Home() {
         <h3 className="absolute right-8">Month,2023</h3>
       </header>
 
-      <section className="cool">
-        {/* Componente Incomes */}
-        <IncomeCard />
+      <div>
+        <section className="genSummary">
+          {/* Componente Incomes */}
+          <IncomeCard />
 
-        {/* Componente Expenses */}
-        <ExpenseCard />
+          {/* Componente Expenses */}
+          <ExpenseCard />
 
-        {/* Componente Total Balance */}
-        <TotalBalanceCard />
+          {/* Componente Total Balance */}
+          <TotalBalanceCard />
 
-        {/* Componente Total Saving Goals */}
-        <TotalSavingCard />
-      </section>
+          {/* Componente Total Saving Goals */}
+          <TotalSavingCard />
+        </section>
 
-      <section className="flex pt-5 justify-between">
-        {/* Componente grafica PIE summary Month */}
-        <MonthSummary />
+        <section className="genSummary">
+          {/* Componente grafica PIE summary Month */}
+          <MonthSummary />
 
-        {/* Componente grafica Curva summary Month */}
-        <MonthCashFlow />
+          {/* Componente grafica Curva summary Month */}
+          <MonthCashFlow />
 
-        {/* Componente Calendario Month */}
-        <Calendar />
-      </section>
+          {/* Componente Calendario Month */}
+          <Calendar />
+        </section>
 
-      <section className="flex pt-5 justify-between">
-        {/* Componente grafica PIE summary Month */}
-        <div className="provisionalComp">Recent Activity</div>
+        <section className="genSummary">
+          {/* Componente grafica PIE summary Month */}
+          <RecentActivity />
 
-        {/* Componente grafica Curva summary Month */}
-        <div className="provisionalComp">Saving Goals</div>
+          {/* Componente grafica Curva summary Month */}
+          <SavingGoals />
 
-        {/* Componente Calendario Month */}
-        <div className="provisionalComp">Card</div>
-      </section>
+          {/* Componente Calendario Month */}
+          <Card />
+        </section>
+      </div>
     </>
   );
 }
