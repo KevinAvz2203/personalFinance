@@ -25,13 +25,13 @@ export default function Nav() {
             </Link>
           </li>
           <li>
-            <Link href="#" className="navLink">
+            <Link href={"/data"} className="navLink">
               <Image src={dataIcon} alt="Home Icon" width="50" height="50" />
               <span className="text-center pt-2">Data</span>
             </Link>
           </li>
           <li>
-            <Link href="#" className="navLink">
+            <Link href={"/goals"} className="navLink">
               <Image src={goalIcon} alt="Home Icon" width="50" height="50" />
               <span className="text-center pt-2">Goals</span>
             </Link>
