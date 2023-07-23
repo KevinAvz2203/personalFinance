@@ -18,12 +18,17 @@ export default function AddExpense() {
             <label className="labelForm text-gray-700" for="category">
               Category
             </label>
-            <input
-              className="inputForm bg-gray-200 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+            <select
+              name=""
               id="category"
-              type="text"
-              placeholder="Insert Category"
-            />
+              className="inputForm bg-gray-200 text-gray-700 focus:outline-none focus:bg-white focus:border-gray-500"
+            >
+              <option value="">Insert Category</option>
+              <option value="">Category 1</option>
+              <option value="">Category 2</option>
+              <option value="">Category 3</option>
+              <option value="">Category 4</option>
+            </select>
           </div>
           <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
             <label className="labelForm text-gray-700" for="amount">
@@ -51,13 +56,13 @@ export default function AddExpense() {
 
         <div className="flex justify-end">
           <button
-            class="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
+            className="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
             type="button"
           >
             Add
           </button>
           <button
-            class="flex-shrink-0 border-transparent border-4 text-teal-500 hover:text-teal-800 text-sm py-1 px-2 rounded"
+            className="flex-shrink-0 border-transparent border-4 text-teal-500 hover:text-teal-800 text-sm py-1 px-2 rounded"
             type="button"
           >
             Cancel

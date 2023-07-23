@@ -1,5 +1,6 @@
-import MonthCashFlow from "@/components/MonthCashFlow";
-import RecentActivity from "@/components/RecentActivity";
+import ActivityHistory from "@/components/ActivityHistory";
+import ExpPerCategory from "@/components/ExpPerCategory";
+import ExpectedExpPerCategory from "@/components/ExpectedExpPerCategory";
 
 export default function Data() {
   return (
@@ -10,14 +11,14 @@ export default function Data() {
           <h3 className="absolute right-8">Month, 2023</h3>
         </header>
 
-        <div className="testing flex">
-          <div className="testing dataGraphs">
-            <MonthCashFlow />
+        <div className="flex">
+          <div className="dataGraphs">
+            <ExpPerCategory />
 
-            <MonthCashFlow />
+            <ExpectedExpPerCategory />
           </div>
-          <div className="testing dataActivity">
-            <RecentActivity />
+          <div className="dataActivity">
+            <ActivityHistory />
           </div>
         </div>
       </div>

@@ -157,12 +157,46 @@ header h3 {
   margin-bottom: 1rem;
 }
 
-
 /* DATA Page */
 .dataGraphs {
+  align-content: center;
   width: 50%;
 }
 
 .dataActivity {
+  display: flex;
+  justify-content: center;
   width: 50%;
+}
+
+.actHistory {
+  border-radius: 10px;
+  background-color: #efefef;
+  width: 95%;
+  height: 100%;
+  padding: 0.5rem;
+}
+
+.catPerMonth {
+  border-radius: 10px;
+  background-color: #d9d9d9;
+  margin-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* Main Goals */
+.mainGoals {
+  display: flex;
+  justify-content: space-around;
+  padding-top: 1rem;
+}
+
+.cardSection {
+  width: 80%;
+}
+
+.goalsCards {
+  display: flex;
+  padding-top: 1rem;
+  justify-content: space-between;
 }
