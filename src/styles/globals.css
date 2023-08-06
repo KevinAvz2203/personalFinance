@@ -155,6 +155,8 @@ header h3 {
   padding: 0.75rem 1rem;
   line-height: 1.25;
   margin-bottom: 1rem;
+  background-color: rgb(229 231 235);
+  color: rgb(55 65 81)
 }
 
 /* DATA Page */
@@ -199,4 +201,45 @@ header h3 {
   display: flex;
   padding-top: 1rem;
   justify-content: space-between;
+}
+
+/* Goals Table /  progress Bar */
+.tableBox {
+  display: flex;
+  justify-content: center;
+  background-color: #8095a8;
+  border-radius: 10px;
+  width: 95%;
+}
+
+.goalInstance {
+  padding-bottom: 2rem;
+}
+
+.goalTitle {
+  display: flex;
+  justify-content: space-between;
+}
+
+.goalsTable {
+  width: inherit;
+}
+
+.containerStyle {
+  height: 20px;
+  background-color: #e0e0de;
+  border-radius: 10px;
+}
+
+.fillerStyles {
+  height: 100%;
+  background-color: lightblue;
+  border-radius: inherit;
+  text-align: right;
+}
+
+.labelStyles {
+  padding: 0;
+  color: white;
+  font-weight: bold;
 }

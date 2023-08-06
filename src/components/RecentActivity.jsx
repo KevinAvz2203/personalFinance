@@ -21,7 +21,7 @@ export default function RecentActivity() {
             Date="Today at 2:20 pm"
             Category="Entertainment"
             Amount="-$150.00 MXN"
-          />
+          />  
           <ChargeActivity
             Name="Groceries"
             Date="Today at 11:45 pm"
