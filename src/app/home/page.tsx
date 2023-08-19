@@ -1,4 +1,5 @@
-import Image from "next/image";
+"use client";
+
 import IncomeCard from "@/components/IncomeCard";
 import ExpenseCard from "@/components/ExpenseCard";
 import TotalBalanceCard from "@/components/TotalBalanceCard";
@@ -9,8 +10,19 @@ import Calendar from "@/components/Calendar";
 import RecentActivity from "@/components/RecentActivity";
 import SavingGoals from "@/components/SavingGoals";
 import Card from "@/components/Card";
+import { useEffect } from "react";
 
 export default function Home() {
+  /*   async function getUserData() {
+    const res = await fetch("/api/users/1");
+    const data = await res.json();
+    console.log(data);
+  }
+
+  useEffect(() => {
+    getUserData();
+  }, []); */
+
   return (
     <>
       <div>

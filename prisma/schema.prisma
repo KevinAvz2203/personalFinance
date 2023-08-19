@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL") 
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  firstName String @db.VarChar(255) @map("first_name")
+  lastName String @db.VarChar(255) @map("last_name")
+  email String @db.VarChar(255)
+  password String @db.VarChar(255) 
+  age Int
+  createdAt DateTime @default(now())
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+  description String @db.VarChar(255) 
+  category String? @db.VarChar(255)     // NOTA: CREAR RELACION CON MODELO CATEGORY CUANDO SEPA COMO SE HACE ESO
+  type String @db.VarChar(255)          // Income / Expense
+  amount Int 
+  createdAt DateTime @default(now()) @map("date")
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+}
+
+model Goal {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+  totalAmount Int
+  currentAmount Int?
+  isComplete Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
