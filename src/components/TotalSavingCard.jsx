@@ -26,7 +26,7 @@ export default function TotalSavingCard({ User }) {
         />
         <div>
           <p>
-            ${totalSaved || 0} of {totalGoal || 0} MXN
+            ${totalSaved || 0} of ${totalGoal || 0} MXN
           </p>
           <p>Total Savings for Goals</p>
         </div>
