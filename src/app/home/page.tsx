@@ -14,55 +14,54 @@ import { getUserData } from "@/Backend/User";
 
 export default async function Home() {
   const [userData] = await Promise.all([getUserData(1)]);
+  const currMonth = new Date().toLocaleString([], { month: "long" });
+  const currYear = new Date().getFullYear();
 
   return (
     <>
+      <header className="flex items-center">
+        <h1>
+          Welcome back, {userData.firstName} {userData.lastName}!
+        </h1>
+        <h3 className="absolute right-8" suppressHydrationWarning={true}>
+          {currMonth}, {currYear}
+        </h3>
+      </header>
+
       <div>
-        <header className="flex items-center">
-          <h1>
-            Welcome back, {userData.firstName} {userData.lastName}!
-          </h1>
-          <h3 className="absolute right-8">Month,2023</h3>
-        </header>
+        <section className="genSummary">
+          {/* Los primeros 3 hay que hacerlos 1 solo */}
+          {/* Componente Incomes */}
+          <IncomeCard User={userData.id} />
+          {/* Componente Expenses */}
+          <ExpenseCard User={userData.id} />
+          {/* Componente Total Balance */}
+          <TotalBalanceCard User={userData.id} />
+          {/* Componente Total Saving Goals */}
+          <TotalSavingCard User={userData.id} />
+        </section>
 
-        <div>
-          <section className="genSummary">
-            {/* Los primeros 3 hay que hacerlos 1 solo */}
-            {/* Componente Incomes */}
-            <IncomeCard User={userData.id} />
+        <section className="genSummary">
+          {/* Componente grafica PIE summary Month */}
+          <MonthSummary />
 
-            {/* Componente Expenses */}
-            <ExpenseCard User={userData.id} />
+          {/* Componente grafica Curva summary Month */}
+          <MonthCashFlow />
 
-            {/* Componente Total Balance */}
-            <TotalBalanceCard User={userData.id} />
+          {/* Componente Calendario Month */}
+          <Calendar />
+        </section>
 
-            {/* Componente Total Saving Goals */}
-            <TotalSavingCard User={userData.id} />
-          </section>
+        <section className="genSummary">
+          {/* Componente grafica PIE summary Month */}
+          <RecentActivity />
 
-          <section className="genSummary">
-            {/* Componente grafica PIE summary Month */}
-            <MonthSummary />
+          {/* Componente grafica Curva summary Month */}
+          <SavingGoals />
 
-            {/* Componente grafica Curva summary Month */}
-            <MonthCashFlow />
-
-            {/* Componente Calendario Month */}
-            <Calendar />
-          </section>
-
-          <section className="genSummary">
-            {/* Componente grafica PIE summary Month */}
-            <RecentActivity />
-
-            {/* Componente grafica Curva summary Month */}
-            <SavingGoals />
-
-            {/* Componente Calendario Month */}
-            <Card />
-          </section>
-        </div>
+          {/* Componente Calendario Month */}
+          <Card />
+        </section>
       </div>
     </>
   );

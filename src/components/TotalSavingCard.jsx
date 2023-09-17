@@ -1,17 +1,16 @@
-"use client";
-
 import Image from "next/image";
 import totalSavingsIcon from "/public/assets/icons/totalSavingsIcon.png";
 import { useState, useMemo } from "react";
-import { getGoals } from "@/Backend/Goal";
+import { getTotalSavedGoals } from "@/Backend/Goal";
 
 export default function TotalSavingCard({ User }) {
   const [totalSaved, setTotalSaved] = useState(0);
   const [totalGoal, setTotalGoal] = useState(0);
 
   async function getUserData() {
-    const [data] = await Promise.all([getGoals(User)]);
-    console.log(data);
+    const [data] = await Promise.all([getTotalSavedGoals(User)]);
+    setTotalSaved(data.totalSaved);
+    setTotalGoal(data.totalGoalsAmount);
   }
 
   useMemo(getUserData, [User]);
@@ -26,7 +25,9 @@ export default function TotalSavingCard({ User }) {
           height={50}
         />
         <div>
-          <p>$15000 of 150000 MXN</p>
+          <p>
+            ${totalSaved || 0} of {totalGoal || 0} MXN
+          </p>
           <p>Total Savings for Goals</p>
         </div>
       </div>
