@@ -1,7 +1,18 @@
 import Image from "next/image";
 import totalBalanceIcon from "/public/assets/icons/totalBalanceIcon.png";
+import { useState, useMemo } from "react";
+import { getTotalBalance } from "@/Backend/Transaction";
 
-export default function TotalBalanceCard() {
+export default function TotalBalanceCard({ User }) {
+  const [total, setTotal] = useState(0);
+
+  async function getUserData() {
+    const [data] = await Promise.all([getTotalBalance(User)]);
+    setTotal(data);
+  }
+
+  useMemo(getUserData, [User]);
+
   return (
     <>
       <div className="topCards bg-orange-300	">
@@ -12,7 +23,7 @@ export default function TotalBalanceCard() {
           height={50}
         />
         <div>
-          <p>$5000 MXN</p>
+          <p>${total} MXN</p>
           <p>Total Balance</p>
         </div>
       </div>

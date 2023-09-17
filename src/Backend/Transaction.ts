@@ -1,0 +1,32 @@
+type Amount = {
+  amount: number;
+};
+
+type Balance = {
+  amount: number;
+  typeId: number;
+};
+
+export async function getIncomes(id: number): Promise<Amount> {
+  const res = await fetch(
+    "http://localhost:3000/api/transactions/incomes/" + id
+  );
+  const data: Amount = await res.json();
+  return data;
+}
+
+export async function getExpenses(id: number): Promise<Amount> {
+  const res = await fetch(
+    "http://localhost:3000/api/transactions/expenses/" + id
+  );
+  const data: Amount = await res.json();
+  return data;
+}
+
+export async function getTotalBalance(id: number): Promise<Balance> {
+  const res = await fetch(
+    "http://localhost:3000/api/transactions/totalBalance/" + id
+  );
+  const data: Balance = await res.json();
+  return data;
+}

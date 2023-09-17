@@ -18,21 +18,41 @@ model User {
   password String @db.VarChar(255) 
   age Int
   createdAt DateTime @default(now())
+
+  transaction Transaction[]
+  goal Goal[]
 }
 
 model Transaction {
   id Int @id @default(autoincrement())
   description String @db.VarChar(255) 
-  category String? @db.VarChar(255)     // NOTA: CREAR RELACION CON MODELO CATEGORY CUANDO SEPA COMO SE HACE ESO
-  type String @db.VarChar(255)          // Income / Expense
   amount Int 
   createdAt DateTime @default(now()) @map("date")
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+  categoryId Int
+  category Category @relation(fields: [categoryId], references: [id])
+
+  typeId Int 
+  type Type @relation(fields: [typeId], references: [id])
 }
 
 model Category {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
+
+  transaction Transaction[]
 }
+
+model Type {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(255)
+
+  transaction Transaction[]
+}
+
 
 model Goal {
   id Int @id @default(autoincrement())
@@ -42,4 +62,7 @@ model Goal {
   isComplete Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
 }

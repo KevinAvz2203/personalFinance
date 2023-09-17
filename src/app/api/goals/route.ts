@@ -14,7 +14,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { name, totalAmount, currentAmount, isComplete } =
+    const { name, totalAmount, currentAmount, isComplete, userId } =
       await request.json();
     const newGoal = await prisma.goal.create({
       data: {
@@ -22,6 +22,7 @@ export async function POST(request: Request) {
         totalAmount,
         currentAmount,
         isComplete,
+        userId,
       },
     });
 

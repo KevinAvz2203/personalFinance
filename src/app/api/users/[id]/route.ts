@@ -12,6 +12,10 @@ export async function GET(request: Request, { params }: Params) {
       where: {
         id: Number(params.id),
       },
+/*       include: {
+        goal: true,
+        transaction: true,
+      }, */
     });
 
     if (!user)

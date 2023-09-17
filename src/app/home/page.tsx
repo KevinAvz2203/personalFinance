@@ -10,40 +10,35 @@ import Calendar from "@/components/Calendar";
 import RecentActivity from "@/components/RecentActivity";
 import SavingGoals from "@/components/SavingGoals";
 import Card from "@/components/Card";
-import { useEffect } from "react";
+import { getUserData } from "@/Backend/User";
 
-export default function Home() {
-  /*   async function getUserData() {
-    const res = await fetch("/api/users/1");
-    const data = await res.json();
-    console.log(data);
-  }
-
-  useEffect(() => {
-    getUserData();
-  }, []); */
+export default async function Home() {
+  const [userData] = await Promise.all([getUserData(1)]);
 
   return (
     <>
       <div>
         <header className="flex items-center">
-          <h1>Welcome back, Nombre Apellido!</h1>
+          <h1>
+            Welcome back, {userData.firstName} {userData.lastName}!
+          </h1>
           <h3 className="absolute right-8">Month,2023</h3>
         </header>
 
         <div>
           <section className="genSummary">
+            {/* Los primeros 3 hay que hacerlos 1 solo */}
             {/* Componente Incomes */}
-            <IncomeCard />
+            <IncomeCard User={userData.id} />
 
             {/* Componente Expenses */}
-            <ExpenseCard />
+            <ExpenseCard User={userData.id} />
 
             {/* Componente Total Balance */}
-            <TotalBalanceCard />
+            <TotalBalanceCard User={userData.id} />
 
             {/* Componente Total Saving Goals */}
-            <TotalSavingCard />
+            <TotalSavingCard User={userData.id} />
           </section>
 
           <section className="genSummary">

@@ -14,13 +14,16 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { description, category, type, amount } = await request.json();
+    const { description, amount, userId, categoryId, typeId } =
+      await request.json();
+
     const newTransaction = await prisma.transaction.create({
       data: {
         description,
-        category,
-        type,
         amount,
+        userId,
+        categoryId,
+        typeId,
       },
     });
 
