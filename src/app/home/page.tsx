@@ -13,7 +13,7 @@ import Card from "@/components/Card";
 import { getUserData } from "@/Backend/User";
 
 export default async function Home() {
-  const [userData] = await Promise.all([getUserData(1)]);
+  const [userData] = await Promise.all([getUserData(2)]);
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const currYear = new Date().getFullYear();
 

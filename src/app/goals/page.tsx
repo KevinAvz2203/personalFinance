@@ -1,3 +1,5 @@
+"use client";
+
 import MainGoals from "@/components/MainGoals";
 import GoalsTable from "@/components/GoalsTable";
 import TotalSavingCard from "@/components/TotalSavingCard";
@@ -39,7 +41,7 @@ export default function Goals() {
           <div className="flex justify-around pt-4">
             <GoalsActive />
             <GoalsCompleted />
-            <TotalSavingCard />
+            {/* <TotalSavingCard /> */}
           </div>
         </div>
       </div>
