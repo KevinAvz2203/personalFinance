@@ -43,7 +43,7 @@ export default async function Home() {
 
         <section className="genSummary">
           {/* Componente grafica PIE summary Month */}
-          <MonthSummary />
+          <MonthSummary User={userData.id} />
 
           {/* Componente grafica Curva summary Month */}
           <MonthCashFlow />
