@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Line } from "react-chartjs-2";
+import { getPerDate } from "@/Backend/Transaction";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -24,6 +25,7 @@ ChartJS.register(
 export default function MonthCashFlow({ User }) {
   const [lineChartData, setLineChartData] = useState({ datasets: [] });
   const currMonth = new Date().toLocaleString([], { month: "long" });
+  const monthNum = new Date().getMonth();
 
   const options = {
     responsive: true,
@@ -35,28 +37,41 @@ export default function MonthCashFlow({ User }) {
   };
 
   async function getMonthCashflow() {
-    let expenses = [50, 100, 40, 870, 360, 200, 10];
-    let incomes = [250, 450, 300, 100, 47, 2500, 7531];
+    let expenses = [0, 0, 0, 0, 0, 0, 0];
+    let incomes = [0, 0, 0, 0, 0, 0, 0];
     const labels = [
+      "Sunday",
       "Monday",
       "Tuesday",
       "Wednesday",
       "Thursday",
       "Friday",
       "Saturday",
-      "Sunday",
     ];
 
-    /* const [cateNames] = await Promise.all([getCategories()]); 
-    const [transPerCat] = await Promise.all([getTotalPerCategory(User)]); */
+    const [perDate] = await Promise.all([getPerDate(User)]);
 
-    /* for (let i = 0; i < cateNames.length; i++) {
-      categorias.push(cateNames[i].name);
-    } */
+    for (let i = 0; i < perDate.length; i++) {
+      let text = perDate[i].createdAt;
+      const newCreateAt = text.split("T");
+      perDate[i].createdAt = newCreateAt[0];
+    }
 
-    /* for (let j = 0; j < transPerCat.length; j++) {
-      gastos[transPerCat[j].categoryId - 1] = transPerCat[j]._sum.amount;
-    } */
+    for (let i = 0; i < perDate.length; i++) {
+      let text = perDate[i].createdAt;
+      const newCreateAt = text.split("-");
+      const year = Number(newCreateAt[0]);
+      const month = Number(newCreateAt[1]);
+      const day = Number(newCreateAt[2]);
+
+      const dayOfWeekDigit = new Date(year, month - 1, day).getDay();
+
+      if (perDate[i].typeId == 1 && monthNum == month - 1) {
+        incomes[dayOfWeekDigit] += perDate[i].amount;
+      } else if (perDate[i].typeId == 2 && monthNum == month - 1) {
+        expenses[dayOfWeekDigit] += perDate[i].amount;
+      }
+    }
 
     setLineChartData({
       labels,
@@ -77,12 +92,12 @@ export default function MonthCashFlow({ User }) {
     });
   }
 
-  useMemo(getMonthCashflow, []);
+  useMemo(getMonthCashflow, [User, monthNum]);
 
   return (
     <>
       <div className="monthGraphs">
-        <h1 className="text-2xl p-2">My Cashflow of the week</h1>
+        <h1 className="text-2xl p-2">My Cashflow of {currMonth}</h1>
         <div className="flex justify-center">
           <Line options={options} data={lineChartData} />
         </div>
