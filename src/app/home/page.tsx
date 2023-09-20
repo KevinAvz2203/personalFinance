@@ -46,7 +46,7 @@ export default async function Home() {
           <MonthSummary User={userData.id} />
 
           {/* Componente grafica Curva summary Month */}
-          <MonthCashFlow />
+          <MonthCashFlow User={userData.id} />
 
           {/* Componente Calendario Month */}
           <Calendar />

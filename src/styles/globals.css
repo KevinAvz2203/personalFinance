@@ -122,9 +122,10 @@ header h3 {
 }
 
 .monthGraphs {
-  background-color: #f3baba;
+  background-color: #f9f9f9;
   width: 32%;
   height: auto;
+  border-radius: 10px;
 }
 
 .incExp {
