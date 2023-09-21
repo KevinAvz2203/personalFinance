@@ -19,10 +19,11 @@ export default function RecentActivity({ User }) {
 
   for (let i = 0; i < userTransactions.length; i++) {
     let text = userTransactions[i].createdAt;
-    const newCreateAt = text.split("T");
+    const newCreateAt = text?.split("T") || [];
+    const hourCreated = newCreateAt[1]?.split(".") || [];
     userTransactions[i].createdAt = newCreateAt[0];
     dates.push(newCreateAt[0]);
-    hours.push(text.slice(11, 19));
+    hours.push(hourCreated[0]);
   }
 
   // Elimino los elementos duplicados del arreglo dates

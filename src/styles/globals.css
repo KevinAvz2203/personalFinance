@@ -79,6 +79,24 @@ header h3 {
   flex-shrink: 0;
 }
 
+.skeletonDataCards-perMonth {
+  width: 90%;
+  height: 25rem;
+  border-radius: 10px;
+  background-color: #d9d9d9;
+  margin-top: 2rem;
+  padding-bottom: 1rem;
+}
+
+.SkeletonDataActivityCard-perMonth {
+  width: 90%;
+  height: 50rem;
+  border-radius: 10px;
+  background-color: #d9d9d9;
+  margin-top: 2rem;
+  padding-bottom: 1rem;
+}
+
 @keyframes skeleton-loading {
   0% {
     background-color: hsl(200, 20%, 70%);

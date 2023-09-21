@@ -2,8 +2,34 @@ import Image from "next/image";
 import ChargeActivity from "./ChargeActivity";
 import addChargeIcon from "/public/assets/icons/addChargeIcon.png";
 import Link from "next/link";
+import { useState, useMemo } from "react";
+import { getPerUser } from "@/Backend/Transaction";
 
-export default function ActivityHistory() {
+export default function ActivityHistory({ User }) {
+  const [userTransactions, setUserTransactions] = useState([]);
+  let dates = [];
+  let hours = [];
+
+  async function getUserTransactions() {
+    const [userTrans] = await Promise.all([getPerUser(User)]);
+    setUserTransactions(userTrans);
+  }
+
+  useMemo(getUserTransactions, [User]);
+
+  for (let i = 0; i < userTransactions.length; i++) {
+    let text = userTransactions[i].createdAt;
+    const newCreateAt = text?.split("T") || [];
+    const hourCreated = newCreateAt[1]?.split(".") || [];
+    userTransactions[i].createdAt = newCreateAt[0];
+    dates.push(newCreateAt[0]);
+    hours.push(hourCreated[0]);
+  }
+
+  // Elimino los elementos duplicados del arreglo dates
+  dates = dates.filter((value, index, array) => array.indexOf(value) === index);
+  let currDay = new Date().toJSON().slice(0, 10);
+
   return (
     <>
       <div className="actHistory">
@@ -14,88 +40,24 @@ export default function ActivityHistory() {
           </Link>
         </div>
 
-        <div className="mb-10">
-          <h4>Today</h4>
-          <ChargeActivity
-            Name="Disney+ Billing"
-            Date="Today at 2:20 pm"
-            Category="Entertainment"
-            Amount="-$150.00 MXN"
-          />
-          <ChargeActivity
-            Name="Groceries"
-            Date="Today at 11:45 pm"
-            Category="Food"
-            Amount="-$894.60 MXN"
-          />
-          <ChargeActivity
-            Name="Recibo de luz"
-            Date="Today at 1:00 pm"
-            Category="Home"
-            Amount="-$100.00 MXN"
-          />
-        </div>
-
-        <div className="mb-10">
-          <h4>Yesterday</h4>
-          <ChargeActivity
-            Name="Paycheck"
-            Date="23/06/2023 at 5:20 pm"
-            Category="Income"
-            Amount="-$3547.00 MXN"
-          />
-        </div>
-
-        <div className="mb-10">
-          <h4>15/06/2023</h4>
-          <ChargeActivity
-            Name="Paycheck"
-            Date="15/06/2023 at 3:40 pm"
-            Category="Income"
-            Amount="-$4500.00 MXN"
-          />
-
-          <ChargeActivity
-            Name="Paycheck"
-            Date="15/06/2023 at 3:40 pm"
-            Category="Income"
-            Amount="-$4500.00 MXN"
-          />
-        </div>
-
-        <div className="mb-10">
-          <h4>10/06/2023</h4>
-          <ChargeActivity
-            Name="Paycheck"
-            Date="15/06/2023 at 3:40 pm"
-            Category="Income"
-            Amount="-$4500.00 MXN"
-          />
-
-          <ChargeActivity
-            Name="Paycheck"
-            Date="15/06/2023 at 3:40 pm"
-            Category="Income"
-            Amount="-$4500.00 MXN"
-          />
-        </div>
-
-        <div className="mb-10">
-          <h4>07/06/2023</h4>
-          <ChargeActivity
-            Name="Paycheck"
-            Date="15/06/2023 at 3:40 pm"
-            Category="Income"
-            Amount="-$4500.00 MXN"
-          />
-
-          <ChargeActivity
-            Name="Paycheck"
-            Date="15/06/2023 at 3:40 pm"
-            Category="Income"
-            Amount="-$4500.00 MXN"
-          />
-        </div>
+        {dates.map((fecha, dtindex) => (
+          <div className="mb-10" key={dtindex}>
+            {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
+            {userTransactions.map(
+              (transaction, index) =>
+                fecha == transaction.createdAt && (
+                  <ChargeActivity
+                    key={transaction.id}
+                    Name={transaction.description}
+                    Date={transaction.createdAt}
+                    Time={hours[index]}
+                    Category={transaction.category.name}
+                    Amount={transaction.amount}
+                  />
+                )
+            )}
+          </div>
+        ))}
       </div>
     </>
   );

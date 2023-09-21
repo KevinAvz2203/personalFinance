@@ -11,9 +11,9 @@ export default function ChargeActivity({ Name, Date, Time, Category, Amount }) {
 
         <div className="chargeCat">{Category}</div>
         {Category == "Income" ? (
-          <div className="chargeAmount">${Amount} MXN</div>
+          <div className="chargeAmount text-blue-600">${Amount} MXN</div>
         ) : (
-          <div className="chargeAmount text-red-600">-${Amount} MXN</div>
+          <div className="chargeAmount text-red-600">- ${Amount} MXN</div>
         )}
       </div>
     </>
