@@ -1,19 +1,20 @@
 import Image from "next/image";
 import totalSavingsIcon from "/public/assets/icons/totalSavingsIcon.png";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { getTotalSavedGoals } from "@/Backend/Goal";
 
 export default function TotalSavingCard({ User }) {
   const [totalSaved, setTotalSaved] = useState(0);
   const [totalGoal, setTotalGoal] = useState(0);
 
-  async function getUserData() {
-    const [data] = await Promise.all([getTotalSavedGoals(User)]);
-    setTotalSaved(data.totalSaved);
-    setTotalGoal(data.totalGoalsAmount);
-  }
-
-  useMemo(getUserData, [User]);
+  useEffect(() => {
+    async function getUserData() {
+      const [data] = await Promise.all([getTotalSavedGoals(User)]);
+      setTotalSaved(data.totalSaved);
+      setTotalGoal(data.totalGoalsAmount);
+    }
+    getUserData();
+  }, [User]);
 
   return (
     <>

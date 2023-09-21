@@ -1,8 +1,6 @@
 "use client";
 
-import IncomeCard from "@/components/IncomeCard";
-import ExpenseCard from "@/components/ExpenseCard";
-import TotalBalanceCard from "@/components/TotalBalanceCard";
+import TopCard from "@/components/TopCard";
 import TotalSavingCard from "@/components/TotalSavingCard";
 import MonthSummary from "@/components/MonthSummary";
 import MonthCashFlow from "@/components/MonthCashFlow";
@@ -30,13 +28,15 @@ export default async function Home() {
 
       <div>
         <section className="genSummary">
-          {/* Los primeros 3 hay que hacerlos 1 solo */}
-          {/* Componente Incomes */}
-          <IncomeCard User={userData.id} />
-          {/* Componente Expenses */}
-          <ExpenseCard User={userData.id} />
-          {/* Componente Total Balance */}
-          <TotalBalanceCard User={userData.id} />
+          {/* Incomes Card */}
+          <TopCard User={userData.id} cardType={0} />
+
+          {/* Expenses Card */}
+          <TopCard User={userData.id} cardType={1} />
+
+          {/* Total Balance Card */}
+          <TopCard User={userData.id} cardType={2} />
+
           {/* Componente Total Saving Goals */}
           <TotalSavingCard User={userData.id} />
         </section>
@@ -49,7 +49,7 @@ export default async function Home() {
           <MonthCashFlow User={userData.id} />
 
           {/* Componente Calendario Month */}
-          <Calendar />
+          {/* <Calendar /> */}
         </section>
 
         <section className="genSummary">

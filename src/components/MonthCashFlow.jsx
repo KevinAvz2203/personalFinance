@@ -34,6 +34,7 @@ export default function MonthCashFlow({ User }) {
         position: "top",
       },
     },
+    maintainAspectRatio: true,
   };
 
   async function getMonthCashflow() {
@@ -96,9 +97,11 @@ export default function MonthCashFlow({ User }) {
 
   return (
     <>
-      <div className="monthGraphs">
-        <h1 className="text-2xl p-2">My Cashflow of {currMonth}</h1>
-        <div className="flex justify-center">
+      <div className="cashFlow">
+        <h1 className="text-2xl p-2" suppressHydrationWarning={true}>
+          My Cashflow of {currMonth}
+        </h1>
+        <div style={{ width: "100%", height: "100%" }}>
           <Line options={options} data={lineChartData} />
         </div>
       </div>
