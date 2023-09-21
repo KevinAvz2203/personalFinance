@@ -54,7 +54,7 @@ export default async function Home() {
 
         <section className="genSummary">
           {/* Componente grafica PIE summary Month */}
-          <RecentActivity />
+          <RecentActivity User={userData.id} />
 
           {/* Componente grafica Curva summary Month */}
           <SavingGoals />

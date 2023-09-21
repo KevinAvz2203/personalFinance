@@ -1,3 +1,5 @@
+import { Transaction } from "@prisma/client";
+
 type Amount = {
   amount: number;
 };
@@ -44,6 +46,14 @@ export async function getPerDate(id: number): Promise<Balance> {
     "http://localhost:3000/api/transactions/sumbydate/" + id
   );
 
+  const data = await res.json();
+  return data;
+}
+
+export async function getPerUser(id: number): Promise<Transaction> {
+  const res = await fetch(
+    "http://localhost:3000/api/transactions/perUser/" + id
+  );
   const data = await res.json();
   return data;
 }

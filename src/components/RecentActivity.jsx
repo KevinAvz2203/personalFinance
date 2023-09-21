@@ -2,8 +2,33 @@ import Image from "next/image";
 import ChargeActivity from "./ChargeActivity";
 import addChargeIcon from "/public/assets/icons/addChargeIcon.png";
 import Link from "next/link";
+import { useState, useMemo } from "react";
+import { getPerUser } from "@/Backend/Transaction";
 
-export default function RecentActivity() {
+export default function RecentActivity({ User }) {
+  const [userTransactions, setUserTransactions] = useState([]);
+  let dates = [];
+  let hours = [];
+
+  async function getUserTransactions() {
+    const [userTrans] = await Promise.all([getPerUser(User)]);
+    setUserTransactions(userTrans);
+  }
+
+  useMemo(getUserTransactions, [User]);
+
+  for (let i = 0; i < userTransactions.length; i++) {
+    let text = userTransactions[i].createdAt;
+    const newCreateAt = text.split("T");
+    userTransactions[i].createdAt = newCreateAt[0];
+    dates.push(newCreateAt[0]);
+    hours.push(text.slice(11, 19));
+  }
+
+  // Elimino los elementos duplicados del arreglo dates
+  dates = dates.filter((value, index, array) => array.indexOf(value) === index);
+  let currDay = new Date().toJSON().slice(0, 10);
+
   return (
     <>
       <div className="recentAct">
@@ -14,37 +39,25 @@ export default function RecentActivity() {
           </Link>
         </div>
 
-        <div className="mb-10">
-          <h4>Today</h4>
-          <ChargeActivity
-            Name="Disney+ Billing"
-            Date="Today at 2:20 pm"
-            Category="Entertainment"
-            Amount="-$150.00 MXN"
-          />  
-          <ChargeActivity
-            Name="Groceries"
-            Date="Today at 11:45 pm"
-            Category="Food"
-            Amount="-$894.60 MXN"
-          />
-          <ChargeActivity
-            Name="Recibo de luz"
-            Date="Today at 1:00 pm"
-            Category="Home"
-            Amount="-$100.00 MXN"
-          />
-        </div>
-
-        <div className="mb-10">
-          <h4>15/06/2023</h4>
-          <ChargeActivity
-            Name="Paycheck"
-            Date="15/06/2023 at 3:40 pm"
-            Category="Income"
-            Amount="-$4500.00 MXN"
-          />
-        </div>
+        {dates.map((fecha, index) => (
+          <div className="mb-10" key={index}>
+            {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
+            {userTransactions.map(
+              (transaction, index) =>
+                index < 4 &&
+                fecha == transaction.createdAt && (
+                  <ChargeActivity
+                    key={transaction.id}
+                    Name={transaction.description}
+                    Date={transaction.createdAt}
+                    Time={hours[index]}
+                    Category={transaction.category.name}
+                    Amount={transaction.amount}
+                  />
+                )
+            )}
+          </div>
+        ))}
       </div>
     </>
   );
