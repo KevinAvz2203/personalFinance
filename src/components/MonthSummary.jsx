@@ -61,7 +61,6 @@ export default function MonthSummary({ User }) {
         <h1 className="text-2xl p-2" suppressHydrationWarning={true}>
           Expenses for {currMonth}
         </h1>
-        {/* <div style={{ width: "100%", height: "100%" }}> */}
         <div className="w-full h-full">
           <Doughnut
             data={pieChartData}

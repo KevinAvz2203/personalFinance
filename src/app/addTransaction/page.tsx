@@ -1,28 +1,82 @@
 "use client";
 
-import { useState } from "react";
+import { getCategories } from "@/Backend/Category";
+import { postTransaction } from "@/Backend/Transaction";
+import { getUserData } from "@/Backend/User";
+import { useState, useEffect, useMemo } from "react";
 
 export default function AddTransaction() {
   const [transaction, setTransaction] = useState("Income");
-
+  const [User, setUser] = useState(0);
+  const [catNames, setCatNames] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     description: "",
-    amount: "",
-    date: "",
-    category: "",
+    amount: 0,
+    userId: User,
+    categoryId: 3,
+    typeId: 1,
   });
 
-  const handleInputChange = (event: any) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+  async function getCategoriesNames() {
+    let nombresCategorias = [];
+    const [cateNames]: any[] = await Promise.all([getCategories()]); // Categories Name
+    const [userData] = await Promise.all([getUserData(2)]);
+
+    for (let i = 0; i < cateNames.length; i++) {
+      nombresCategorias.push(cateNames[i].name);
+    }
+
+    setCatNames(nombresCategorias);
+    setUser(userData.id);
+  }
+
+  useEffect(() => {
+    getCategoriesNames();
+    setFormData({
+      description: "",
+      amount: 0,
+      userId: User,
+      categoryId: 3,
+      typeId: 1,
+    });
+  }, [User]);
+
+  const pageRefresher = () => {
+    window.location.reload(); // cambiar ruta
   };
 
-  const handleSubmit = (event: any) => {
-    console.log(formData);
-    console.log(transaction);
+  const handleInputChange = (e: any) => {
+    if (e.target.name === "description") {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    } else {
+      setFormData({ ...formData, [e.target.name]: Number(e.target.value) });
+    }
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    postTransaction(formData).then(pageRefresher);
   };
 
   const onOptionChange = (e: any) => {
     setTransaction(e.target.value);
+    if (e.target.value === "Income") {
+      setFormData({
+        description: "",
+        amount: 0,
+        userId: User,
+        categoryId: 3,
+        typeId: 1,
+      });
+    } else {
+      setFormData({
+        description: "",
+        amount: 0,
+        userId: User,
+        categoryId: 1,
+        typeId: 2,
+      });
+    }
   };
 
   return (
@@ -68,6 +122,7 @@ export default function AddTransaction() {
                   Description
                 </label>
                 <input
+                  required={true}
                   className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
                   id="description"
                   name="description"
@@ -82,46 +137,44 @@ export default function AddTransaction() {
                   Amount
                 </label>
                 <input
+                  required={true}
                   className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
                   id="amount"
                   name="amount"
-                  type="text"
+                  type="number"
                   placeholder="Insert Amount"
                   value={formData.amount}
                   onChange={handleInputChange}
                 />
               </div>
-              <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label className="labelForm text-gray-700" htmlFor="date">
-                  Date
-                </label>
-                <input
-                  className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="date"
-                  name="date"
-                  type="text"
-                  placeholder="Insert Date"
-                  value={formData.date}
-                  onChange={handleInputChange}
-                />
-              </div>
               {transaction === "Expense" ? (
                 <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                  <label className="labelForm text-gray-700" htmlFor="category">
+                  <label
+                    className="labelForm text-gray-700"
+                    htmlFor="categoryId"
+                  >
                     Category
                   </label>
                   <select
-                    name="category"
-                    id="category"
+                    required={true}
+                    name="categoryId"
+                    id="categoryId"
                     className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
-                    value={formData.category}
+                    value={formData.categoryId}
                     onChange={handleInputChange}
                   >
-                    <option value="null">Insert Category</option>
-                    <option value="category1">Category 1</option>
-                    <option value="category2">Category 2</option>
-                    <option value="category3">Category 3</option>
-                    <option value="category4">Category 4</option>
+                    <option defaultChecked disabled>
+                      Select Category
+                    </option>
+
+                    {catNames.map(
+                      (category, index) =>
+                        category !== "Income" && (
+                          <option key={index} value={index + 1}>
+                            {category}
+                          </option>
+                        )
+                    )}
                   </select>
                 </div>
               ) : (
