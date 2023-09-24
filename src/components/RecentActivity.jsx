@@ -40,25 +40,28 @@ export default function RecentActivity({ User }) {
           </Link>
         </div>
 
-        {dates.map((fecha, index) => (
-          <div className="mb-10" key={index}>
-            {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
-            {userTransactions.map(
-              (transaction, index) =>
-                index < 4 &&
-                fecha == transaction.createdAt && (
-                  <ChargeActivity
-                    key={transaction.id}
-                    Name={transaction.description}
-                    Date={transaction.createdAt}
-                    Time={hours[index]}
-                    Category={transaction.category.name}
-                    Amount={transaction.amount}
-                  />
-                )
-            )}
-          </div>
-        ))}
+        {dates.map(
+          (fecha, index) =>
+            index < 2 && (
+              <div className="mb-10" key={index}>
+                {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
+                {userTransactions.map(
+                  (transaction, transId) =>
+                    transId < 4 &&
+                    fecha == transaction.createdAt && (
+                      <ChargeActivity
+                        key={transaction.id}
+                        Name={transaction.description}
+                        Date={transaction.createdAt}
+                        Time={hours[transId]}
+                        Category={transaction.category.name}
+                        Amount={transaction.amount}
+                      />
+                    )
+                )}
+              </div>
+            )
+        )}
       </div>
     </>
   );
