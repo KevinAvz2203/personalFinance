@@ -84,7 +84,7 @@ export default function AddTransaction() {
       <div className="addTransClass">
         <div className="addTransaction">
           <header>
-            <h1>Add Income</h1>
+            <h1>Add a new transaction</h1>
           </header>
           <div className="p-2">
             <input
