@@ -10,19 +10,17 @@ import {
 } from "@/Backend/Transaction";
 
 export default function TopCard({ User, cardType }) {
-  const [income, setIncome] = useState(0);
-  const [expense, setExpense] = useState(0);
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
     async function getUserIncomeData() {
       const [data] = await Promise.all([getIncomes(User)]);
-      setIncome(data.amount);
+      setTotal(data.amount);
     }
 
     async function getUserExpenseData() {
       const [data] = await Promise.all([getExpenses(User)]);
-      setExpense(data.amount);
+      setTotal(data.amount);
     }
 
     async function getUserBalanceData() {
@@ -52,7 +50,7 @@ export default function TopCard({ User, cardType }) {
           <div className="topCards bg-red-300	">
             <Image src={incomeIcon} alt="Income Icon" width={50} height={50} />
             <div>
-              <p>${income | 0} MXN</p>
+              <p>${total | 0} MXN</p>
               <p>Incomes</p>
             </div>
           </div>
@@ -70,7 +68,7 @@ export default function TopCard({ User, cardType }) {
               height={50}
             />
             <div>
-              <p>${expense | 0} MXN</p>
+              <p>${total | 0} MXN</p>
               <p>Expenses</p>
             </div>
           </div>

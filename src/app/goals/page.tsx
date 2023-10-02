@@ -6,8 +6,11 @@ import TotalSavingCard from "@/components/TotalSavingCard";
 import GoalsActive from "@/components/GoalsActive";
 import GoalsCompleted from "@/components/GoalsCompleted";
 import Link from "next/link";
+import { getUserData } from "@/Backend/User"; // Borrar cuando tenga una mejor forma de hacer esto
 
-export default function Goals() {
+export default async function Goals() {
+  const [userData] = await Promise.all([getUserData(2)]);
+
   return (
     <>
       <div>
@@ -41,7 +44,7 @@ export default function Goals() {
           <div className="flex justify-around pt-4">
             <GoalsActive />
             <GoalsCompleted />
-            {/* <TotalSavingCard /> */}
+            <TotalSavingCard User={userData.id} />
           </div>
         </div>
       </div>

@@ -18,6 +18,9 @@ export default function MonthSummary({ User }) {
     const [transPerCat] = await Promise.all([getTotalPerCategory(User)]);
 
     for (let i = 0; i < cateNames.length; i++) {
+      if (cateNames[i].name === "Income") {
+        continue;
+      }
       categorias.push(cateNames[i].name);
     }
 

@@ -22,7 +22,7 @@ export default async function Data() {
 
         <div className="flex">
           <div className="dataGraphs">
-            <ExpPerCategory />
+            <ExpPerCategory User={userData.id} />
 
             <ExpectedExpPerCategory />
           </div>

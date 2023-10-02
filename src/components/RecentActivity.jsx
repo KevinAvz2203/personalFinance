@@ -42,7 +42,7 @@ export default function RecentActivity({ User }) {
 
         {dates.map(
           (fecha, index) =>
-            index < 2 && (
+            index < 3 && (
               <div className="mb-10" key={index}>
                 {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
                 {userTransactions.map(
