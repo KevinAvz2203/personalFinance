@@ -20,7 +20,7 @@ export default function AddTransaction() {
   async function getCategoriesNames() {
     let nombresCategorias = [];
     const [cateNames]: any[] = await Promise.all([getCategories()]); // Categories Name
-    const [userData] = await Promise.all([getUserData(2)]);
+    const [userData] = await Promise.all([getUserData(1)]);
 
     for (let i = 0; i < cateNames.length; i++) {
       nombresCategorias.push(cateNames[i].name);

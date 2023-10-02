@@ -9,7 +9,7 @@ import Link from "next/link";
 import { getUserData } from "@/Backend/User"; // Borrar cuando tenga una mejor forma de hacer esto
 
 export default async function Goals() {
-  const [userData] = await Promise.all([getUserData(2)]);
+  const [userData] = await Promise.all([getUserData(1)]);
 
   return (
     <>
