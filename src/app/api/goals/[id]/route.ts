@@ -50,7 +50,7 @@ export async function DELETE(request: Request, { params }: Params) {
 
 export async function PUT(request: Request, { params }: Params) {
   try {
-    const { name, totalAmount, currentAmount, isComplete } =
+    const { name, totalAmount, currentAmount, isComplete, isFavorite } =
       await request.json();
 
     const updatedGoal = await prisma.goal.update({
@@ -62,6 +62,7 @@ export async function PUT(request: Request, { params }: Params) {
         totalAmount,
         currentAmount,
         isComplete,
+        isFavorite,
       },
     });
 

@@ -14,17 +14,21 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { name, totalAmount, currentAmount, isComplete, userId } =
+    const { name, totalAmount, currentAmount, isComplete, isFavorite, userId } =
       await request.json();
+
     const newGoal = await prisma.goal.create({
       data: {
         name,
         totalAmount,
         currentAmount,
         isComplete,
+        isFavorite,
         userId,
       },
     });
+
+    console.log(newGoal);
 
     return NextResponse.json(newGoal);
   } catch (error) {

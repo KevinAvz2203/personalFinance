@@ -1,5 +1,6 @@
 "use client";
 
+import { postGoal } from "@/Backend/Goal";
 import { getUserData } from "@/Backend/User";
 import { useState, useEffect } from "react";
 
@@ -38,7 +39,17 @@ export default function AddGoal() {
   };
 
   const handleInputChange = (event: any) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
+    if (
+      event.target.name === "currentAmount" ||
+      event.target.name === "totalAmount"
+    ) {
+      setFormData({
+        ...formData,
+        [event.target.name]: Number(event.target.value),
+      });
+    } else {
+      setFormData({ ...formData, [event.target.name]: event.target.value });
+    }
   };
 
   const handleCheckChange = (event: any) => {
@@ -47,8 +58,7 @@ export default function AddGoal() {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    console.log(formData);
-    console.log(isFavorite);
+    postGoal(formData, isFavorite).then(pageRefresher);
   };
 
   return (

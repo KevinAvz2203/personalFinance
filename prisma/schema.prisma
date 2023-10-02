@@ -60,7 +60,7 @@ model Goal {
   totalAmount Int
   currentAmount Int?
   isComplete Boolean @default(false)
-  isFavorite Boolean @default(false)
+  isFavorite Boolean? @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

@@ -1,4 +1,4 @@
-/* import { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { json } from "stream/consumers";
@@ -43,4 +43,3 @@ export async function GET(request: Request, { params }: Params) {
     }
   }
 }
- */

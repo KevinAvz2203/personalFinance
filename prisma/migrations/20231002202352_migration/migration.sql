@@ -47,7 +47,7 @@ CREATE TABLE `Goal` (
     `totalAmount` INTEGER NOT NULL,
     `currentAmount` INTEGER NULL,
     `isComplete` BOOLEAN NOT NULL DEFAULT false,
-    `isFavorite` BOOLEAN NOT NULL DEFAULT false,
+    `isFavorite` BOOLEAN NULL DEFAULT false,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
     `userId` INTEGER NOT NULL,
