@@ -293,6 +293,10 @@ header h3 {
   width: 95%;
 }
 
+.goalsTable {
+  width: inherit;
+}
+
 .goalInstance {
   padding-bottom: 2rem;
 }
@@ -300,10 +304,6 @@ header h3 {
 .goalTitle {
   display: flex;
   justify-content: space-between;
-}
-
-.goalsTable {
-  width: inherit;
 }
 
 .containerStyle {

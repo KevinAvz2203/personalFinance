@@ -25,7 +25,7 @@ export default async function Goals() {
           </section>
 
           <section className="flex justify-center pt-4">
-            <GoalsTable />
+            <GoalsTable User={userData.id} />
           </section>
 
           <div className="pt-4">

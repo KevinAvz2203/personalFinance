@@ -17,3 +17,9 @@ export async function postGoal(goalData: any, isFavorite: Boolean) {
   const data = await res.json();
   console.log(data);
 }
+
+export async function getUserGoals(id: number): Promise<Goal> {
+  const res = await fetch("http://localhost:3000/api/goals/users/" + id);
+  const data = await res.json();
+  return data;
+}

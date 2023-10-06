@@ -1,65 +1,43 @@
 "use client";
 
+import { getUserGoals } from "@/Backend/Goal";
 import ProgressBar from "@/components/ProgressBar";
+import { useState, useEffect } from "react";
 
-export default function GoalsTable() {
+export default function GoalsTable({ User }) {
+  const [userGoals, setUserGoals] = useState([]);
+
+  useEffect(() => {
+    async function getSingleUserGoals() {
+      const [existingGoals] = await Promise.all([getUserGoals(User)]);
+      setUserGoals(existingGoals);
+    }
+
+    getSingleUserGoals();
+  }, [User]);
+
   return (
     <>
       <div className="tableBox">
-        <div className="goalsTable">
-          <div className="goalInstance pt-4">
-            <div className="goalTitle">
-              <p>Goal 1</p>
-              <p>$80,000 of $100,000 MXN</p>
+        <div className="goalsTable pt-4">
+          {userGoals.map((goal, index) => (
+            <div className="goalInstance" key={index}>
+              <div className="goalTitle">
+                <p>{goal.name}</p>
+                <p>
+                  ${goal.currentAmount} of ${goal.totalAmount} MXN
+                </p>
+              </div>
+
+              <ProgressBar
+                key={goal.id}
+                completed={(
+                  (Number(goal.currentAmount) / Number(goal.totalAmount)) *
+                  100
+                ).toFixed(1)}
+              />
             </div>
-
-            <ProgressBar key={1} completed={80} />
-          </div>
-
-          <div className="goalInstance">
-            <div className="goalTitle">
-              <p>Goal 2</p>
-              <p>$50,000 of $100,000 MXN</p>
-            </div>
-
-            <ProgressBar key={2} completed={50} />
-          </div>
-
-          <div className="goalInstance">
-            <div className="goalTitle">
-              <p>Goal 3</p>
-              <p>$40,000 of $100,000 MXN</p>
-            </div>
-
-            <ProgressBar key={3} completed={40} />
-          </div>
-
-          <div className="goalInstance">
-            <div className="goalTitle">
-              <p>Goal 4</p>
-              <p>$12,000 of $100,000 MXN</p>
-            </div>
-
-            <ProgressBar key={4} completed={12} />
-          </div>
-
-          <div className="goalInstance">
-            <div className="goalTitle">
-              <p>Goal 5</p>
-              <p>$24,000 of $100,000 MXN</p>
-            </div>
-
-            <ProgressBar key={5} completed={24} />
-          </div>
-
-          <div className="goalInstance">
-            <div className="goalTitle">
-              <p>Goal 6</p>
-              <p>$86,000 of $100,000 MXN</p>
-            </div>
-
-            <ProgressBar key={6} completed={86} />
-          </div>
+          ))}
         </div>
       </div>
     </>

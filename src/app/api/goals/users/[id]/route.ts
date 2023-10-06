@@ -1,16 +1,9 @@
-/* import { NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { json } from "stream/consumers";
 
 interface Params {
   params: { id: string };
 }
-
-type userSumGoals = {
-  totalSaved: number;
-  totalGoalsAmount: number;
-};
 
 export async function GET(request: Request, { params }: Params) {
   try {
@@ -26,21 +19,10 @@ export async function GET(request: Request, { params }: Params) {
         { status: 404 }
       );
 
-    const data: userSumGoals = {
-      totalSaved: 0,
-      totalGoalsAmount: 0,
-    };
-
-    for (let i = 0; i < userGoals.length; i++) {
-      data.totalSaved += userGoals[i].currentAmount || 0;
-      data.totalGoalsAmount += userGoals[i].totalAmount || 0;
-    }
-
-    return NextResponse.json(data);
+    return NextResponse.json(userGoals);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });
     }
   }
 }
- */
