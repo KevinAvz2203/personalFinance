@@ -26,46 +26,44 @@ export default function MainGoals({ User }) {
 
   return (
     <>
-      <div>
-        <div className="mainGoals">
-          {favoriteGoals.map((goal, index) => (
-            <div key={index}>
-              <Doughnut
-                className="testing"
-                data={{
-                  labels: ["Saved", "Remaining"],
-                  datasets: [
-                    {
-                      data: [
-                        goal.currentAmount,
-                        goal.totalAmount - goal.currentAmount,
-                      ],
-                      backgroundColor: ["#336699", "#99CCFF"],
-                      display: true,
-                      borderColor: "#D1D6DC",
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    legend: {
-                      display: false,
-                    },
-                    tooltip: {
-                      enabled: true,
-                    },
+      <div className="mainGoals">
+        {favoriteGoals.map((goal, index) => (
+          <div key={index}>
+            <Doughnut
+              className=""
+              data={{
+                labels: ["Saved", "Remaining"],
+                datasets: [
+                  {
+                    data: [
+                      goal.currentAmount,
+                      goal.totalAmount - goal.currentAmount,
+                    ],
+                    backgroundColor: ["#336699", "#99CCFF"],
+                    display: true,
+                    borderColor: "#D1D6DC",
                   },
-                  rotation: -90,
-                  circumference: 180,
-                  cutout: "60%",
-                  maintainAspectRatio: true,
-                  responsive: true,
-                }}
-              />
-              <p className="text-center text-2xl">{goal.name}</p>
-            </div>
-          ))}
-        </div>
+                ],
+              }}
+              options={{
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                  tooltip: {
+                    enabled: true,
+                  },
+                },
+                rotation: -90,
+                circumference: 180,
+                cutout: "60%",
+                maintainAspectRatio: false,
+                responsive: true,
+              }}
+            />
+            <p className="text-center text-2xl">{goal.name}</p>
+          </div>
+        ))}
       </div>
     </>
   );
