@@ -1,11 +1,11 @@
-"use client";
-
 import { getUserGoals } from "@/Backend/Goal";
 import ProgressBar from "@/components/ProgressBar";
 import { useState, useEffect } from "react";
 
 export default function GoalsTable({ User }) {
   const [userGoals, setUserGoals] = useState([]);
+  const maxFavorites = 4;
+  let activeFavotires = 0;
 
   useEffect(() => {
     async function getSingleUserGoals() {
@@ -15,6 +15,12 @@ export default function GoalsTable({ User }) {
 
     getSingleUserGoals();
   }, [User]);
+
+  for (let i = 0; i < userGoals.length; i++) {
+    if (userGoals[i].isFavorite === true) {
+      activeFavotires++;
+    }
+  }
 
   return (
     <>
@@ -38,6 +44,10 @@ export default function GoalsTable({ User }) {
               />
             </div>
           ))}
+
+          <p>
+            Active Favorites: {activeFavotires}/{maxFavorites}
+          </p>
         </div>
       </div>
     </>

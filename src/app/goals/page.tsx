@@ -21,7 +21,7 @@ export default async function Goals() {
 
         <div className="">
           <section className="">
-            <MainGoals />
+            <MainGoals User={userData.id} />
           </section>
 
           <section className="flex justify-center pt-4">
