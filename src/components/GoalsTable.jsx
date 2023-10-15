@@ -26,10 +26,19 @@ export default function GoalsTable({ User }) {
     <>
       <div className="tableBox">
         <div className="goalsTable pt-4">
-          {userGoals.map((goal, index) => (
-            <div className="goalInstance" key={index}>
+          {userGoals.map((goal) => (
+            <div className="goalInstance" key={goal.id}>
               <div className="goalTitle">
-                <p>{goal.name}</p>
+                <p>
+                  {goal.name}
+                  <button
+                    onClick={async () => {
+                      console.log(goal);
+                    }}
+                  >
+                    - edit
+                  </button>
+                </p>
                 <p>
                   ${goal.currentAmount} of ${goal.totalAmount} MXN
                 </p>

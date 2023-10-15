@@ -163,7 +163,7 @@ header h3 {
 /* Tercera fila pagina Home */
 .recentAct {
   background-color: #8095a8;
-  width: 40%;
+  width: 33%; /* 40% era lo original */
   padding: 0.5rem;
   border-radius: 10px;
 }
