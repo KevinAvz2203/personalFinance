@@ -1,40 +1,41 @@
 "use client";
 
-import { postGoal } from "@/Backend/Goal";
-import { getUserData } from "@/Backend/User";
-import { useState, useEffect } from "react";
+import { getGoal, updateGoal } from "@/Backend/Goal";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AddGoal() {
+interface Params {
+  params: { id: number };
+}
+
+export default function AddGoal({ params }: Params) {
   const router = useRouter();
 
   const [isFavorite, setIsFavorite] = useState(false);
-  const [User, setUser] = useState(0); // Borrar cuando pueda recuperar el userID de las cookies
   const [formData, setFormData] = useState({
     name: "",
     totalAmount: 0,
     currentAmount: 0,
     isComplete: false,
-    isFavorite: 0, // Agregar al schema
-    userId: User,
+    isFavorite: false, // Agregar al schema
+    userId: params.id,
   });
 
   async function getUserSetFormData() {
-    const [userData] = await Promise.all([getUserData(1)]);
-    setUser(userData.id);
+    /* EDITAR */
+    const [goalData] = await Promise.all([getGoal(params.id)]);
+
+    setFormData({
+      name: goalData.name,
+      totalAmount: goalData.totalAmount,
+      currentAmount: goalData.currentAmount || 0,
+      isComplete: goalData.isComplete,
+      isFavorite: false,
+      userId: goalData.userId,
+    });
   }
 
-  useEffect(() => {
-    getUserSetFormData();
-    setFormData({
-      name: "",
-      totalAmount: 0,
-      currentAmount: 0,
-      isComplete: false,
-      isFavorite: 0,
-      userId: User,
-    });
-  }, [User]);
+  useMemo(getUserSetFormData, [params.id]);
 
   const handleInputChange = (event: any) => {
     if (
@@ -56,7 +57,9 @@ export default function AddGoal() {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    postGoal(formData, isFavorite).then(() => router.push("/goals"));
+    updateGoal(params.id, formData, isFavorite).then(() =>
+      router.push("/goals")
+    );
   };
 
   return (
@@ -64,7 +67,7 @@ export default function AddGoal() {
       <div className="addTransClass">
         <div className="addTransaction">
           <header>
-            <h1>Setting a New Goal!</h1>
+            <h1>Update your current goal!</h1>
           </header>
 
           <form onSubmit={handleSubmit} className="p-2">
@@ -143,7 +146,7 @@ export default function AddGoal() {
                 className="flex-shrink-0 bg-teal-500 hover:bg-teal-700 border-teal-500 hover:border-teal-700 text-sm border-4 text-white py-1 px-2 rounded"
                 type="submit"
               >
-                Add
+                Update
               </button>
               <button
                 className="flex-shrink-0 border-transparent border-4 text-teal-500 hover:text-teal-800 text-sm py-1 px-2 rounded"
