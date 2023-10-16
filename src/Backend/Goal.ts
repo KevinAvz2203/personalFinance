@@ -1,6 +1,11 @@
 import { Goal } from "@prisma/client";
 
-export async function getTotalSavedGoals(id: number): Promise<Goal> {
+type userSumGoals = {
+  totalSaved: number;
+  totalGoalsAmount: number;
+};
+
+export async function getTotalSavedGoals(id: number): Promise<userSumGoals> {
   const res = await fetch("http://localhost:3000/api/goals/userSummary/" + id);
   const data = await res.json();
   return data;

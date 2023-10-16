@@ -2,10 +2,9 @@
 
 import TopCard from "@/components/TopCard";
 import TotalSavingCard from "@/components/TotalSavingCard";
+import RecentActivity from "@/components/RecentActivity";
 import MonthSummary from "@/components/MonthSummary";
 import MonthCashFlow from "@/components/MonthCashFlow";
-import Calendar from "@/components/Calendar";
-import RecentActivity from "@/components/RecentActivity";
 import SavingGoals from "@/components/SavingGoals";
 import Card from "@/components/Card";
 import { getUserData } from "@/Backend/User";
@@ -47,9 +46,6 @@ export default async function Home() {
 
           {/* Componente grafica Curva summary Month */}
           <MonthCashFlow User={userData.id} />
-
-          {/* Componente Calendario Month */}
-          {/* <Calendar /> */}
         </section>
 
         <section className="genSummary">

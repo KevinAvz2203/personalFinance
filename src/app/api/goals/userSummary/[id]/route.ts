@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
-import { json } from "stream/consumers";
 
 interface Params {
   params: { id: string };

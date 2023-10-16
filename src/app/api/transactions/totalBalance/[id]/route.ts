@@ -8,7 +8,10 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const transaction = await prisma.transaction.findMany({
+    const transaction = await prisma.transaction.aggregate({
+      _sum: {
+        amount: true,
+      },
       where: {
         userId: Number(params.id),
       },
@@ -20,17 +23,7 @@ export async function GET(request: Request, { params }: Params) {
         { status: 404 }
       );
 
-    let total = 0;
-
-    for (let i = 0; i < transaction.length; i++) {
-      if (transaction[i].typeId == 1) {
-        total += transaction[i].amount;
-      } else {
-        total -= transaction[i].amount;
-      }
-    }
-
-    return NextResponse.json(total);
+    return NextResponse.json(transaction._sum);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });

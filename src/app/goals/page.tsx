@@ -44,8 +44,8 @@ export default async function Goals() {
       </div>
 
       <div className="flex justify-around pt-4">
-        <GoalsActive User={userData.id}/>
-        <GoalsCompleted User={userData.id}/>
+        <GoalsActive User={userData.id} />
+        <GoalsCompleted User={userData.id} />
         <TotalSavingCard User={userData.id} />
       </div>
     </>

@@ -3,7 +3,11 @@ import totalSavingsIcon from "/public/assets/icons/totalSavingsIcon.png";
 import { useState, useMemo, useEffect } from "react";
 import { getTotalSavedGoals } from "@/Backend/Goal";
 
-export default function TotalSavingCard({ User }) {
+type incomeData = {
+  User: number;
+};
+
+export default function TotalSavingCard({ User }: incomeData) {
   const [totalSaved, setTotalSaved] = useState(0);
   const [totalGoal, setTotalGoal] = useState(0);
 

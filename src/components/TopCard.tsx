@@ -9,7 +9,12 @@ import {
   getTotalBalance,
 } from "@/Backend/Transaction";
 
-export default function TopCard({ User, cardType }) {
+type incomeData = {
+  User: number;
+  cardType: number;
+};
+
+export default function TopCard({ User, cardType }: incomeData) {
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
@@ -25,7 +30,7 @@ export default function TopCard({ User, cardType }) {
 
     async function getUserBalanceData() {
       const [data] = await Promise.all([getTotalBalance(User)]);
-      setTotal(data);
+      setTotal(data.amount);
     }
 
     switch (cardType) {
@@ -78,23 +83,22 @@ export default function TopCard({ User, cardType }) {
       )}
       {cardType == 2 ? (
         <>
-      <div className="topCards bg-orange-300	">
-        <Image
-          src={totalBalanceIcon}
-          alt="T Balance Icon"
-          width={50}
-          height={50}
-        />
-        <div>
-          <p>${total} MXN</p>
-          <p>Total Balance</p>
-        </div>
-      </div>
-    </>
+          <div className="topCards bg-orange-300	">
+            <Image
+              src={totalBalanceIcon}
+              alt="T Balance Icon"
+              width={50}
+              height={50}
+            />
+            <div>
+              <p>${total} MXN</p>
+              <p>Total Balance</p>
+            </div>
+          </div>
+        </>
       ) : (
         <></>
       )}
     </>
   );
-
 }
