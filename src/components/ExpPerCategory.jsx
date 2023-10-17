@@ -40,7 +40,9 @@ export default function ExpPerCategory({ User }) {
     }
 
     for (let j = 0; j < transPerCat.length; j++) {
-      gastos[transPerCat[j].categoryId - 1] = transPerCat[j]._sum.amount;
+      gastos[transPerCat[j].categoryId - 1] = Math.abs(
+        transPerCat[j]._sum.amount
+      );
     }
 
     setBarChartData({

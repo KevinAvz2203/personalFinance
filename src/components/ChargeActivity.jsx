@@ -13,7 +13,7 @@ export default function ChargeActivity({ Name, Date, Time, Category, Amount }) {
         {Category == "Income" ? (
           <div className="chargeAmount text-blue-600">${Amount} MXN</div>
         ) : (
-          <div className="chargeAmount text-red-600">- ${Amount} MXN</div>
+          <div className="chargeAmount text-red-600">${Amount} MXN</div>
         )}
       </div>
     </>

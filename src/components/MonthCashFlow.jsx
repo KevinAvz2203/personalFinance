@@ -70,7 +70,7 @@ export default function MonthCashFlow({ User }) {
       if (perDate[i].typeId == 1 && monthNum == month - 1) {
         incomes[dayOfWeekDigit] += perDate[i].amount;
       } else if (perDate[i].typeId == 2 && monthNum == month - 1) {
-        expenses[dayOfWeekDigit] += perDate[i].amount;
+        expenses[dayOfWeekDigit] += Math.abs(perDate[i].amount);
       }
     }
 

@@ -33,7 +33,7 @@ export async function getTotalBalance(id: number): Promise<Balance> {
   return data;
 }
 
-export async function getTotalPerCategory(id: number): Promise<Balance> {
+export async function getTotalPerCategory(id: number) {
   const res = await fetch(
     "http://localhost:3000/api/transactions/percategory/" + id
   );
