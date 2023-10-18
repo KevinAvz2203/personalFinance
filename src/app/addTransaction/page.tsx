@@ -3,9 +3,12 @@
 import { getCategories } from "@/Backend/Category";
 import { postTransaction } from "@/Backend/Transaction";
 import { getUserData } from "@/Backend/User";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function AddTransaction() {
+  const router = useRouter();
+
   const [transaction, setTransaction] = useState("Income");
   const [User, setUser] = useState(0);
   const [catNames, setCatNames] = useState<string[]>([]);
@@ -192,6 +195,7 @@ export default function AddTransaction() {
               <button
                 className="flex-shrink-0 border-transparent border-4 text-teal-500 hover:text-teal-800 text-sm py-1 px-2 rounded"
                 type="button"
+                onClick={() => router.back()}
               >
                 Cancel
               </button>

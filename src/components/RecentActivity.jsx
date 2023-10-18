@@ -7,6 +7,12 @@ import { getPerUser } from "@/Backend/Transaction";
 
 export default function RecentActivity({ User }) {
   const [userTransactions, setUserTransactions] = useState([]);
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
   let dates = [];
   let hours = [];
 
@@ -18,17 +24,16 @@ export default function RecentActivity({ User }) {
   useMemo(getUserTransactions, [User]);
 
   for (let i = 0; i < userTransactions.length; i++) {
-    let text = userTransactions[i].createdAt;
-    const newCreateAt = text?.split("T") || [];
-    const hourCreated = newCreateAt[1]?.split(".") || [];
-    userTransactions[i].createdAt = newCreateAt[0];
-    dates.push(newCreateAt[0]);
-    hours.push(hourCreated[0]);
+    const singleDate = userTransactions[i].createdAt;
+    var d = new Date(singleDate);
+
+    dates.push(d.toLocaleDateString(undefined, options));
+    hours.push(d.toLocaleTimeString("en-US"));
   }
 
   // Elimino los elementos duplicados del arreglo dates
   dates = dates.filter((value, index, array) => array.indexOf(value) === index);
-  let currDay = new Date().toJSON().slice(0, 10);
+  let currDay = new Date().toLocaleDateString(undefined, options);
 
   return (
     <>
@@ -41,18 +46,20 @@ export default function RecentActivity({ User }) {
         </div>
 
         {dates.map(
-          (fecha, index) =>
-            index < 3 && (
-              <div className="mb-10" key={index}>
+          (fecha, dtindex) =>
+            dtindex < 3 && (
+              <div className="mb-10" key={dtindex}>
                 {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
                 {userTransactions.map(
                   (transaction, transId) =>
-                    transId < 4 &&
-                    fecha == transaction.createdAt && (
+                    fecha ==
+                      new Date(transaction.createdAt).toLocaleDateString(
+                        undefined,
+                        options
+                      ) && (
                       <ChargeActivity
                         key={transaction.id}
                         Name={transaction.description}
-                        Date={transaction.createdAt}
                         Time={hours[transId]}
                         Category={transaction.category.name}
                         Amount={transaction.amount}

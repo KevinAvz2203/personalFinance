@@ -1,12 +1,10 @@
-export default function ChargeActivity({ Name, Date, Time, Category, Amount }) {
+export default function ChargeActivity({ Name, Time, Category, Amount }) {
   return (
     <>
       <div className="charge">
         <div className="chargeData">
           <p className="text-lg">{Name}</p>
-          <p className="text-xs">
-            {Date} at {Time}
-          </p>
+          <p className="text-xs">{Time}</p>
         </div>
 
         <div className="chargeCat">{Category}</div>

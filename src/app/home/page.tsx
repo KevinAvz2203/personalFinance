@@ -53,10 +53,10 @@ export default async function Home() {
           <RecentActivity User={userData.id} />
 
           {/* Componente grafica Curva summary Month */}
-          <SavingGoals />
+          <SavingGoals User={userData.id} />
 
           {/* Componente Calendario Month */}
-          <Card />
+          {/* <Card /> */}
         </section>
       </div>
     </>

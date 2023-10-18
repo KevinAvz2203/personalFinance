@@ -59,6 +59,11 @@ export async function getPerUser(id: number): Promise<Transaction> {
 }
 
 export async function postTransaction(transactionData: any) {
+  if (transactionData.typeId === 2) {
+    transactionData.typeId = 2;
+    transactionData.amount = transactionData.amount * -1;
+  }
+
   const res = await fetch("http://localhost:3000/api/transactions/", {
     method: "POST",
     body: JSON.stringify(transactionData),
