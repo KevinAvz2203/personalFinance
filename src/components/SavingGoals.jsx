@@ -2,10 +2,30 @@ import Image from "next/image";
 import optionDots from "/public/assets/icons/optionDots.png";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
+import { useState, useEffect } from "react";
+import { getUserGoals } from "@/Backend/Goal";
 
 Chart.register(ArcElement, Tooltip, Legend);
 
 export default function SavingGoals({ User }) {
+  const [userGoals, setUserGoals] = useState([]);
+  let favoriteGoals = [];
+
+  useEffect(() => {
+    async function getFavoriteGoalsProgress() {
+      const [existingGoals] = await Promise.all([getUserGoals(User)]);
+      setUserGoals(existingGoals);
+    }
+
+    getFavoriteGoalsProgress();
+  }, [User]);
+
+  for (let i = 0; i < userGoals.length; i++) {
+    if (userGoals[i].isFavorite === true && favoriteGoals.length < 4) {
+      favoriteGoals.push(userGoals[i]);
+    }
+  }
+
   return (
     <>
       <div className="savingGoals">
@@ -14,68 +34,67 @@ export default function SavingGoals({ User }) {
           <Image src={optionDots} alt="add charge icon" />
         </div>
 
-        <div className="grid grid-cols-2 gap-4"></div>
+        <div className="grid grid-cols-2 gap-4">
+          {favoriteGoals.map((goal, index) => (
+            <div key={index}>
+              <Doughnut
+                data={{
+                  labels: ["Saved", "Remaining"],
+                  datasets: [
+                    {
+                      data: [
+                        goal.currentAmount,
+                        goal.totalAmount - goal.currentAmount,
+                      ],
+                      backgroundColor: ["#336699", "#99CCFF"],
+                      display: true,
+                      borderColor: "#D1D6DC",
+                    },
+                  ],
+                }}
+                options={{
+                  plugins: {
+                    legend: {
+                      display: false,
+                    },
+                    tooltip: {
+                      enabled: true,
+                    },
+                  },
+                  elements: {
+                    center: {
+                      color: "#FF6384", // Default is #000000
+                      fontStyle: "Arial", // Default is Arial
+                      sidePadding: 20, // Default is 20 (as a percentage)
+                      minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
+                      lineHeight: 25, // Default is 25 (in px), used for when text wraps
+                    },
+                  },
+                  /* maintainAspectRatio: false,
+                  responsive: true, */
+                }}
+                plugins={[
+                  {
+                    id: "textCenter",
+                    beforeDatasetsDraw(chart, args, pluginOptions) {
+                      const { ctx, data } = chart;
 
-        <Doughnut
-          data={{
-            labels: ["Yes", "No"],
-            datasets: [
-              {
-                data: [300, 50],
-                backgroundColor: ["#FF6384", "#36A2EB"],
-                hoverBackgroundColor: ["#FF6384", "#36A2EB"],
-              },
-            ],
-          }}
-          options={{
-            elements: {
-              center: {
-                color: "#FF6384", // Default is #000000
-                fontStyle: "Arial", // Default is Arial
-                sidePadding: 20, // Default is 20 (as a percentage)
-                minFontSize: 25, // Default is 20 (in px), set to false and text will not wrap.
-                lineHeight: 25, // Default is 25 (in px), used for when text wraps
-              },
-            },
-          }}
-          plugins={[
-            {
-              id: "textCenter",
-              beforeDatasetsDraw(chart, args, pluginOptions) {
-                const { ctx, data } = chart;
-
-                ctx.save();
-                ctx.fillStyle = "black";
-                ctx.textAlign = "center";
-                ctx.textBaseLine = "middle";
-                ctx.fillText(
-                  "Viaje a Alemania",
-                  chart.getDatasetMeta(0).data[0].x,
-                  chart.getDatasetMeta(0).data[0].y
-                );
-              },
-            },
-          ]}
-        />
-
-        {/* <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Image src={goalPercentage} alt="goal % icon" />
-            <p className="text-center">PlayStation 5</p>
-          </div>
-          <div>
-            <Image src={goalPercentage} alt="goal % icon" />
-            <p className="text-center">PlayStation 5</p>
-          </div>
-          <div>
-            <Image src={goalPercentage} alt="goal % icon" />
-            <p className="text-center">PlayStation 5</p>
-          </div>
-          <div>
-            <Image src={goalPercentage} alt="goal % icon" />
-            <p className="text-center">PlayStation 5</p>
-          </div>
-        </div> */}
+                      ctx.save();
+                      ctx.fillStyle = "black";
+                      ctx.textAlign = "center";
+                      ctx.textBaseLine = "middle";
+                      ctx.fillText(
+                        goal.name,
+                        chart.getDatasetMeta(0).data[0].x,
+                        chart.getDatasetMeta(0).data[0].y
+                      );
+                    },
+                  },
+                ]}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </>
   );
