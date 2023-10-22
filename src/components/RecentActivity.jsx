@@ -45,30 +45,32 @@ export default function RecentActivity({ User }) {
           </Link>
         </div>
 
-        {dates.map(
-          (fecha, dtindex) =>
-            dtindex < 3 && (
-              <div className="mb-10" key={dtindex}>
-                {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
-                {userTransactions.map(
-                  (transaction, transId) =>
-                    fecha ==
-                      new Date(transaction.createdAt).toLocaleDateString(
-                        undefined,
-                        options
-                      ) && (
-                      <ChargeActivity
-                        key={transaction.id}
-                        Name={transaction.description}
-                        Time={hours[transId]}
-                        Category={transaction.category.name}
-                        Amount={transaction.amount}
-                      />
-                    )
-                )}
-              </div>
-            )
-        )}
+        <div className="scrollingClass">
+          {dates.map(
+            (fecha, dtindex) =>
+              dtindex < 3 && (
+                <div className="mb-10" key={dtindex}>
+                  {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
+                  {userTransactions.map(
+                    (transaction, transId) =>
+                      fecha ==
+                        new Date(transaction.createdAt).toLocaleDateString(
+                          undefined,
+                          options
+                        ) && (
+                        <ChargeActivity
+                          key={transaction.id}
+                          Name={transaction.description}
+                          Time={hours[transId]}
+                          Category={transaction.category.name}
+                          Amount={transaction.amount}
+                        />
+                      )
+                  )}
+                </div>
+              )
+          )}
+        </div>
       </div>
     </>
   );

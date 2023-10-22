@@ -34,9 +34,9 @@ export default function SavingGoals({ User }) {
           <Image src={optionDots} alt="add charge icon" />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-2">
           {favoriteGoals.map((goal, index) => (
-            <div key={index}>
+            <div key={index} className="testing">
               <Doughnut
                 data={{
                   labels: ["Saved", "Remaining"],
@@ -70,24 +70,32 @@ export default function SavingGoals({ User }) {
                       lineHeight: 25, // Default is 25 (in px), used for when text wraps
                     },
                   },
-                  /* maintainAspectRatio: false,
-                  responsive: true, */
+                  maintainAspectRatio: false,
+                  responsive: true,
                 }}
                 plugins={[
                   {
                     id: "textCenter",
                     beforeDatasetsDraw(chart, args, pluginOptions) {
                       const { ctx, data } = chart;
+                      const xCord = chart.getDatasetMeta(0).data[0].x;
+                      const yCord = chart.getDatasetMeta(0).data[0].y;
+
+                      const palabra = goal.name;
+                      const arrPalabra = palabra.split(" ");
 
                       ctx.save();
                       ctx.fillStyle = "black";
                       ctx.textAlign = "center";
                       ctx.textBaseLine = "middle";
-                      ctx.fillText(
-                        goal.name,
-                        chart.getDatasetMeta(0).data[0].x,
-                        chart.getDatasetMeta(0).data[0].y
-                      );
+
+                      /* EDITAAAAAAAAR */
+                      /* for (let i = 0; i < arrPalabra.length; i++) {
+                        ctx.fillText(arrPalabra[i], xCord, yCord + brincoLinea);
+                        brincoLinea += 5;
+                      } */
+
+                      ctx.fillText(goal.name, xCord, yCord);
                     },
                   },
                 ]}
