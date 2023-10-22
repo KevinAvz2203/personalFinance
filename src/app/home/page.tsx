@@ -1,7 +1,7 @@
 import TopCard from "@/components/TopCard";
 import TotalSavingCard from "@/components/TotalSavingCard";
-import RecentActivity from "@/components/RecentActivity";
 import MonthSummary from "@/components/MonthSummary";
+import RecentActivity from "@/components/RecentActivity";
 import MonthCashFlow from "@/components/MonthCashFlow";
 import SavingGoals from "@/components/SavingGoals";
 import { getUserData } from "@/Backend/User";
@@ -42,12 +42,12 @@ export default async function Home() {
           {/* <MonthSummary User={userData.id} /> */}
 
           {/* Componente grafica Curva summary Month */}
-          {/* <MonthCashFlow User={userData.id} /> */}
+          <MonthCashFlow User={userData.id} />
         </section>
 
         <section className="genSummary">
           {/* Componente grafica PIE summary Month */}
-          <RecentActivity User={userData.id} />
+          {/* <RecentActivity User={userData.id} /> */}
 
           {/* Componente grafica Curva summary Month */}
           {/* <SavingGoals User={userData.id} /> */}

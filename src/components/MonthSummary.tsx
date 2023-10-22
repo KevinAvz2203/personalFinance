@@ -1,3 +1,5 @@
+"use client";
+
 import { getCategories } from "@/Backend/Category";
 import { getTotalPerCategory } from "@/Backend/Transaction";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
@@ -6,15 +8,38 @@ import { Doughnut } from "react-chartjs-2";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-export default function MonthSummary({ User }) {
-  const [pieChartData, setPieChartData] = useState({ datasets: [] });
+type IncomeData = {
+  User: number;
+};
+
+interface PieChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor: string[];
+    borderColor: string[];
+    borderWidth: number;
+  }[];
+}
+
+type CategoryData = {
+  id: number;
+  name: string;
+};
+
+export default function MonthSummary({ User }: IncomeData) {
+  const [pieChartData, setPieChartData] = useState<PieChartData>({
+    labels: [],
+    datasets: [],
+  });
   const currMonth = new Date().toLocaleString([], { month: "long" });
 
   async function getCateMonthSummary() {
-    let categorias = [];
+    let categorias: string[] = [];
     let gastos = [0, 0, 0, 0, 0, 0];
 
-    const [cateNames] = await Promise.all([getCategories()]); // Categories Name
+    const [cateNames]: any[] = await Promise.all([getCategories()]);
     const [transPerCat] = await Promise.all([getTotalPerCategory(User)]);
 
     for (let i = 0; i < cateNames.length; i++) {
@@ -62,7 +87,7 @@ export default function MonthSummary({ User }) {
     <>
       <div className="monthGraphs">
         <h1 className="text-2xl p-2" suppressHydrationWarning={true}>
-          Expenses for {currMonth}
+          Expenses from {currMonth}
         </h1>
         <div className="w-full h-full">
           <Doughnut
