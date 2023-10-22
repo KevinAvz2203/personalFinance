@@ -9,6 +9,20 @@ type Balance = {
   typeId: number;
 };
 
+type TransactionsData = {
+  id: number;
+  description: string;
+  amount: number;
+  createdAt: Date;
+  userId: number;
+  categoryId: number;
+  typeId: number;
+  category: {
+    id: number;
+    name: string;
+  };
+};
+
 export async function getIncomes(id: number): Promise<Amount> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/incomes/" + id
@@ -25,11 +39,11 @@ export async function getExpenses(id: number): Promise<Amount> {
   return data;
 }
 
-export async function getTotalBalance(id: number): Promise<Balance> {
+export async function getTotalBalance(id: number): Promise<Amount> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/totalBalance/" + id
   );
-  const data: Balance = await res.json();
+  const data: Amount = await res.json();
   return data;
 }
 
@@ -50,7 +64,7 @@ export async function getPerDate(id: number): Promise<Balance> {
   return data;
 }
 
-export async function getPerUser(id: number): Promise<Transaction> {
+export async function getPerUser(id: number): Promise<TransactionsData> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/perUser/" + id
   );

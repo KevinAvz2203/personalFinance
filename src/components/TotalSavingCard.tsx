@@ -1,24 +1,13 @@
 import Image from "next/image";
 import totalSavingsIcon from "/public/assets/icons/totalSavingsIcon.png";
-import { useState, useMemo, useEffect } from "react";
 import { getTotalSavedGoals } from "@/Backend/Goal";
 
 type incomeData = {
   User: number;
 };
 
-export default function TotalSavingCard({ User }: incomeData) {
-  const [totalSaved, setTotalSaved] = useState(0);
-  const [totalGoal, setTotalGoal] = useState(0);
-
-  useEffect(() => {
-    async function getUserData() {
-      const [data] = await Promise.all([getTotalSavedGoals(User)]);
-      setTotalSaved(data.totalSaved);
-      setTotalGoal(data.totalGoalsAmount);
-    }
-    getUserData();
-  }, [User]);
+export default async function TotalSavingCard({ User }: incomeData) {
+  const data = await getTotalSavedGoals(User);
 
   return (
     <>
@@ -31,7 +20,7 @@ export default function TotalSavingCard({ User }: incomeData) {
         />
         <div>
           <p>
-            ${totalSaved || 0} of ${totalGoal || 0} MXN
+            ${data.totalSaved || 0} of ${data.totalGoalsAmount || 0} MXN
           </p>
           <p>Total Savings for Goals</p>
         </div>

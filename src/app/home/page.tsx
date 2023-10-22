@@ -1,16 +1,13 @@
-"use client";
-
 import TopCard from "@/components/TopCard";
 import TotalSavingCard from "@/components/TotalSavingCard";
 import RecentActivity from "@/components/RecentActivity";
 import MonthSummary from "@/components/MonthSummary";
 import MonthCashFlow from "@/components/MonthCashFlow";
 import SavingGoals from "@/components/SavingGoals";
-import Card from "@/components/Card";
 import { getUserData } from "@/Backend/User";
 
 export default async function Home() {
-  const [userData] = await Promise.all([getUserData(1)]);
+  const userData = await getUserData(1); // Editar ya que regresa toda la info
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const currYear = new Date().getFullYear();
 
@@ -42,10 +39,10 @@ export default async function Home() {
 
         <section className="genSummary">
           {/* Componente grafica PIE summary Month */}
-          <MonthSummary User={userData.id} />
+          {/* <MonthSummary User={userData.id} /> */}
 
           {/* Componente grafica Curva summary Month */}
-          <MonthCashFlow User={userData.id} />
+          {/* <MonthCashFlow User={userData.id} /> */}
         </section>
 
         <section className="genSummary">
@@ -53,10 +50,7 @@ export default async function Home() {
           <RecentActivity User={userData.id} />
 
           {/* Componente grafica Curva summary Month */}
-          <SavingGoals User={userData.id} />
-
-          {/* Componente Calendario Month */}
-          {/* <Card /> */}
+          {/* <SavingGoals User={userData.id} /> */}
         </section>
       </div>
     </>

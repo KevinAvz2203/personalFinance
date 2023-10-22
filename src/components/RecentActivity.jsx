@@ -1,8 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import ChargeActivity from "./ChargeActivity";
 import addChargeIcon from "/public/assets/icons/addChargeIcon.png";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { getPerUser } from "@/Backend/Transaction";
 
 export default function RecentActivity({ User }) {
@@ -16,12 +18,14 @@ export default function RecentActivity({ User }) {
   let dates = [];
   let hours = [];
 
-  async function getUserTransactions() {
-    const [userTrans] = await Promise.all([getPerUser(User)]);
-    setUserTransactions(userTrans);
-  }
+  useEffect(() => {
+    async function getUserTransactions() {
+      const userTrans = await getPerUser(User);
+      setUserTransactions(userTrans);
+    }
 
-  useMemo(getUserTransactions, [User]);
+    getUserTransactions();
+  }, [User]);
 
   for (let i = 0; i < userTransactions.length; i++) {
     const singleDate = userTransactions[i].createdAt;

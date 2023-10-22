@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import incomeIcon from "/public/assets/icons/incomeIcon.png";
 import expenseIcon from "/public/assets/icons/expenseIcon.png";
@@ -19,17 +21,17 @@ export default function TopCard({ User, cardType }: incomeData) {
 
   useEffect(() => {
     async function getUserIncomeData() {
-      const [data] = await Promise.all([getIncomes(User)]);
+      const data = await getIncomes(User);
       setTotal(data.amount);
     }
 
     async function getUserExpenseData() {
-      const [data] = await Promise.all([getExpenses(User)]);
+      const data = await getExpenses(User);
       setTotal(data.amount);
     }
 
     async function getUserBalanceData() {
-      const [data] = await Promise.all([getTotalBalance(User)]);
+      const data = await getTotalBalance(User);
       setTotal(data.amount);
     }
 
