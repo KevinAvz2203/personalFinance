@@ -29,7 +29,7 @@ export default function RecentActivity({ User }) {
 
   for (let i = 0; i < userTransactions.length; i++) {
     const singleDate = userTransactions[i].createdAt;
-    var d = new Date(singleDate);
+    const d = new Date(singleDate);
 
     dates.push(d.toLocaleDateString(undefined, options));
     hours.push(d.toLocaleTimeString("en-US"));

@@ -23,6 +23,12 @@ type TransactionsData = {
   };
 };
 
+type TransactionsByDate = {
+  createdAt: Date;
+  typeId: number;
+  amount: number;
+};
+
 export async function getIncomes(id: number): Promise<Amount> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/incomes/" + id
@@ -55,7 +61,7 @@ export async function getTotalPerCategory(id: number) {
   return data;
 }
 
-export async function getPerDate(id: number): Promise<Balance> {
+export async function getPerDate(id: number): Promise<TransactionsByDate> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/sumbydate/" + id
   );

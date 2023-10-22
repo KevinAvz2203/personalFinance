@@ -24,8 +24,25 @@ ChartJS.register(
   Legend
 );
 
-export default function MonthCashFlow({ User }) {
-  const [lineChartData, setLineChartData] = useState({ datasets: [] });
+type IncomeData = {
+  User: number;
+};
+
+interface LineChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    backgroundColor: string;
+    borderColor: string;
+  }[];
+}
+
+export default function MonthCashFlow({ User }: IncomeData) {
+  const [lineChartData, setLineChartData] = useState<LineChartData>({
+    labels: [],
+    datasets: [],
+  });
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const monthNum = new Date().getMonth();
 
@@ -37,7 +54,7 @@ export default function MonthCashFlow({ User }) {
       },
     },
     maintainAspectRatio: true,
-  };
+  } as const;
 
   async function getMonthCashflow() {
     let expenses = [0, 0, 0, 0, 0, 0, 0];
@@ -52,32 +69,30 @@ export default function MonthCashFlow({ User }) {
       "Saturday",
     ];
 
-    const [perDate] = await Promise.all([getPerDate(User)]);
+    const [perDate]: any[] = await Promise.all([getPerDate(User)]);
 
     for (let i = 0; i < perDate.length; i++) {
-      let text = perDate[i].createdAt;
-      const newCreateAt = text.split("T");
-      perDate[i].createdAt = newCreateAt[0];
-    }
+      const singleDate = perDate[i].createdAt;
+      const d = new Date(singleDate);
+      const dayOfWeekDigit: number = d.getDay();
+      const isCurrentMonth: boolean = monthNum == d.getMonth();
 
-    for (let i = 0; i < perDate.length; i++) {
-      let text = perDate[i].createdAt;
-      const newCreateAt = text.split("-");
-      const year = Number(newCreateAt[0]);
-      const month = Number(newCreateAt[1]);
-      const day = Number(newCreateAt[2]);
+      if (isCurrentMonth) {
+        const amountToAdd =
+          perDate[i].typeId == 1
+            ? perDate[i].amount
+            : Math.abs(perDate[i].amount);
 
-      const dayOfWeekDigit = new Date(year, month - 1, day).getDay();
-
-      if (perDate[i].typeId == 1 && monthNum == month - 1) {
-        incomes[dayOfWeekDigit] += perDate[i].amount;
-      } else if (perDate[i].typeId == 2 && monthNum == month - 1) {
-        expenses[dayOfWeekDigit] += Math.abs(perDate[i].amount);
+        if (perDate[i].typeId == 1) {
+          incomes[dayOfWeekDigit] += amountToAdd;
+        } else {
+          expenses[dayOfWeekDigit] += amountToAdd;
+        }
       }
     }
 
     setLineChartData({
-      labels,
+      labels: labels,
       datasets: [
         {
           label: "Incomes",
