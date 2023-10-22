@@ -14,11 +14,7 @@ type TransactionsData = {
   description: string;
   amount: number;
   createdAt: Date;
-  userId: number;
-  categoryId: number;
-  typeId: number;
   category: {
-    id: number;
     name: string;
   };
 };
@@ -74,7 +70,7 @@ export async function getPerUser(id: number): Promise<TransactionsData> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/perUser/" + id
   );
-  const data = await res.json();
+  const data: TransactionsData = await res.json();
   return data;
 }
 

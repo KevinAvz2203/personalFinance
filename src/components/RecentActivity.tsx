@@ -7,20 +7,37 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { getPerUser } from "@/Backend/Transaction";
 
-export default function RecentActivity({ User }) {
-  const [userTransactions, setUserTransactions] = useState([]);
+type IncomeData = {
+  User: number;
+};
+
+type TransactionsData = {
+  id: number;
+  description: string;
+  amount: number;
+  createdAt: Date;
+  category: {
+    name: string;
+  };
+};
+
+export default function RecentActivity({ User }: IncomeData) {
+  const [userTransactions, setUserTransactions] = useState<TransactionsData[]>(
+    []
+  );
   const options = {
     weekday: "long",
     year: "numeric",
     month: "long",
     day: "numeric",
-  };
-  let dates = [];
-  let hours = [];
+  } as const;
+  let dates: string[] = [];
+  let hours: string[] = [];
 
   useEffect(() => {
     async function getUserTransactions() {
-      const userTrans = await getPerUser(User);
+      const [userTrans]: any[] = await Promise.all([getPerUser(User)]);
+      console.log(userTrans);
       setUserTransactions(userTrans);
     }
 
