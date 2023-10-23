@@ -39,10 +39,10 @@ export default async function Home() {
 
         <section className="genSummary">
           {/* Componente grafica PIE summary Month */}
-          {/* <MonthSummary User={userData.id} /> */}
+          <MonthSummary User={userData.id} />
 
           {/* Componente grafica Curva summary Month */}
-          {/* <MonthCashFlow User={userData.id} /> */}
+          <MonthCashFlow User={userData.id} />
         </section>
 
         <section className="genSummary">
@@ -50,7 +50,7 @@ export default async function Home() {
           <RecentActivity User={userData.id} />
 
           {/* Componente grafica Curva summary Month */}
-          {/* <SavingGoals User={userData.id} /> */}
+          <SavingGoals User={userData.id} />
         </section>
       </div>
     </>

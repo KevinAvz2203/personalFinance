@@ -37,7 +37,6 @@ export default function RecentActivity({ User }: IncomeData) {
   useEffect(() => {
     async function getUserTransactions() {
       const [userTrans]: any[] = await Promise.all([getPerUser(User)]);
-      console.log(userTrans);
       setUserTransactions(userTrans);
     }
 
