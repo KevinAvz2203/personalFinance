@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useMemo } from "react";
 import { Bar } from "react-chartjs-2";
 import { getCategories } from "@/Backend/Category";

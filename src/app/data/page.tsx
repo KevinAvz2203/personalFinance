@@ -1,5 +1,3 @@
-"use client";
-
 import ActivityHistory from "@/components/ActivityHistory";
 import ExpPerCategory from "@/components/ExpPerCategory";
 import ExpectedExpPerCategory from "@/components/ExpectedExpPerCategory";

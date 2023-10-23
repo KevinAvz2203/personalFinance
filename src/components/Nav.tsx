@@ -49,12 +49,7 @@ export default function Nav() {
           </li>
         </ul>
         <div className="modeSwitch">
-          <Image
-            src={darkLightIcon}
-            alt="Home Icon"
-            width="auto"
-            height="auto"
-          />
+          <Image src={darkLightIcon} alt="Home Icon" width="50" height="50" />
         </div>
       </aside>
     </>
