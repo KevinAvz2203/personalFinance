@@ -23,15 +23,32 @@ ChartJS.register(
   Legend
 );
 
-export default function ExpPerCategory({ User }) {
-  const [barChartData, setBarChartData] = useState({ datasets: [] });
+type IncomeData = {
+  User: number;
+};
+
+interface BarChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+    borderColor: string;
+    backgroundColor: string;
+  }[];
+}
+
+export default function ExpPerCategory({ User }: IncomeData) {
+  const [barChartData, setBarChartData] = useState<BarChartData>({
+    labels: [],
+    datasets: [],
+  });
   const currMonth = new Date().toLocaleString([], { month: "long" });
 
   async function getCateMonthSummary() {
     let categorias = [];
     let gastos = [0, 0, 0, 0, 0, 0];
 
-    const [cateNames] = await Promise.all([getCategories()]); // Categories Name
+    const [cateNames]: any[] = await Promise.all([getCategories()]); // Categories Name
     const [transPerCat] = await Promise.all([getTotalPerCategory(User)]);
 
     for (let i = 0; i < cateNames.length; i++) {
@@ -68,7 +85,6 @@ export default function ExpPerCategory({ User }) {
         <h1 className="text-2xl p-2" suppressHydrationWarning={true}>
           Expenses per Categories for {currMonth}
         </h1>
-        {/* <div className="flex justify-center"> */}
         <div className="w-full h-full">
           <Bar
             options={{
