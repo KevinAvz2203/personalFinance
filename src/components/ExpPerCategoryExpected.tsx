@@ -1,7 +1,7 @@
 import Image from "next/image";
 import catMonthly from "/public/assets/images/catMonthly.png";
 
-export default function ExpectedExpPerCategory() {
+export default function ExpPerCategoryExpected() {
   return (
     <>
       <div className="catPerMonth">

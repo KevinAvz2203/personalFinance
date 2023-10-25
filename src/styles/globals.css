@@ -132,24 +132,15 @@ header h3 {
   color: rgb(55 65 81);
 }
 
-/* DATA Page */
-.dataGraphs {
-  align-content: center;
-  width: 50%;
-}
-
-.dataActivity {
-  display: flex;
-  justify-content: center;
-  width: 50%;
-}
-
+/* ================================ */
+/* ExpPerCategories */
 .catPerMonth {
   border-radius: 10px;
   background-color: #d9d9d9;
   margin-top: 1rem;
   padding-bottom: 1rem;
 }
+/* ================================ */
 
 /* Main Goals */
 .mainGoals {

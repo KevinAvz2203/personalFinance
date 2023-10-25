@@ -1,7 +1,8 @@
 import ExpPerCategory from "@/components/ExpPerCategory";
-import ExpectedExpPerCategory from "@/components/ExpectedExpPerCategory";
+import ExpPerCategoryExpected from "@/components/ExpPerCategoryExpected";
 import HistoricActivity from "@/components/HistoricActivity";
 import { getUserData } from "@/Backend/User";
+import styles from "./data.module.css";
 
 export default async function Data() {
   const [userData] = await Promise.all([getUserData(1)]);
@@ -19,12 +20,12 @@ export default async function Data() {
         </header>
 
         <div className="flex">
-          <div className="dataGraphs">
+          <div className={styles.dataGraphs}>
             <ExpPerCategory User={userData.id} />
 
-            <ExpectedExpPerCategory />
+            <ExpPerCategoryExpected />
           </div>
-          <div className="dataActivity">
+          <div className={styles.dataActivity}>
             <HistoricActivity User={userData.id} HistoryType={1} />
           </div>
         </div>
