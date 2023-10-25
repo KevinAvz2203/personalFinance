@@ -1,11 +1,14 @@
+import styles from "./Skeleton.module.css";
+import TopCardStyles from "./TopCard.module.css";
+
 export default function SkeletonTopCard() {
   return (
     <>
-      <div className="topCards bg-slate-300">
-        <span className="skeletonTopCards-img skeleton"></span>
+      <div className={`${TopCardStyles.topCards} bg-slate-300`}>
+        <span className={(styles.skeletonTopCards_img, styles.skeleton)}></span>
         <div>
-          <div className="skeleton skeleton-text"></div>
-          <div className="skeleton skeleton-text"></div>
+          <div className={(styles.skeleton, styles.skeleton_text)}></div>
+          <div className={(styles.skeleton, styles.skeleton_text)}></div>
         </div>
       </div>
     </>
