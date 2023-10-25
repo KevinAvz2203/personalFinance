@@ -1,5 +1,3 @@
-"use client";
-
 import MainGoals from "@/components/MainGoals";
 import GoalsTable from "@/components/GoalsTable";
 import TotalSavingCard from "@/components/TotalSavingCard";

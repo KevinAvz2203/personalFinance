@@ -40,7 +40,7 @@ export async function getUserFavoriteGoals(id: number): Promise<FavoriteGoals> {
   const res = await fetch(
     "http://localhost:3000/api/goals/users/favorites/" + id
   );
-  const data = await res.json();
+  const data: FavoriteGoals = await res.json();
   return data;
 }
 

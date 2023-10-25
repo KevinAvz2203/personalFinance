@@ -1,34 +1,42 @@
+"use client";
+
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
 import { useState, useEffect } from "react";
-import { getUserGoals } from "@/Backend/Goal";
+import { getUserFavoriteGoals } from "@/Backend/Goal";
 
 Chart.register(ArcElement, Tooltip, Legend);
 
-export default function MainGoals({ User }) {
-  const [userGoals, setUserGoals] = useState([]);
-  let favoriteGoals = [];
+type IncomeData = {
+  User: number;
+};
+
+type FavoriteGoals = {
+  id: number;
+  name: string;
+  totalAmount: number;
+  currentAmount: number;
+};
+
+export default function MainGoals({ User }: IncomeData) {
+  const [userGoals, setUserGoals] = useState<FavoriteGoals[]>([]);
 
   useEffect(() => {
-    async function getSemiChartData() {
-      const [existingGoals] = await Promise.all([getUserGoals(User)]);
+    async function getFavoriteGoalsProgress() {
+      const [existingGoals]: any[] = await Promise.all([
+        getUserFavoriteGoals(User),
+      ]);
       setUserGoals(existingGoals);
     }
 
-    getSemiChartData();
+    getFavoriteGoalsProgress();
   }, [User]);
-
-  for (let i = 0; i < userGoals.length; i++) {
-    if (userGoals[i].isFavorite === true && favoriteGoals.length < 4) {
-      favoriteGoals.push(userGoals[i]);
-    }
-  }
 
   return (
     <>
       <div className="mainGoals">
-        {favoriteGoals.map((goal, index) => (
-          <div key={index}>
+        {userGoals.map((goal) => (
+          <div key={goal.id}>
             <Doughnut
               className=""
               data={{
@@ -40,7 +48,6 @@ export default function MainGoals({ User }) {
                       goal.totalAmount - goal.currentAmount,
                     ],
                     backgroundColor: ["#336699", "#99CCFF"],
-                    display: true,
                     borderColor: "#D1D6DC",
                   },
                 ],

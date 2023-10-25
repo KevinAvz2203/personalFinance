@@ -1,16 +1,34 @@
+"use client";
+
 import { getUserGoals } from "@/Backend/Goal";
 import ProgressBar from "@/components/ProgressBar";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-export default function GoalsTable({ User }) {
-  const [userGoals, setUserGoals] = useState([]);
+type IncomeData = {
+  User: number;
+};
+
+interface GoalData {
+  id: number;
+  name: string;
+  totalAmount: number;
+  currentAmount: number | null;
+  isComplete: boolean;
+  isFavorite: boolean | null;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: number;
+}
+
+export default function GoalsTable({ User }: IncomeData) {
+  const [userGoals, setUserGoals] = useState<GoalData[]>([]);
   const maxFavorites = 4;
   let activeFavotires = 0;
 
   useEffect(() => {
     async function getSingleUserGoals() {
-      const [existingGoals] = await Promise.all([getUserGoals(User)]);
+      const [existingGoals]: any[] = await Promise.all([getUserGoals(User)]);
       setUserGoals(existingGoals);
     }
 
@@ -53,7 +71,6 @@ export default function GoalsTable({ User }) {
                 </div>
               )
           )}
-
           <p>
             Active Favorites: {activeFavotires}/{maxFavorites}
           </p>

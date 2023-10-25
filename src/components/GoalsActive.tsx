@@ -3,13 +3,29 @@
 import { useState, useEffect } from "react";
 import { getUserGoals } from "@/Backend/Goal";
 
-export default function GoalsActive({ User }) {
-  const [userGoals, setUserGoals] = useState([]);
+type IncomeData = {
+  User: number;
+};
+
+interface UserGoals {
+  id: number;
+  name: string;
+  totalAmount: number;
+  currentAmount: number | null;
+  isComplete: boolean;
+  isFavorite: boolean | null;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: number;
+}
+
+export default function GoalsActive({ User }: IncomeData) {
+  const [userGoals, setUserGoals] = useState<UserGoals[]>([]);
   let activeGoals = 0;
 
   useEffect(() => {
     async function getCompletedGoals() {
-      const [existingGoals] = await Promise.all([getUserGoals(User)]);
+      const [existingGoals]: any[] = await Promise.all([getUserGoals(User)]);
       setUserGoals(existingGoals);
     }
 
