@@ -1,6 +1,8 @@
-export default function ProgressBar(props) {
-  const { completed } = props;
+type IncomeData = {
+  completed: string;
+};
 
+export default function ProgressBar({ completed }: IncomeData) {
   const fillerStyles = {
     width: `${completed}%`,
   };

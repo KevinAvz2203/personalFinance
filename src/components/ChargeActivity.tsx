@@ -1,4 +1,16 @@
-export default function ChargeActivity({ Name, Time, Category, Amount }) {
+type ChargeData = {
+  Name: string;
+  Time: string;
+  Category: string;
+  Amount: number;
+};
+
+export default function ChargeActivity({
+  Name,
+  Time,
+  Category,
+  Amount,
+}: ChargeData) {
   return (
     <>
       <div className="charge">
