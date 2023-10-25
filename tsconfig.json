@@ -23,6 +23,17 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/Nav.tsx", "src/components/SkeletonMiddleCard.tsx", "src/components/SkeletonTopCard.tsx", "src/components/MonthCashFlow.tsx", "src/components/GoalsTable.tsx", "src/components/RecentActivity.tsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/components/Nav.tsx",
+    "src/components/SkeletonMiddleCard.tsx",
+    "src/components/SkeletonTopCard.tsx",
+    "src/components/MonthCashFlow.tsx",
+    "src/components/GoalsTable.tsx",
+    "src/components/HistoricActivity.tsx"
+  ],
   "exclude": ["node_modules"]
 }

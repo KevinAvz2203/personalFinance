@@ -10,6 +10,7 @@ import {
   getExpenses,
   getTotalBalance,
 } from "@/Backend/Transaction";
+import styles from "./TopCard.module.css";
 
 type incomeData = {
   User: number;
@@ -54,7 +55,7 @@ export default function TopCard({ User, cardType }: incomeData) {
     <>
       {cardType == 0 ? (
         <>
-          <div className="topCards bg-red-300	">
+          <div className={`${styles.topCards} bg-red-300`}>
             <Image src={incomeIcon} alt="Income Icon" width={50} height={50} />
             <div>
               <p>${total | 0} MXN</p>
@@ -67,7 +68,7 @@ export default function TopCard({ User, cardType }: incomeData) {
       )}
       {cardType == 1 ? (
         <>
-          <div className="topCards bg-neutral-300	">
+          <div className={`${styles.topCards} bg-neutral-300	`}>
             <Image
               src={expenseIcon}
               alt="Expense Icon"
@@ -85,7 +86,7 @@ export default function TopCard({ User, cardType }: incomeData) {
       )}
       {cardType == 2 ? (
         <>
-          <div className="topCards bg-orange-300	">
+          <div className={`${styles.topCards} bg-orange-300`}>
             <Image
               src={totalBalanceIcon}
               alt="T Balance Icon"

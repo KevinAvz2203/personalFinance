@@ -1,0 +1,25 @@
+.recentAct {
+  background-color: #8095a8;
+  width: 33%; /* 40% era lo original */
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+
+.scrollingClass {
+  height: 50vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollingClass::-webkit-scrollbar {
+  display: none;
+}
+
+.actHistory {
+  border-radius: 10px;
+  background-color: #efefef;
+  width: 95%;
+  height: 100%;
+  padding: 0.5rem;
+}

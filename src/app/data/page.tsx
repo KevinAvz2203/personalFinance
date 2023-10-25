@@ -1,6 +1,6 @@
-import ActivityHistory from "@/components/ActivityHistory";
 import ExpPerCategory from "@/components/ExpPerCategory";
 import ExpectedExpPerCategory from "@/components/ExpectedExpPerCategory";
+import HistoricActivity from "@/components/HistoricActivity";
 import { getUserData } from "@/Backend/User";
 
 export default async function Data() {
@@ -25,7 +25,7 @@ export default async function Data() {
             <ExpectedExpPerCategory />
           </div>
           <div className="dataActivity">
-            <ActivityHistory User={userData.id} />
+            <HistoricActivity User={userData.id} HistoryType={1} />
           </div>
         </div>
       </div>

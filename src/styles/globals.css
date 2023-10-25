@@ -106,39 +106,8 @@ header h3 {
   }
 }
 
-/* ============================================== */
-
-/* Home Page Top Cards */
-.topCards {
-  display: flex;
-  align-items: center;
-  width: 22%;
-  height: 6rem; /* Tal vez quitar esta */
-  padding: 0 1.5%;
-  border-radius: 10px;
-}
-
-.topCards div {
-  padding-left: 1rem;
-}
-
-.topCards div p {
-  font-size: large;
-}
-
-.topCards div p:last-child {
-  font-size: 0.75rem;
-}
-
 /* ================================ */
-
-/* Testing */
-.genSummary {
-  display: flex;
-  padding-top: 2rem;
-  justify-content: space-between;
-}
-
+/* MonthSummary Component */
 .monthGraphs {
   background-color: #f9f9f9;
   width: 32%;
@@ -146,12 +115,14 @@ header h3 {
   border-radius: 10px;
 }
 
+/* CashFlow Component */
 .cashFlow {
   background-color: #f9f9f9;
   width: 65%;
   height: auto;
   border-radius: 10px;
 }
+/* ================================ */
 
 .incExp {
   display: grid;
@@ -159,34 +130,10 @@ header h3 {
   padding: 1rem;
 }
 /* ================================ */
-
-/* Tercera fila pagina Home */
-.recentAct {
-  background-color: #8095a8;
-  width: 33%; /* 40% era lo original */
-  padding: 0.5rem;
-  border-radius: 10px;
-}
-
-.scrollingClass {
-  height: 50vh;
-  overflow-y: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.scrollingClass::-webkit-scrollbar {
-  display: none;
-}
-
+/* SavingGoals Component */
 .savingGoals {
   background-color: #8095a8;
   border-radius: 10px;
-  padding: 0.5rem;
-}
-
-.creditCard {
-  background-color: #8095a8;
   padding: 0.5rem;
 }
 /* ================================ */
@@ -262,14 +209,6 @@ header h3 {
   display: flex;
   justify-content: center;
   width: 50%;
-}
-
-.actHistory {
-  border-radius: 10px;
-  background-color: #efefef;
-  width: 95%;
-  height: 100%;
-  padding: 0.5rem;
 }
 
 .catPerMonth {

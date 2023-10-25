@@ -1,10 +1,11 @@
 import TopCard from "@/components/TopCard";
 import TotalSavingCard from "@/components/TotalSavingCard";
 import MonthSummary from "@/components/MonthSummary";
-import RecentActivity from "@/components/RecentActivity";
+import HistoricActivity from "@/components/HistoricActivity";
 import MonthCashFlow from "@/components/MonthCashFlow";
 import SavingGoals from "@/components/SavingGoals";
 import { getUserData } from "@/Backend/User";
+import styles from "./home.module.css";
 
 export default async function Home() {
   const userData = await getUserData(1); // Editar ya que regresa toda la info
@@ -23,7 +24,7 @@ export default async function Home() {
       </header>
 
       <div>
-        <section className="genSummary">
+        <section className={styles.genSummary}>
           {/* Incomes Card */}
           <TopCard User={userData.id} cardType={0} />
 
@@ -37,7 +38,7 @@ export default async function Home() {
           <TotalSavingCard User={userData.id} />
         </section>
 
-        <section className="genSummary">
+        <section className={styles.genSummary}>
           {/* Componente grafica PIE summary Month */}
           <MonthSummary User={userData.id} />
 
@@ -45,9 +46,9 @@ export default async function Home() {
           <MonthCashFlow User={userData.id} />
         </section>
 
-        <section className="genSummary">
+        <section className={styles.genSummary}>
           {/* Componente grafica PIE summary Month */}
-          <RecentActivity User={userData.id} />
+          <HistoricActivity User={userData.id} HistoryType={0} />
 
           {/* Componente grafica Curva summary Month */}
           <SavingGoals User={userData.id} />
