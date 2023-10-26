@@ -1,3 +1,5 @@
+import styles from "./ChargeActivity.module.css";
+
 type ChargeData = {
   Name: string;
   Time: string;
@@ -13,17 +15,21 @@ export default function ChargeActivity({
 }: ChargeData) {
   return (
     <>
-      <div className="charge">
-        <div className="chargeData">
+      <div className={styles.charge}>
+        <div className={styles.chargeData}>
           <p className="text-lg">{Name}</p>
           <p className="text-xs">{Time}</p>
         </div>
 
-        <div className="chargeCat">{Category}</div>
+        <div className={styles.chargeCat}>{Category}</div>
         {Category == "Income" ? (
-          <div className="chargeAmount text-blue-600">${Amount} MXN</div>
+          <div className={`${styles.chargeAmount} text-blue-600`}>
+            ${Amount} MXN
+          </div>
         ) : (
-          <div className="chargeAmount text-red-600">${Amount} MXN</div>
+          <div className={`${styles.chargeAmount} text-red-600`}>
+            ${Amount} MXN
+          </div>
         )}
       </div>
     </>

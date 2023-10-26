@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { Line } from "react-chartjs-2";
 import { getPerDate } from "@/Backend/Transaction";
+import styles from "./Month.module.css";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -114,7 +115,7 @@ export default function MonthCashFlow({ User }: IncomeData) {
 
   return (
     <>
-      <div className="cashFlow">
+      <div className={styles.cashFlow}>
         <h1 className="text-2xl p-2" suppressHydrationWarning={true}>
           My Cashflow of {currMonth}
         </h1>

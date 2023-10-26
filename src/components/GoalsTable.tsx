@@ -4,6 +4,7 @@ import { getUserGoals } from "@/Backend/Goal";
 import ProgressBar from "@/components/ProgressBar";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import styles from "./Goals.module.css";
 
 type IncomeData = {
   User: number;
@@ -43,13 +44,13 @@ export default function GoalsTable({ User }: IncomeData) {
 
   return (
     <>
-      <div className="tableBox">
-        <div className="goalsTable pt-4">
+      <div className={styles.tableBox}>
+        <div className={styles.goalsTable}>
           {userGoals.map(
             (goal) =>
               goal.isComplete == false && (
-                <div className="goalInstance" key={goal.id}>
-                  <div className="goalTitle">
+                <div className={styles.goalInstance} key={goal.id}>
+                  <div className={styles.goalTitle}>
                     <p>
                       {goal.name}{" "}
                       <Link href={"/addGoal/" + goal.id}>

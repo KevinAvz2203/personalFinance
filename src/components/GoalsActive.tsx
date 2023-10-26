@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getUserGoals } from "@/Backend/Goal";
+import styles from "./TopCard.module.css";
 
 type IncomeData = {
   User: number;
@@ -40,7 +41,7 @@ export default function GoalsActive({ User }: IncomeData) {
 
   return (
     <>
-      <div className="topCards bg-amber-300	">
+      <div className={`${styles.topCards} bg-amber-300`}>
         <div>
           <p>Active Goals: {activeGoals}</p>
           <p></p>

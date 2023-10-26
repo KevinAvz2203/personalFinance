@@ -1,0 +1,15 @@
+/* MonthSummary Component */
+.monthGraphs {
+  background-color: #f9f9f9;
+  width: 35%;
+  height: auto;
+  border-radius: 10px;
+}
+
+/* CashFlow Component */
+.cashFlow {
+  background-color: #f9f9f9;
+  width: 62%;
+  height: auto;
+  border-radius: 10px;
+}

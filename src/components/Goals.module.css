@@ -1,0 +1,21 @@
+.tableBox {
+  display: flex;
+  justify-content: center;
+  background-color: #8095a8;
+  border-radius: 10px;
+  width: 95%;
+}
+
+.goalsTable {
+  width: inherit;
+  padding-top: 1rem;
+}
+
+.goalInstance {
+  padding-bottom: 2rem;
+}
+
+.goalTitle {
+  display: flex;
+  justify-content: space-between;
+}

@@ -44,7 +44,7 @@ export default function SavingGoals({ User }: IncomeData) {
 
         <div className="grid grid-cols-2 gap-2">
           {userGoals.map((goal) => (
-            <div key={goal.id} className="testing">
+            <div key={goal.id} className="">
               <Doughnut
                 data={{
                   labels: ["Saved", "Remaining"],

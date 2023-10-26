@@ -5,6 +5,7 @@ import { getTotalPerCategory } from "@/Backend/Transaction";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useState, useMemo } from "react";
 import { Doughnut } from "react-chartjs-2";
+import styles from "./Month.module.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -85,7 +86,7 @@ export default function MonthSummary({ User }: IncomeData) {
 
   return (
     <>
-      <div className="monthGraphs">
+      <div className={styles.monthGraphs}>
         <h1 className="text-2xl p-2" suppressHydrationWarning={true}>
           Expenses from {currMonth}
         </h1>

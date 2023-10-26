@@ -1,0 +1,28 @@
+.megaBG {
+  background-color: #8095a8;
+  border-width: 1px;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  z-index: 40;
+  width: 8rem;
+  height: 100vh;
+}
+
+.navLink {
+  border: 1px solid white;
+  display: grid;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  justify-content: center;
+  color: white;
+}
+
+.navLink:hover {
+  background-color: rgb(55 65 81);
+}
+
+.modeSwitch {
+  position: absolute;
+  bottom: 0;
+}

@@ -1,0 +1,21 @@
+.charge {
+  padding: 0 0.5rem;
+  margin-bottom: 0.5rem;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.chargeData {
+  width: 40%;
+}
+
+.chargeCat {
+  width: 20%;
+}
+
+.chargeAmount {
+  width: 40%;
+  text-align: right;
+}

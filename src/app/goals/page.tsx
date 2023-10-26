@@ -20,7 +20,7 @@ export default async function Goals() {
         </h3>
       </header>
 
-      <div className="recuadro">
+      <div className="MainGoalsArea">
         <MainGoals User={userData.id} />
       </div>
 

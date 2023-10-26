@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { getUserGoals } from "@/Backend/Goal";
+import styles from "./TopCard.module.css";
 
 export default function GoalsCompleted({ User }) {
   const [userGoals, setUserGoals] = useState([]);
@@ -24,7 +25,7 @@ export default function GoalsCompleted({ User }) {
 
   return (
     <>
-      <div className="topCards bg-amber-300	">
+      <div className={`${styles.topCards} bg-amber-300`}>
         <div>
           <p>Completed Goals: {completedGoals}</p>
           <p></p>

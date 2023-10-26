@@ -4,6 +4,7 @@ import { postGoal } from "@/Backend/Goal";
 import { getUserData } from "@/Backend/User";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import styles from "@/components/addTransGoal.module.css";
 
 export default function AddGoal() {
   const router = useRouter();
@@ -61,8 +62,8 @@ export default function AddGoal() {
 
   return (
     <>
-      <div className="addTransClass">
-        <div className="addTransaction">
+      <div className={styles.addTransClass}>
+        <div className={styles.addTransaction}>
           <header>
             <h1>Setting a New Goal!</h1>
           </header>
@@ -70,12 +71,15 @@ export default function AddGoal() {
           <form onSubmit={handleSubmit} className="p-2">
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label className="labelForm text-gray-700" htmlFor="name">
+                <label
+                  className={`${styles.labelForm} text-gray-700`}
+                  htmlFor="name"
+                >
                   Goal Name
                 </label>
                 <input
                   required={true}
-                  className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
+                  className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
                   id="name"
                   name="name"
                   type="text"
@@ -87,14 +91,14 @@ export default function AddGoal() {
 
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
-                  className="labelForm text-gray-700"
+                  className={`${styles.labelForm} text-gray-700`}
                   htmlFor="totalAmount"
                 >
                   Total Goal Amount
                 </label>
                 <input
                   required={true}
-                  className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
+                  className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
                   id="totalAmount"
                   name="totalAmount"
                   type="number"
@@ -106,13 +110,13 @@ export default function AddGoal() {
 
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
-                  className="labelForm text-gray-700"
+                  className={`${styles.labelForm} text-gray-700`}
                   htmlFor="currentAmount"
                 >
                   Current Saved Amount
                 </label>
                 <input
-                  className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
+                  className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
                   id="currentAmount"
                   name="currentAmount"
                   type="number"
@@ -124,7 +128,10 @@ export default function AddGoal() {
 
               {/* Editar este label porque no funciona como quiero */}
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                <label className="labelForm text-gray-700" htmlFor="favorite">
+                <label
+                  className={`${styles.labelForm} text-gray-700`}
+                  htmlFor="favorite"
+                >
                   Favorite Goal
                 </label>
                 <label className="relative inline-flex items-center mr-5 cursor-pointer">

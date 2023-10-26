@@ -5,6 +5,7 @@ import { postTransaction } from "@/Backend/Transaction";
 import { getUserData } from "@/Backend/User";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import styles from "@/components/addTransGoal.module.css";
 
 export default function AddTransaction() {
   const router = useRouter();
@@ -84,8 +85,8 @@ export default function AddTransaction() {
 
   return (
     <>
-      <div className="addTransClass">
-        <div className="addTransaction">
+      <div className={styles.addTransClass}>
+        <div className={styles.addTransaction}>
           <header>
             <h1>Add a new transaction</h1>
           </header>
@@ -126,7 +127,7 @@ export default function AddTransaction() {
                 </label>
                 <input
                   required={true}
-                  className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
+                  className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
                   id="description"
                   name="description"
                   type="text"
@@ -141,7 +142,7 @@ export default function AddTransaction() {
                 </label>
                 <input
                   required={true}
-                  className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
+                  className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
                   id="amount"
                   name="amount"
                   type="number"
@@ -162,7 +163,7 @@ export default function AddTransaction() {
                     required={true}
                     name="categoryId"
                     id="categoryId"
-                    className="inputForm focus:outline-none focus:bg-white focus:border-gray-500"
+                    className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
                     value={formData.categoryId}
                     onChange={handleInputChange}
                   >
