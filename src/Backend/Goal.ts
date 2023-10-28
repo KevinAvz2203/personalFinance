@@ -13,7 +13,7 @@ type FavoriteGoals = {
 };
 
 export async function getTotalSavedGoals(id: number): Promise<userSumGoals> {
-  const res = await fetch("http://localhost:3000/api/goals/userSummary/" + id);
+  const res = await fetch("http://localhost:3000/api/goals/user/summary/" + id);
   const data = await res.json();
   return data;
 }
@@ -31,14 +31,14 @@ export async function postGoal(goalData: any, isFavorite: Boolean) {
 }
 
 export async function getUserGoals(id: number): Promise<Goal> {
-  const res = await fetch("http://localhost:3000/api/goals/users/" + id);
+  const res = await fetch("http://localhost:3000/api/goals/user/" + id);
   const data = await res.json();
   return data;
 }
 
 export async function getUserFavoriteGoals(id: number): Promise<FavoriteGoals> {
   const res = await fetch(
-    "http://localhost:3000/api/goals/users/favorites/" + id
+    "http://localhost:3000/api/goals/user/favorites/" + id
   );
   const data: FavoriteGoals = await res.json();
   return data;
