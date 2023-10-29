@@ -38,7 +38,7 @@ export default function MonthSummary({ User }: IncomeData) {
 
   async function getCateMonthSummary() {
     let categorias: string[] = [];
-    let gastos = [0, 0, 0, 0, 0, 0];
+    let gastos: number[] = [];
 
     const [cateNames]: any[] = await Promise.all([getCategories()]);
     const [transPerCat] = await Promise.all([getTotalPerCategory(User)]);
@@ -51,7 +51,7 @@ export default function MonthSummary({ User }: IncomeData) {
     }
 
     for (let j = 0; j < transPerCat.length; j++) {
-      gastos[transPerCat[j].categoryId - 1] = transPerCat[j]._sum.amount;
+      gastos.push(transPerCat[j]._sum.amount);
     }
 
     setPieChartData({

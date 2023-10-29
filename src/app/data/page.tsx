@@ -23,7 +23,7 @@ export default async function Data() {
           <div className={styles.dataGraphs}>
             <ExpPerCategory User={userData.id} />
 
-            <ExpPerCategoryExpected />
+            <ExpPerCategoryExpected User={userData.id} />
           </div>
           <div className={styles.dataActivity}>
             <HistoricActivity User={userData.id} HistoryType={1} />

@@ -46,7 +46,7 @@ export default function ExpPerCategory({ User }: IncomeData) {
 
   async function getCateMonthSummary() {
     let categorias = [];
-    let gastos = [0, 0, 0, 0, 0, 0];
+    let gastos: number[] = [];
 
     const [cateNames]: any[] = await Promise.all([getCategories()]); // Categories Name
     const [transPerCat] = await Promise.all([getTotalPerCategory(User)]);
@@ -59,9 +59,7 @@ export default function ExpPerCategory({ User }: IncomeData) {
     }
 
     for (let j = 0; j < transPerCat.length; j++) {
-      gastos[transPerCat[j].categoryId - 1] = Math.abs(
-        transPerCat[j]._sum.amount
-      );
+      gastos.push(Math.abs(transPerCat[j]._sum.amount));
     }
 
     setBarChartData({

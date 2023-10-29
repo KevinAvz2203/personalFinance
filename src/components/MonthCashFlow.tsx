@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import { getPerDate } from "@/Backend/Transaction";
 import styles from "./Month.module.css";
@@ -57,61 +57,63 @@ export default function MonthCashFlow({ User }: IncomeData) {
     maintainAspectRatio: true,
   } as const;
 
-  async function getMonthCashflow() {
-    let expenses = [0, 0, 0, 0, 0, 0, 0];
-    let incomes = [0, 0, 0, 0, 0, 0, 0];
-    const labels = [
-      "Sunday",
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-    ];
+  useEffect(() => {
+    async function getMonthCashflow() {
+      let expenses = [0, 0, 0, 0, 0, 0, 0];
+      let incomes = [0, 0, 0, 0, 0, 0, 0];
+      const labels = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+      ];
 
-    const [perDate]: any[] = await Promise.all([getPerDate(User)]);
+      const [perDate]: any[] = await Promise.all([getPerDate(User)]);
 
-    for (let i = 0; i < perDate.length; i++) {
-      const singleDate = perDate[i].createdAt;
-      const d = new Date(singleDate);
-      const dayOfWeekDigit: number = d.getDay();
-      const isCurrentMonth: boolean = monthNum == d.getMonth();
+      for (let i = 0; i < perDate.length; i++) {
+        const singleDate = perDate[i].createdAt;
+        const d = new Date(singleDate);
+        const dayOfWeekDigit: number = d.getDay();
+        const isCurrentMonth: boolean = monthNum == d.getMonth();
 
-      if (isCurrentMonth) {
-        const amountToAdd =
-          perDate[i].typeId == 1
-            ? perDate[i].amount
-            : Math.abs(perDate[i].amount);
+        if (isCurrentMonth) {
+          const amountToAdd =
+            perDate[i].typeId == 1
+              ? perDate[i].amount
+              : Math.abs(perDate[i].amount);
 
-        if (perDate[i].typeId == 1) {
-          incomes[dayOfWeekDigit] += amountToAdd;
-        } else {
-          expenses[dayOfWeekDigit] += amountToAdd;
+          if (perDate[i].typeId == 1) {
+            incomes[dayOfWeekDigit] += amountToAdd;
+          } else {
+            expenses[dayOfWeekDigit] += amountToAdd;
+          }
         }
       }
+
+      setLineChartData({
+        labels: labels,
+        datasets: [
+          {
+            label: "Incomes",
+            data: incomes.map((income) => income),
+            borderColor: "rgb(53, 162, 235)",
+            backgroundColor: "rgba(53, 162, 235, 0.5)",
+          },
+          {
+            label: "Expenses",
+            data: expenses.map((expense) => expense),
+            borderColor: "rgb(255, 99, 132)",
+            backgroundColor: "rgba(255, 99, 132, 0.5)",
+          },
+        ],
+      });
     }
 
-    setLineChartData({
-      labels: labels,
-      datasets: [
-        {
-          label: "Incomes",
-          data: incomes.map((income) => income),
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.5)",
-        },
-        {
-          label: "Expenses",
-          data: expenses.map((expense) => expense),
-          borderColor: "rgb(255, 99, 132)",
-          backgroundColor: "rgba(255, 99, 132, 0.5)",
-        },
-      ],
-    });
-  }
-
-  useMemo(getMonthCashflow, [User, monthNum]);
+    getMonthCashflow();
+  }, [User, monthNum]);
 
   return (
     <>

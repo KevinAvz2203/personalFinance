@@ -23,6 +23,9 @@ export async function GET(request: Request, { params }: Params) {
           gte: new Date(`${currYear}-${monthNum}-01`).toISOString(), // "2022-01-15T00:00:00.000Z"
         },
       },
+      orderBy: {
+        categoryId: "asc",
+      },
     });
 
     if (!transaction)

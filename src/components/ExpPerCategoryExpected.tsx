@@ -1,7 +1,11 @@
 import Image from "next/image";
 import catMonthly from "/public/assets/images/catMonthly.png";
 
-export default function ExpPerCategoryExpected() {
+type IncomeData = {
+  User: number;
+};
+
+export default function ExpPerCategoryExpected({ User }: IncomeData) {
   return (
     <>
       <div className="catPerMonth">
