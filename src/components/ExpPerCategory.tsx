@@ -1,9 +1,9 @@
 "use client";
 
+import { getTotalPerCategory } from "@/Backend/Transaction";
+import { getCategories } from "@/Backend/Category";
 import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
-import { getCategories } from "@/Backend/Category";
-import { getTotalPerCategory } from "@/Backend/Transaction";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -27,6 +27,18 @@ type IncomeData = {
   User: number;
 };
 
+interface Category {
+  id: number;
+  name: string;
+}
+
+interface TotalPerCategory {
+  _sum: {
+    amount: number;
+  };
+  categoryId: number;
+}
+
 interface BarChartData {
   labels: string[];
   datasets: {
@@ -46,25 +58,24 @@ export default function ExpPerCategory({ User }: IncomeData) {
 
   useEffect(() => {
     async function getCateMonthSummary() {
-      let categorias = [];
-      let gastos: number[] = [];
+      const categories: Category[] = await getCategories();
+      const transPerCat: TotalPerCategory[] = await getTotalPerCategory(User);
 
-      const [cateNames]: any[] = await Promise.all([getCategories()]); // Categories Name
-      const [transPerCat] = await Promise.all([getTotalPerCategory(User)]);
+      const filteredCategories = categories.filter(
+        (cate) => cate.name !== "Income"
+      );
+      const labels = filteredCategories.map((cate) => cate.name);
 
-      for (let i = 0; i < cateNames.length; i++) {
-        if (cateNames[i].name === "Income") {
-          continue;
-        }
-        categorias.push(cateNames[i].name);
-      }
+      let gastos: number[] = new Array(labels.length).fill(0);
 
       for (let j = 0; j < transPerCat.length; j++) {
-        gastos.push(Math.abs(transPerCat[j]._sum.amount));
+        gastos[transPerCat[j].categoryId - 2] = Math.abs(
+          transPerCat[j]._sum.amount
+        );
       }
 
       setBarChartData({
-        labels: categorias,
+        labels: labels,
         datasets: [
           {
             label: "Total spend",

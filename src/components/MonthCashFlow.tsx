@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Line } from "react-chartjs-2";
 import { getPerDate } from "@/Backend/Transaction";
 import styles from "./Month.module.css";
+import { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,6 +28,12 @@ ChartJS.register(
 type IncomeData = {
   User: number;
 };
+
+interface TransactionsByDate {
+  createdAt: Date;
+  typeId: number;
+  amount: number;
+}
 
 interface LineChartData {
   labels: string[];
@@ -71,7 +77,7 @@ export default function MonthCashFlow({ User }: IncomeData) {
         "Saturday",
       ];
 
-      const [perDate]: any[] = await Promise.all([getPerDate(User)]);
+      const perDate: TransactionsByDate[] = await getPerDate(User);
 
       for (let i = 0; i < perDate.length; i++) {
         const singleDate = perDate[i].createdAt;

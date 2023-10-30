@@ -31,6 +31,13 @@ type PrevMonthsTransaction = {
   total_amount: number;
 };
 
+type TotalPerCategory = {
+  _sum: {
+    amount: number;
+  };
+  categoryId: number;
+};
+
 export async function getPerUser(id: number): Promise<TransactionsData> {
   const res = await fetch("http://localhost:3000/api/transactions/user/" + id);
   const data: TransactionsData = await res.json();
@@ -61,7 +68,9 @@ export async function getTotalBalance(id: number): Promise<Amount> {
   return data;
 }
 
-export async function getTotalPerCategory(id: number) {
+export async function getTotalPerCategory(
+  id: number
+): Promise<TotalPerCategory[]> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/user/percategory/" + id
   );
@@ -69,7 +78,7 @@ export async function getTotalPerCategory(id: number) {
   return data;
 }
 
-export async function getPerDate(id: number): Promise<TransactionsByDate> {
+export async function getPerDate(id: number): Promise<TransactionsByDate[]> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/user/sumbydate/" + id
   );
