@@ -17,7 +17,7 @@ export default function AddTransaction() {
     description: "",
     amount: 0,
     userId: User,
-    categoryId: 3,
+    categoryId: 1,
     typeId: 1,
   });
 
@@ -40,7 +40,7 @@ export default function AddTransaction() {
       description: "",
       amount: 0,
       userId: User,
-      categoryId: 3,
+      categoryId: 1,
       typeId: 1,
     });
   }, [User]);
@@ -69,7 +69,7 @@ export default function AddTransaction() {
         description: "",
         amount: 0,
         userId: User,
-        categoryId: 3,
+        categoryId: 1,
         typeId: 1,
       });
     } else {
@@ -77,7 +77,7 @@ export default function AddTransaction() {
         description: "",
         amount: 0,
         userId: User,
-        categoryId: 1,
+        categoryId: 2,
         typeId: 2,
       });
     }

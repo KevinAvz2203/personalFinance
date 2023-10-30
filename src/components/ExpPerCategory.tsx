@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import { getCategories } from "@/Backend/Category";
 import { getTotalPerCategory } from "@/Backend/Transaction";
@@ -44,38 +44,40 @@ export default function ExpPerCategory({ User }: IncomeData) {
   });
   const currMonth = new Date().toLocaleString([], { month: "long" });
 
-  async function getCateMonthSummary() {
-    let categorias = [];
-    let gastos: number[] = [];
+  useEffect(() => {
+    async function getCateMonthSummary() {
+      let categorias = [];
+      let gastos: number[] = [];
 
-    const [cateNames]: any[] = await Promise.all([getCategories()]); // Categories Name
-    const [transPerCat] = await Promise.all([getTotalPerCategory(User)]);
+      const [cateNames]: any[] = await Promise.all([getCategories()]); // Categories Name
+      const [transPerCat] = await Promise.all([getTotalPerCategory(User)]);
 
-    for (let i = 0; i < cateNames.length; i++) {
-      if (cateNames[i].name === "Income") {
-        continue;
+      for (let i = 0; i < cateNames.length; i++) {
+        if (cateNames[i].name === "Income") {
+          continue;
+        }
+        categorias.push(cateNames[i].name);
       }
-      categorias.push(cateNames[i].name);
+
+      for (let j = 0; j < transPerCat.length; j++) {
+        gastos.push(Math.abs(transPerCat[j]._sum.amount));
+      }
+
+      setBarChartData({
+        labels: categorias,
+        datasets: [
+          {
+            label: "Total spend",
+            data: gastos,
+            borderColor: "rgb(53, 162, 235)",
+            backgroundColor: "rgba(53, 162, 235, 0.5)",
+          },
+        ],
+      });
     }
 
-    for (let j = 0; j < transPerCat.length; j++) {
-      gastos.push(Math.abs(transPerCat[j]._sum.amount));
-    }
-
-    setBarChartData({
-      labels: categorias,
-      datasets: [
-        {
-          label: "Total spend",
-          data: gastos,
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.5)",
-        },
-      ],
-    });
-  }
-
-  useMemo(getCateMonthSummary, [User]);
+    getCateMonthSummary();
+  }, [User]);
 
   return (
     <>

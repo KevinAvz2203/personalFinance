@@ -25,6 +25,18 @@ type TransactionsByDate = {
   amount: number;
 };
 
+type PrevMonthsTransaction = {
+  month: number;
+  Categoria: string;
+  total_amount: number;
+};
+
+export async function getPerUser(id: number): Promise<TransactionsData> {
+  const res = await fetch("http://localhost:3000/api/transactions/user/" + id);
+  const data: TransactionsData = await res.json();
+  return data;
+}
+
 export async function getIncomes(id: number): Promise<Amount> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/user/incomes/" + id
@@ -66,9 +78,14 @@ export async function getPerDate(id: number): Promise<TransactionsByDate> {
   return data;
 }
 
-export async function getPerUser(id: number): Promise<TransactionsData> {
-  const res = await fetch("http://localhost:3000/api/transactions/user/" + id);
-  const data: TransactionsData = await res.json();
+export async function getPrevMonths(
+  id: number
+): Promise<PrevMonthsTransaction[]> {
+  const res = await fetch(
+    "http://localhost:3000/api/transactions/user/prevMonths/" + id
+  );
+
+  const data = await res.json();
   return data;
 }
 
