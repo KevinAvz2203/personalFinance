@@ -4,6 +4,7 @@ import { getPrevMonths } from "@/Backend/Transaction";
 import { getCategories } from "@/Backend/Category";
 import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
+import styles from "./ExpPerCategory.module.css";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -109,7 +110,7 @@ export default function ExpPerCategoryExpected({ User }: IncomeData) {
 
   return (
     <>
-      <div className="catPerMonth">
+      <div className={styles.catPerMonth}>
         <h1 className="text-2xl p-2">Expected expenses for next Month</h1>
         <div className="w-full h-full">
           <Bar

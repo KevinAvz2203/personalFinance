@@ -38,9 +38,9 @@ type TotalPerCategory = {
   categoryId: number;
 };
 
-export async function getPerUser(id: number): Promise<TransactionsData> {
+export async function getPerUser(id: number): Promise<TransactionsData[]> {
   const res = await fetch("http://localhost:3000/api/transactions/user/" + id);
-  const data: TransactionsData = await res.json();
+  const data = await res.json();
   return data;
 }
 

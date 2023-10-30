@@ -4,6 +4,7 @@ import { getTotalPerCategory } from "@/Backend/Transaction";
 import { getCategories } from "@/Backend/Category";
 import { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
+import styles from "./ExpPerCategory.module.css";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -92,20 +93,20 @@ export default function ExpPerCategory({ User }: IncomeData) {
 
   return (
     <>
-      <div className="catPerMonth">
+      <div className={styles.catPerMonth}>
         <h1 className="text-2xl p-2" suppressHydrationWarning={true}>
           Expenses per Categories for {currMonth}
         </h1>
         <div className="w-full h-full">
           <Bar
             options={{
+              responsive: true,
               indexAxis: "y",
               elements: {
                 bar: {
                   borderWidth: 2,
                 },
               },
-              responsive: true,
               maintainAspectRatio: true,
             }}
             data={barChartData}

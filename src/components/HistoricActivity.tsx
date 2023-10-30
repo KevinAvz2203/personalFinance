@@ -4,7 +4,7 @@ import Image from "next/image";
 import ChargeActivity from "./ChargeActivity";
 import addChargeIcon from "/public/assets/icons/addChargeIcon.png";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { getPerUser } from "@/Backend/Transaction";
 import styles from "./HistoricActivity.module.css";
 
@@ -23,36 +23,39 @@ type TransactionsData = {
   };
 };
 
+const options = {
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+} as const;
+
 export default function HistoricActivity({ User, HistoryType }: IncomeData) {
   const [userTransactions, setUserTransactions] = useState<TransactionsData[]>(
     []
   );
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  } as const;
-  let dates: string[] = [];
-  let hours: string[] = [];
 
-  async function getUserTransactions() {
-    const [userTrans]: any[] = await Promise.all([getPerUser(User)]);
-    setUserTransactions(userTrans);
-  }
+  useEffect(() => {
+    async function getUserTransactions() {
+      const userTrans = await getPerUser(User);
+      setUserTransactions(userTrans);
+    }
 
-  useMemo(getUserTransactions, [User]);
+    getUserTransactions();
+  }, [User]);
 
-  for (let i = 0; i < userTransactions.length; i++) {
-    const singleDate = userTransactions[i].createdAt;
-    const d = new Date(singleDate);
+  const dates = userTransactions.map((transaction) => {
+    const d = new Date(transaction.createdAt);
+    return d.toLocaleDateString(undefined, options);
+  });
 
-    dates.push(d.toLocaleDateString(undefined, options));
-    hours.push(d.toLocaleTimeString("en-US"));
-  }
+  const hours = userTransactions.map((transaction) => {
+    const d = new Date(transaction.createdAt);
+    return d.toLocaleTimeString("en-US");
+  });
 
-  // Elimino los elementos duplicados del arreglo dates
-  dates = dates.filter((value, index, array) => array.indexOf(value) === index);
+  // Creo un arreglo en date al Set(dates), solo guardando los valores unicos dentro de dates
+  const uniqueDates = Array.from(new Set(dates));
   let currDay = new Date().toLocaleDateString(undefined, options);
 
   return (
@@ -67,7 +70,7 @@ export default function HistoricActivity({ User, HistoryType }: IncomeData) {
           </div>
 
           <div className={styles.scrollingClass}>
-            {dates.map(
+            {uniqueDates.map(
               (fecha, dtindex) =>
                 dtindex < 3 && (
                   <div className="mb-10" key={dtindex}>
