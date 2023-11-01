@@ -29,7 +29,7 @@ export default function GoalsTable({ User }: IncomeData) {
 
   useEffect(() => {
     async function getSingleUserGoals() {
-      const [existingGoals]: any[] = await Promise.all([getUserGoals(User)]);
+      const existingGoals = await getUserGoals(User);
       setUserGoals(existingGoals);
     }
 

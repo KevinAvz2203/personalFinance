@@ -7,7 +7,7 @@ import Link from "next/link";
 import { getUserData } from "@/Backend/User"; // Borrar cuando tenga una mejor forma de hacer esto
 
 export default async function Goals() {
-  const [userData] = await Promise.all([getUserData(1)]);
+  const userData = await getUserData(1);
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const currYear = new Date().getFullYear();
 

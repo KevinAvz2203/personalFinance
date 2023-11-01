@@ -30,17 +30,17 @@ export async function postGoal(goalData: any, isFavorite: Boolean) {
   console.log(data);
 }
 
-export async function getUserGoals(id: number): Promise<Goal> {
+export async function getUserGoals(id: number): Promise<Goal[]> {
   const res = await fetch("http://localhost:3000/api/goals/user/" + id);
   const data = await res.json();
   return data;
 }
 
-export async function getUserFavoriteGoals(id: number): Promise<FavoriteGoals> {
+export async function getUserFavoriteGoals(id: number): Promise<FavoriteGoals[]> {
   const res = await fetch(
     "http://localhost:3000/api/goals/user/favorites/" + id
   );
-  const data: FavoriteGoals = await res.json();
+  const data = await res.json();
   return data;
 }
 

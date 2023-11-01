@@ -25,9 +25,7 @@ export default function SavingGoals({ User }: IncomeData) {
 
   useEffect(() => {
     async function getFavoriteGoalsProgress() {
-      const [existingGoals]: any[] = await Promise.all([
-        getUserFavoriteGoals(User),
-      ]);
+      const existingGoals = await getUserFavoriteGoals(User);
       setUserGoals(existingGoals);
     }
 

@@ -5,7 +5,7 @@ import { getUserData } from "@/Backend/User";
 import styles from "./data.module.css";
 
 export default async function Data() {
-  const [userData] = await Promise.all([getUserData(1)]);
+  const userData = await getUserData(1); // Editar ya que regresa toda la info
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const currYear = new Date().getFullYear();
 

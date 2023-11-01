@@ -45,6 +45,16 @@ interface LineChartData {
   }[];
 }
 
+const labels = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+
 export default function MonthCashFlow({ User }: IncomeData) {
   const [lineChartData, setLineChartData] = useState<LineChartData>({
     labels: [],
@@ -67,21 +77,11 @@ export default function MonthCashFlow({ User }: IncomeData) {
     async function getMonthCashflow() {
       let expenses = [0, 0, 0, 0, 0, 0, 0];
       let incomes = [0, 0, 0, 0, 0, 0, 0];
-      const labels = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
 
       const perDate: TransactionsByDate[] = await getPerDate(User);
 
       for (let i = 0; i < perDate.length; i++) {
-        const singleDate = perDate[i].createdAt;
-        const d = new Date(singleDate);
+        const d = new Date(perDate[i].createdAt);
         const dayOfWeekDigit: number = d.getDay();
         const isCurrentMonth: boolean = monthNum == d.getMonth();
 
