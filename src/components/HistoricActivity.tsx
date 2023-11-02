@@ -109,7 +109,7 @@ export default function HistoricActivity({ User, HistoryType }: IncomeData) {
             </Link>
           </div>
 
-          {dates.map((fecha, dtindex) => (
+          {uniqueDates.map((fecha, dtindex) => (
             <div className="mb-10" key={dtindex}>
               {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
               {userTransactions.map(
