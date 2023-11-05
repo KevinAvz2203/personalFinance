@@ -17,9 +17,9 @@ export default function AddGoal({ params }: Params) {
     name: "",
     totalAmount: 0,
     currentAmount: 0,
+    userId: params.id,
     isComplete: false,
     isFavorite: false, // Agregar al schema
-    userId: params.id,
   });
 
   async function getUserSetFormData() {
@@ -30,9 +30,9 @@ export default function AddGoal({ params }: Params) {
       name: goalData.name,
       totalAmount: goalData.totalAmount,
       currentAmount: goalData.currentAmount || 0,
+      userId: goalData.userId,
       isComplete: goalData.isComplete,
       isFavorite: false,
-      userId: goalData.userId,
     });
   }
 

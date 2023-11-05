@@ -15,9 +15,9 @@ export default function AddGoal() {
     name: "",
     totalAmount: 0,
     currentAmount: 0,
-    isComplete: false,
-    isFavorite: 0, // Agregar al schema
     userId: User,
+    isComplete: false,
+    isFavorite: 0,
   });
 
   async function getUserSetFormData() {
@@ -31,9 +31,9 @@ export default function AddGoal() {
       name: "",
       totalAmount: 0,
       currentAmount: 0,
+      userId: User,
       isComplete: false,
       isFavorite: 0,
-      userId: User,
     });
   }, [User]);
 

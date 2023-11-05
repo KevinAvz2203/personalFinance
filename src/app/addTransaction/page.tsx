@@ -17,8 +17,8 @@ export default function AddTransaction() {
     description: "",
     amount: 0,
     userId: User,
-    categoryId: 1,
     typeId: 1,
+    categoryId: 1,
   });
 
   async function getCategoriesNames() {
@@ -40,8 +40,8 @@ export default function AddTransaction() {
       description: "",
       amount: 0,
       userId: User,
-      categoryId: 1,
       typeId: 1,
+      categoryId: 1,
     });
   }, [User]);
 
@@ -69,16 +69,16 @@ export default function AddTransaction() {
         description: "",
         amount: 0,
         userId: User,
-        categoryId: 1,
         typeId: 1,
+        categoryId: 1,
       });
     } else {
       setFormData({
         description: "",
         amount: 0,
         userId: User,
-        categoryId: 2,
         typeId: 2,
+        categoryId: 2,
       });
     }
   };

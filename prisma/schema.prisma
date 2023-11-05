@@ -14,10 +14,11 @@ model User {
   id Int @id @default(autoincrement())
   firstName String @db.VarChar(255) @map("first_name")
   lastName String @db.VarChar(255) @map("last_name")
-  email String @db.VarChar(255)
-  password String @db.VarChar(255) 
+  email String @unique
+  password String  
   age Int
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   transaction Transaction[]
   goal Goal[]
@@ -32,11 +33,11 @@ model Transaction {
   userId Int
   user User @relation(fields: [userId], references: [id])
 
-  categoryId Int
-  category Category @relation(fields: [categoryId], references: [id])
-
   typeId Int 
   type Type @relation(fields: [typeId], references: [id])
+
+  categoryId Int
+  category Category @relation(fields: [categoryId], references: [id])
 }
 
 model Category {
@@ -59,11 +60,14 @@ model Goal {
   name String @db.VarChar(255)
   totalAmount Int
   currentAmount Int?
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
   isComplete Boolean @default(false)
   isFavorite Boolean? @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  userId Int
-  user User @relation(fields: [userId], references: [id])
+  
 }
