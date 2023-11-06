@@ -1,23 +1,32 @@
+"use client";
+
 import TopCard from "@/components/TopCard";
 import TotalSavingCard from "@/components/TotalSavingCard";
 import MonthSummary from "@/components/MonthSummary";
 import HistoricActivity from "@/components/HistoricActivity";
 import MonthCashFlow from "@/components/MonthCashFlow";
 import SavingGoals from "@/components/SavingGoals";
-import { getUserData } from "@/Backend/User";
 import styles from "./home.module.css";
+import { useSession } from "next-auth/react";
 
-export default async function Home() {
-  const userData = await getUserData(1); // Editar ya que regresa toda la info
+export default function Home() {
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const currYear = new Date().getFullYear();
+  const { data: session } = useSession();
+  console.log(session);
+
+  let UserID: number = 0;
+  let UserName = "";
+
+  if (session?.user) {
+    UserID = session.user.id || 0;
+    UserName = session.user.name;
+  }
 
   return (
     <>
       <header className="flex items-center">
-        <h1>
-          Welcome back, {userData.firstName} {userData.lastName}!
-        </h1>
+        <h1>Welcome back, {UserName}</h1>
         <h3 className="absolute right-8" suppressHydrationWarning={true}>
           {currMonth}, {currYear}
         </h3>
@@ -26,32 +35,32 @@ export default async function Home() {
       <div>
         <section className={styles.genSummary}>
           {/* Incomes Card */}
-          <TopCard User={userData.id} cardType={0} />
+          <TopCard User={UserID} cardType={0} />
 
           {/* Expenses Card */}
-          <TopCard User={userData.id} cardType={1} />
+          <TopCard User={UserID} cardType={1} />
 
           {/* Total Balance Card */}
-          <TopCard User={userData.id} cardType={2} />
+          <TopCard User={UserID} cardType={2} />
 
           {/* Componente Total Saving Goals */}
-          <TotalSavingCard User={userData.id} />
+          <TotalSavingCard User={UserID} />
         </section>
 
         <section className={styles.genSummary}>
           {/* Componente grafica PIE summary Month */}
-          <MonthSummary User={userData.id} />
+          <MonthSummary User={UserID} />
 
           {/* Componente grafica Curva summary Month */}
-          <MonthCashFlow User={userData.id} />
+          <MonthCashFlow User={UserID} />
         </section>
 
         <section className={styles.genSummary}>
           {/* Componente grafica PIE summary Month */}
-          <HistoricActivity User={userData.id} HistoryType={0} />
+          <HistoricActivity User={UserID} HistoryType={0} />
 
           {/* Componente grafica Curva summary Month */}
-          <SavingGoals User={userData.id} />
+          <SavingGoals User={UserID} />
         </section>
       </div>
     </>

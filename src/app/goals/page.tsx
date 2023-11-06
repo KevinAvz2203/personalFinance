@@ -1,15 +1,23 @@
+"use client";
+
 import MainGoals from "@/components/MainGoals";
 import GoalsTable from "@/components/GoalsTable";
 import TotalSavingCard from "@/components/TotalSavingCard";
 import GoalsActive from "@/components/GoalsActive";
 import GoalsCompleted from "@/components/GoalsCompleted";
 import Link from "next/link";
-import { getUserData } from "@/Backend/User"; // Borrar cuando tenga una mejor forma de hacer esto
+import { useSession } from "next-auth/react";
 
-export default async function Goals() {
-  const userData = await getUserData(1);
+export default function Goals() {
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const currYear = new Date().getFullYear();
+  const { data: session } = useSession();
+
+  let UserID: number = 0;
+
+  if (session?.user) {
+    UserID = session.user.id || 0;
+  }
 
   return (
     <>
@@ -21,11 +29,11 @@ export default async function Goals() {
       </header>
 
       <div className="MainGoalsArea">
-        <MainGoals User={userData.id} />
+        <MainGoals User={UserID} />
       </div>
 
       <section className="flex justify-center pt-4">
-        <GoalsTable User={userData.id} />
+        <GoalsTable User={UserID} />
       </section>
 
       <div className="pt-4">
@@ -42,9 +50,9 @@ export default async function Goals() {
       </div>
 
       <div className="flex justify-around pt-4">
-        <GoalsActive User={userData.id} />
-        <GoalsCompleted User={userData.id} />
-        <TotalSavingCard User={userData.id} />
+        <GoalsActive User={UserID} />
+        <GoalsCompleted User={UserID} />
+        <TotalSavingCard User={UserID} />
       </div>
     </>
   );

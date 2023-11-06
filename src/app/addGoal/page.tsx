@@ -1,41 +1,41 @@
 "use client";
 
 import { postGoal } from "@/Backend/Goal";
-import { getUserData } from "@/Backend/User";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "@/components/addTransGoal.module.css";
+import { useSession } from "next-auth/react";
 
 export default function AddGoal() {
+  const { data: session } = useSession();
   const router = useRouter();
 
+  let UserID = 0;
+
+  if (session?.user) {
+    UserID = session.user.id || 0;
+  }
+
   const [isFavorite, setIsFavorite] = useState(false);
-  const [User, setUser] = useState(0); // Borrar cuando pueda recuperar el userID de las cookies
   const [formData, setFormData] = useState({
     name: "",
     totalAmount: 0,
     currentAmount: 0,
-    userId: User,
+    userId: UserID,
     isComplete: false,
     isFavorite: 0,
   });
 
-  async function getUserSetFormData() {
-    const [userData] = await Promise.all([getUserData(1)]);
-    setUser(userData.id);
-  }
-
   useEffect(() => {
-    getUserSetFormData();
     setFormData({
       name: "",
       totalAmount: 0,
       currentAmount: 0,
-      userId: User,
+      userId: UserID,
       isComplete: false,
       isFavorite: 0,
     });
-  }, [User]);
+  }, [UserID]);
 
   const handleInputChange = (event: any) => {
     if (
