@@ -94,7 +94,7 @@ export default function TopCard({ User, cardType }: incomeData) {
               height={50}
             />
             <div>
-              <p>${total} MXN</p>
+              <p>${total | 0} MXN</p>
               <p>Total Balance</p>
             </div>
           </div>

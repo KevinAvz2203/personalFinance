@@ -2,21 +2,27 @@
 
 import { getCategories } from "@/Backend/Category";
 import { postTransaction } from "@/Backend/Transaction";
-import { getUserData } from "@/Backend/User";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "@/components/addTransGoal.module.css";
+import { useSession } from "next-auth/react";
 
 export default function AddTransaction() {
+  const { data: session } = useSession();
   const router = useRouter();
 
+  let UserID = 0;
+
+  if (session?.user) {
+    UserID = session.user.id || 0;
+  }
+
   const [transaction, setTransaction] = useState("Income");
-  const [User, setUser] = useState(0);
   const [catNames, setCatNames] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     description: "",
     amount: 0,
-    userId: User,
+    userId: UserID,
     typeId: 1,
     categoryId: 1,
   });
@@ -24,14 +30,12 @@ export default function AddTransaction() {
   async function getCategoriesNames() {
     let nombresCategorias = [];
     const [cateNames]: any[] = await Promise.all([getCategories()]); // Categories Name
-    const [userData] = await Promise.all([getUserData(1)]);
 
     for (let i = 0; i < cateNames.length; i++) {
       nombresCategorias.push(cateNames[i].name);
     }
 
     setCatNames(nombresCategorias);
-    setUser(userData.id);
   }
 
   useEffect(() => {
@@ -39,11 +43,11 @@ export default function AddTransaction() {
     setFormData({
       description: "",
       amount: 0,
-      userId: User,
+      userId: UserID,
       typeId: 1,
       categoryId: 1,
     });
-  }, [User]);
+  }, [UserID]);
 
   const pageRefresher = () => {
     window.location.reload(); // cambiar ruta
@@ -68,7 +72,7 @@ export default function AddTransaction() {
       setFormData({
         description: "",
         amount: 0,
-        userId: User,
+        userId: UserID,
         typeId: 1,
         categoryId: 1,
       });
@@ -76,7 +80,7 @@ export default function AddTransaction() {
       setFormData({
         description: "",
         amount: 0,
-        userId: User,
+        userId: UserID,
         typeId: 2,
         categoryId: 2,
       });

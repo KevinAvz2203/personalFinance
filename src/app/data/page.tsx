@@ -1,13 +1,21 @@
+"use client";
+
 import ExpPerCategory from "@/components/ExpPerCategory";
 import ExpPerCategoryExpected from "@/components/ExpPerCategoryExpected";
 import HistoricActivity from "@/components/HistoricActivity";
-import { getUserData } from "@/Backend/User";
 import styles from "./data.module.css";
+import { useSession } from "next-auth/react";
 
-export default async function Data() {
-  const userData = await getUserData(1); // Editar ya que regresa toda la info
+export default function Data() {
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const currYear = new Date().getFullYear();
+  const { data: session } = useSession();
+
+  let UserID: number = 0;
+
+  if (session?.user) {
+    UserID = session.user.id || 0;
+  }
 
   return (
     <>
@@ -21,12 +29,12 @@ export default async function Data() {
 
         <div className="flex">
           <div className={styles.dataGraphs}>
-            <ExpPerCategory User={userData.id} />
+            <ExpPerCategory User={UserID} />
 
-            <ExpPerCategoryExpected User={userData.id} />
+            <ExpPerCategoryExpected User={UserID} />
           </div>
           <div className={styles.dataActivity}>
-            <HistoricActivity User={userData.id} HistoryType={1} />
+            <HistoricActivity User={UserID} HistoryType={1} />
           </div>
         </div>
       </div>
