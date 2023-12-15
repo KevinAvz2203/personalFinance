@@ -33,9 +33,6 @@ export default function RegisterPage() {
       }),
     });
 
-    const postRes = await res.json();
-    console.log(postRes);
-
     if (res.ok) {
       router.push("/auth/login");
     }

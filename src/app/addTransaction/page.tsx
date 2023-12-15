@@ -6,10 +6,25 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import styles from "@/components/addTransGoal.module.css";
 import { useSession } from "next-auth/react";
+import { useForm, SubmitHandler } from "react-hook-form";
+
+interface Category {
+  id: number;
+  name: string;
+}
+
+type FormValues = {
+  description: string;
+  amount: number;
+  userId: number;
+  typeId: number;
+  categoryId: number;
+};
 
 export default function AddTransaction() {
   const { data: session } = useSession();
-  const router = useRouter();
+  const [transaction, setTransaction] = useState("Income");
+  const [catNames, setCatNames] = useState<string[]>([]);
 
   let UserID = 0;
 
@@ -17,73 +32,55 @@ export default function AddTransaction() {
     UserID = session.user.id || 0;
   }
 
-  const [transaction, setTransaction] = useState("Income");
-  const [catNames, setCatNames] = useState<string[]>([]);
-  const [formData, setFormData] = useState({
-    description: "",
-    amount: 0,
-    userId: UserID,
-    typeId: 1,
-    categoryId: 1,
-  });
+  const router = useRouter();
 
-  async function getCategoriesNames() {
-    let nombresCategorias = [];
-    const [cateNames]: any[] = await Promise.all([getCategories()]); // Categories Name
-
-    for (let i = 0; i < cateNames.length; i++) {
-      nombresCategorias.push(cateNames[i].name);
-    }
-
-    setCatNames(nombresCategorias);
-  }
-
-  useEffect(() => {
-    getCategoriesNames();
-    setFormData({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
       description: "",
       amount: 0,
       userId: UserID,
       typeId: 1,
       categoryId: 1,
-    });
+    },
+  });
+
+  useEffect(() => {
+    async function getCategoriesNames() {
+      const categories: Category[] = await getCategories();
+      const nombresCategorias = categories.map((cate) => cate.name);
+
+      if (session?.user) {
+        UserID = session.user.id || 0;
+      }
+
+      setCatNames(nombresCategorias);
+    }
+
+    getCategoriesNames();
   }, [UserID]);
 
   const pageRefresher = () => {
     window.location.reload(); // cambiar ruta
   };
 
-  const handleInputChange = (e: any) => {
-    if (e.target.name === "description") {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    } else {
-      setFormData({ ...formData, [e.target.name]: Number(e.target.value) });
-    }
-  };
-
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    postTransaction(formData).then(pageRefresher);
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    console.log(data);
+    postTransaction(data).then(pageRefresher);
   };
 
   const onOptionChange = (e: any) => {
     setTransaction(e.target.value);
     if (e.target.value === "Income") {
-      setFormData({
-        description: "",
-        amount: 0,
-        userId: UserID,
-        typeId: 1,
-        categoryId: 1,
-      });
+      setValue("typeId", 1);
+      setValue("categoryId", 1);
     } else {
-      setFormData({
-        description: "",
-        amount: 0,
-        userId: UserID,
-        typeId: 2,
-        categoryId: 2,
-      });
+      setValue("typeId", 2);
+      setValue("categoryId", 2);
     }
   };
 
@@ -120,7 +117,7 @@ export default function AddTransaction() {
             </label>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="flex flex-wrap">
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                 <label
@@ -130,61 +127,86 @@ export default function AddTransaction() {
                   Description
                 </label>
                 <input
-                  required={true}
-                  className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
-                  id="description"
-                  name="description"
                   type="text"
-                  placeholder="Insert Description"
-                  value={formData.description}
-                  onChange={handleInputChange}
+                  id="description"
+                  {...register("description", {
+                    required: {
+                      value: true,
+                      message: "Transaction name is required",
+                    },
+                  })}
+                  className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
+                  placeholder="Transaction name"
                 />
+                {errors.description && (
+                  <span className="text-red-500 text-xs">
+                    {errors.description.message}
+                  </span>
+                )}
               </div>
+
               <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                 <label className="labelForm text-gray-700" htmlFor="amount">
                   Amount
                 </label>
                 <input
-                  required={true}
-                  className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
-                  id="amount"
-                  name="amount"
                   type="number"
-                  placeholder="Insert Amount"
-                  value={formData.amount}
-                  onChange={handleInputChange}
+                  id="amount"
+                  {...register("amount", {
+                    required: {
+                      value: true,
+                      message: "Total amount is required",
+                    },
+                  })}
+                  className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
+                  placeholder="Total amount"
                 />
+                {errors.amount && (
+                  <span className="text-red-500 text-xs">
+                    {errors.amount.message}
+                  </span>
+                )}
               </div>
-              {transaction === "Expense" ? (
-                <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                  <label
-                    className="labelForm text-gray-700"
-                    htmlFor="categoryId"
-                  >
-                    Category
-                  </label>
-                  <select
-                    required={true}
-                    name="categoryId"
-                    id="categoryId"
-                    className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
-                    value={formData.categoryId}
-                    onChange={handleInputChange}
-                  >
-                    <option defaultChecked disabled>
-                      Select Category
-                    </option>
 
-                    {catNames.map(
-                      (category, index) =>
-                        category !== "Income" && (
-                          <option key={index} value={index + 1}>
-                            {category}
-                          </option>
-                        )
+              {transaction === "Expense" ? (
+                <>
+                  <div className="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                    <label
+                      className="labelForm text-gray-700"
+                      htmlFor="categoryId"
+                    >
+                      Category
+                    </label>
+                    <select
+                      id="categoryId"
+                      {...register("categoryId", {
+                        required: {
+                          value: true,
+                          message: "Category is required",
+                        },
+                      })}
+                      className={`${styles.inputForm} focus:outline-none focus:bg-white focus:border-gray-500`}
+                    >
+                      <option defaultChecked disabled>
+                        Select Category
+                      </option>
+
+                      {catNames.map(
+                        (category, index) =>
+                          category !== "Income" && (
+                            <option key={index} value={index + 1}>
+                              {category}
+                            </option>
+                          )
+                      )}
+                    </select>
+                    {errors.categoryId && (
+                      <span className="text-red-500 text-xs">
+                        {errors.categoryId.message}
+                      </span>
                     )}
-                  </select>
-                </div>
+                  </div>
+                </>
               ) : (
                 <></>
               )}

@@ -19,6 +19,14 @@ type TransactionsData = {
   };
 };
 
+type PostTransactionData = {
+  description: string;
+  amount: number;
+  userId: number;
+  typeId: number;
+  categoryId: number;
+};
+
 type TransactionsByDate = {
   createdAt: Date;
   typeId: number;
@@ -98,11 +106,16 @@ export async function getPrevMonths(
   return data;
 }
 
-export async function postTransaction(transactionData: any) {
+export async function postTransaction(transactionData: PostTransactionData) {
+  transactionData.amount = Number(transactionData.amount);
+  transactionData.categoryId = Number(transactionData.categoryId);
+
   if (transactionData.typeId === 2) {
     transactionData.typeId = 2;
     transactionData.amount = transactionData.amount * -1;
   }
+
+  console.log(transactionData);
 
   const res = await fetch("http://localhost:3000/api/transactions/", {
     method: "POST",
