@@ -13,7 +13,6 @@ export default function Home() {
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const currYear = new Date().getFullYear();
   const { data: session } = useSession();
-  console.log(session);
 
   let UserID: number = 0;
   let UserName = "";

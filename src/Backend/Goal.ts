@@ -36,7 +36,9 @@ export async function getUserGoals(id: number): Promise<Goal[]> {
   return data;
 }
 
-export async function getUserFavoriteGoals(id: number): Promise<FavoriteGoals[]> {
+export async function getUserFavoriteGoals(
+  id: number
+): Promise<FavoriteGoals[]> {
   const res = await fetch(
     "http://localhost:3000/api/goals/user/favorites/" + id
   );

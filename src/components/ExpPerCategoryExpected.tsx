@@ -77,12 +77,14 @@ export default function ExpPerCategoryExpected({ User }: IncomeData) {
         (cate) => cate.name !== "Income"
       );
 
-      const multiArray: number[][] = [[], [], []];
+      const multiArray: number[][] = [[], [], [], [], [], [], [], [], [], []];
       for (let j = 0; j < prevMonthsTransaction.length; j++) {
         multiArray[Number(prevMonthsTransaction[j].Categoria) - 2].push(
           prevMonthsTransaction[j].total_amount
         );
       }
+
+      console.log(multiArray);
 
       const weights = [0.1, 0.2, 0.3, 0.4, 0.5];
       const gastosPrevistos = multiArray.map((data) => {
