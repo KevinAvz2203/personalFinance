@@ -8,28 +8,20 @@ import MonthCashFlow from "@/components/MonthCashFlow";
 import SavingGoals from "@/components/SavingGoals";
 import styles from "./home.module.css";
 import { useSession } from "next-auth/react";
+import Header from "@/components/Header";
 
 export default function Home() {
-  const currMonth = new Date().toLocaleString([], { month: "long" });
-  const currYear = new Date().getFullYear();
   const { data: session } = useSession();
 
   let UserID: number = 0;
-  let UserName = "";
 
   if (session?.user) {
     UserID = session.user.id || 0;
-    UserName = session.user.name;
   }
 
   return (
     <>
-      <header className="flex items-center">
-        <h1>Welcome back, {UserName}</h1>
-        <h3 className="absolute right-8" suppressHydrationWarning={true}>
-          {currMonth}, {currYear}
-        </h3>
-      </header>
+      <Header />
 
       <div>
         <section className={styles.genSummary}>
