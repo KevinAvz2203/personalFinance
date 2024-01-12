@@ -2,7 +2,7 @@
 
 import MainGoals from "@/components/MainGoals";
 import GoalsTable from "@/components/GoalsTable";
-import TotalSavingCard from "@/components/TotalSavingCard";
+/* import TotalSavingCard from "@/components/TotalSavingCard"; */
 import GoalsActive from "@/components/GoalsActive";
 import GoalsCompleted from "@/components/GoalsCompleted";
 import Link from "next/link";
@@ -52,7 +52,7 @@ export default function Goals() {
       <div className="flex justify-around pt-4">
         <GoalsActive User={UserID} />
         <GoalsCompleted User={UserID} />
-        <TotalSavingCard User={UserID} />
+        {/* <TotalSavingCard User={UserID} /> */}
       </div>
     </>
   );

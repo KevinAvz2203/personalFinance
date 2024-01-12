@@ -1,10 +1,18 @@
+.container {
+  background-color: white;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  border-radius: 20px;
+}
+
 .topCards {
   display: flex;
   align-items: center;
-  width: 22%;
-  height: 6rem; /* Tal vez quitar esta */
-  padding: 0 1.5%;
-  border-radius: 10px;
+  justify-content: center;
+  height: 8rem;
+  width: 25%;
 }
 
 .topCards div {
@@ -12,9 +20,18 @@
 }
 
 .topCards div p {
-  font-size: large;
+  font-size: x-large;
 }
 
 .topCards div p:last-child {
-  font-size: 0.75rem;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.topCards:nth-child(1) div p:last-child {
+  color: #32d956;
+}
+
+.topCards:nth-child(3) div p:last-child {
+  color: #ff0000;
 }

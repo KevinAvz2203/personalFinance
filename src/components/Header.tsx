@@ -17,7 +17,7 @@ export default function Header() {
 
   return (
     <>
-      <header className={styles.header}>
+      <header className={`${styles.header} testing`}>
         <h1 className="text-5xl">Welcome back! </h1>
         <div className="absolute right-8 text-right flex">
           <Image src={userIcon} alt="User Icon" width="50" height="30" />
