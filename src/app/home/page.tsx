@@ -12,6 +12,7 @@ import Loading from "./loading";
 export default function Home() {
   const { data: session } = useSession();
 
+  /* Mientras no se encuentra una session activa, se muestra la pantalla de carga */
   while (!session) {
     return (
       <>
@@ -37,13 +38,12 @@ export default function Home() {
           <MonthCashFlow User={UserID} />
 
           {/* Componente grafica PIE summary Month */}
-          {/* <MonthSummary User={UserID} /> */}
+          <MonthSummary User={UserID} />
         </section>
 
         <section className={styles.genSummary}>
           {/* Componente grafica PIE summary Month */}
           {/* <HistoricActivity User={UserID} HistoryType={0} /> */}
-
         </section>
       </div>
     </>

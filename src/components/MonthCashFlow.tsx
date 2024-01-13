@@ -3,13 +3,12 @@
 import { getPerDate } from "@/Backend/Transaction";
 import styles from "./Month.module.css";
 import { useState, useEffect } from "react";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend,
@@ -18,8 +17,7 @@ import {
 ChartJS.register(
   CategoryScale,
   LinearScale,
-  PointElement,
-  LineElement,
+  BarElement,
   Title,
   Tooltip,
   Legend
@@ -35,16 +33,19 @@ interface TransactionsByDate {
   amount: number;
 }
 
-interface LineChartData {
+interface BarChartData {
   labels: string[];
   datasets: {
     label: string;
     data: number[];
     backgroundColor: string;
     borderColor: string;
+    hoverBackgroundColor: string;
+    borderRadius: { topRight: 10; topLeft: 10 };
   }[];
 }
 
+/* Dias de la semana */
 const labels = [
   "Sunday",
   "Monday",
@@ -56,79 +57,112 @@ const labels = [
 ];
 
 export default function MonthCashFlow({ User }: IncomeData) {
-  const [lineChartData, setLineChartData] = useState<LineChartData>({
+  const [barChartData, setBarChartData] = useState<BarChartData>({
     labels: [],
     datasets: [],
   });
-  const currMonth = new Date().toLocaleString([], { month: "long" });
-  const monthNum = new Date().getMonth();
 
+  let delayed: any;
+  /* Config del Bar Chart */
   const options = {
     responsive: true,
+    animation: {
+      onComplete: () => {
+        delayed = true;
+      },
+      delay: (context: any) => {
+        let delay = 0;
+        if (context.type === "data" && context.mode === "default" && !delayed) {
+          delay = context.dataIndex * 300 + context.datasetIndex * 100;
+        }
+        return delay;
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+      },
+      y: {
+        ticks: {
+          beginAtZero: true,
+          callback: function (value: any, index: any, values: any) {
+            return value / 1000 + "K";
+          },
+        },
+        border: {
+          dash: [10, 5],
+        },
+      },
+    },
     plugins: {
+      tooltip: {
+        yAlign: "bottom",
+      },
       legend: {
-        position: "top",
+        display: false,
       },
     },
     maintainAspectRatio: true,
   } as const;
 
   useEffect(() => {
+    /* Esta funcion realiza el fetch por la informacion a desplegar
+      en la barra.
+      
+      Actualmente recibe todas las transacciones typeId = 2 del mes actual
+      y las guarda en un arreglo, la POS corresponde al dia de la semana cuando se 
+      realizaron, siendo de domingo - sabado
+      
+      Proximo update: Poder hacer fetch de la semana actual tambien */
     async function getMonthCashflow() {
-      let expenses = [0, 0, 0, 0, 0, 0, 0];
-      let incomes = [0, 0, 0, 0, 0, 0, 0];
-
       const perDate: TransactionsByDate[] = await getPerDate(User);
 
-      for (let i = 0; i < perDate.length; i++) {
-        const d = new Date(perDate[i].createdAt);
-        const dayOfWeekDigit: number = d.getDay();
-        const isCurrentMonth: boolean = monthNum == d.getMonth();
+      /* forEach: Recorre el arreglo perDate y va asignando
+        uno por uno en su POS del arreglo expenses correspondiente,
+        es lo mismo que un FOR pero se lee mejor */
+      const expenses = [0, 0, 0, 0, 0, 0, 0];
+      perDate.forEach((item) => {
+        const d = new Date(item.createdAt);
+        const dayOfWeekDigit = d.getDay();
+        const amountToAdd = Math.abs(item.amount);
+        expenses[dayOfWeekDigit] += amountToAdd;
+      });
 
-        if (isCurrentMonth) {
-          const amountToAdd =
-            perDate[i].typeId == 1
-              ? perDate[i].amount
-              : Math.abs(perDate[i].amount);
-
-          if (perDate[i].typeId == 1) {
-            incomes[dayOfWeekDigit] += amountToAdd;
-          } else {
-            expenses[dayOfWeekDigit] += amountToAdd;
-          }
-        }
-      }
-
-      setLineChartData({
+      setBarChartData({
         labels: labels,
         datasets: [
           {
-            label: "Incomes",
-            data: incomes.map((income) => income),
-            borderColor: "rgb(53, 162, 235)",
-            backgroundColor: "rgba(53, 162, 235, 0.5)",
-          },
-          {
-            label: "Expenses",
+            label: "Total",
             data: expenses.map((expense) => expense),
-            borderColor: "rgb(255, 99, 132)",
-            backgroundColor: "rgba(255, 99, 132, 0.5)",
+            borderColor: "rgba(141, 169, 196, 0.4)",
+            backgroundColor: "#8DA9C4",
+            hoverBackgroundColor: "#134074",
+            borderRadius: { topRight: 10, topLeft: 10 },
           },
         ],
       });
     }
 
     getMonthCashflow();
-  }, [User, monthNum]);
+  }, [User]);
 
   return (
     <>
       <div className={styles.cashFlow}>
-        <h1 className="text-2xl p-2" suppressHydrationWarning={true}>
-          My Cashflow of {currMonth}
-        </h1>
+        <div className={styles.header}>
+          <div>
+            <p>Transactions</p>
+            <h2>Summary</h2>
+          </div>
+          <div className={styles.buttons}>
+            <button className={styles.active}>Weekly</button>
+            <button>Monthly</button>
+          </div>
+        </div>
         <div style={{ width: "100%", height: "100%" }}>
-          <Line options={options} data={lineChartData} />
+          <Bar options={options} data={barChartData} />
         </div>
       </div>
     </>
