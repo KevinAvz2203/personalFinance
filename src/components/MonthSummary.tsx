@@ -1,6 +1,4 @@
-"use client";
-
-import { getCategories } from "@/Backend/Category";
+/* import { getCategories } from "@/Backend/Category"; */
 import { getTotalPerCategory } from "@/Backend/Transaction";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useState, useEffect } from "react";
@@ -36,58 +34,63 @@ interface PieChartData {
   }[];
 }
 
+const cateNames = [
+  "Home",
+  "Food",
+  "Services",
+  "Health",
+  "Pets",
+  "Transportation",
+  "Entertainment",
+  "Personal",
+  "Other",
+];
+
 export default function MonthSummary({ User }: IncomeData) {
   const [pieChartData, setPieChartData] = useState<PieChartData>({
     labels: [],
     datasets: [],
   });
-  const currMonth = new Date().toLocaleString([], { month: "long" });
 
   useEffect(() => {
     async function getCateMonthSummary() {
-      const categories: Category[] = await getCategories();
       const transPerCat: TotalPerCategory[] = await getTotalPerCategory(User);
 
-      const filteredCategories = categories.filter(
-        (cate) => cate.name !== "Income"
-      );
-      const labels = filteredCategories.map((cate) => cate.name);
+      let gastos: number[] = new Array(cateNames.length).fill(0);
 
-      let gastos: number[] = new Array(labels.length).fill(0);
-
-      for (let j = 0; j < transPerCat.length; j++) {
-        gastos[transPerCat[j].categoryId - 2] = Math.abs(
-          transPerCat[j]._sum.amount
-        );
-      }
+      transPerCat.forEach((transaction) => {
+        let index = transaction.categoryId - 2;
+        let amount = Math.abs(transaction._sum.amount);
+        gastos[index] = amount;
+      });
 
       setPieChartData({
-        labels: labels,
+        labels: cateNames,
         datasets: [
           {
             label: "Total spend",
             data: gastos,
             backgroundColor: [
-              "rgba(255, 228, 196, 0.2)",
-              "rgba(255, 160, 122, 0.2)",
-              "rgba(0, 128, 128, 0.2)",
-              "rgba(255, 0, 0, 0.2)",
-              "rgba(139, 69, 19, 0.2)",
-              "rgba(0, 0, 0, 0.2)",
-              "rgba(255, 215, 0, 0.2)",
-              "rgba(255, 255, 255, 0.2)",
-              "rgba(128, 128, 128, 0.2)",
+              "rgba(19, 64, 116, 1)",
+              "rgba(19, 49, 92, 1)",
+              "rgba(11, 37, 69, 1)",
+              "rgba(141, 169, 196, 1)",
+              "rgba(238, 244, 237, 1)",
+              "rgba(241, 255, 235, 1)",
+              "rgba(240, 235, 216, 1)",
+              "rgba(201, 232, 196, 1)",
+              "rgba(203, 207, 201, 1)",
             ],
             borderColor: [
-              "rgba(255, 228, 196, 1)",
-              "rgba(255, 160, 122, 1)",
-              "rgba(0, 128, 128, 1)",
-              "rgba(255, 0, 0, 1)",
-              "rgba(139, 69, 19, 1)",
-              "rgba(0, 0, 0, 1)",
-              "rgba(255, 215, 0, 1)",
-              "rgba(255, 255, 255, 1)",
-              "rgba(128, 128, 128, 1)",
+              "rgba(19, 64, 116, 0.2)",
+              "rgba(19, 49, 92, 0.2)",
+              "rgba(11, 37, 69, 0.2)",
+              "rgba(141, 169, 196, 0.2)",
+              "rgba(238, 244, 237, 0.2)",
+              "rgba(241, 255, 235, 0.2)",
+              "rgba(240, 235, 216, 0.2)",
+              "rgba(201, 232, 196, 0.2)",
+              "rgba(203, 207, 201, 0.2)",
             ],
             borderWidth: 1,
           },
@@ -101,20 +104,27 @@ export default function MonthSummary({ User }: IncomeData) {
   return (
     <>
       <div className={styles.monthGraphs}>
-        <h1 className="text-2xl p-2" suppressHydrationWarning={true}>
-          Expenses from {currMonth}
-        </h1>
-        <div className="w-full h-full">
+        <div className={styles.header}>
+          <div>
+            <p>Transactions</p>
+            <h2>Per Category</h2>
+          </div>
+          <div className={styles.buttons}>
+            <button className={styles.active}>Weekly</button>
+            <button>Monthly</button>
+          </div>
+        </div>
+        <div className={`${styles.barChart}`}>
           <Doughnut
             data={pieChartData}
             options={{
               responsive: true,
               plugins: {
                 legend: {
-                  position: "right",
+                  /* Cambiar proximamente a display: false */ position: "right",
                 },
               },
-              maintainAspectRatio: true,
+              maintainAspectRatio: false,
             }}
           />
         </div>

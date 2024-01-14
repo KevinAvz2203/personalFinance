@@ -1,5 +1,3 @@
-"use client";
-
 import { getPerDate } from "@/Backend/Transaction";
 import styles from "./Month.module.css";
 import { useState, useEffect } from "react";
@@ -104,7 +102,7 @@ export default function MonthCashFlow({ User }: IncomeData) {
         display: false,
       },
     },
-    maintainAspectRatio: true,
+    maintainAspectRatio: false,
   } as const;
 
   useEffect(() => {
@@ -161,7 +159,7 @@ export default function MonthCashFlow({ User }: IncomeData) {
             <button>Monthly</button>
           </div>
         </div>
-        <div style={{ width: "100%", height: "100%" }}>
+        <div className={styles.barChart}>
           <Bar options={options} data={barChartData} />
         </div>
       </div>
