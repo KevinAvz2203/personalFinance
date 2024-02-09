@@ -78,7 +78,7 @@ export default function Nav() {
                 </Link>
               </li>
               <li className={`${styles.navLi}`}>
-                <Link href={"/data"} className={`${styles.navLink}`}>
+                <Link href={"/stadistics"} className={`${styles.navLink}`}>
                   <Image
                     src={statsWhite}
                     alt="Home Icon"

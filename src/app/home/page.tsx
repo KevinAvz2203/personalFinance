@@ -27,7 +27,7 @@ export default function Home() {
     <>
       <Header />
 
-      <div>
+      <div className="content">
         {/* Top Cards */}
         <section className={styles.genSummary}>
           <TopCard User={UserID} />

@@ -11,7 +11,16 @@
 }
 
 body {
-  background-color: #EEF4ED;
+  background-color: #eef4ed;
+}
+
+.content {
+  margin: 0rem 1.5em;
+  margin-bottom: 1.5rem;
+}
+
+.content > * {
+  margin-top: 1.5rem;
 }
 
 /* ================================ */

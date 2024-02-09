@@ -1,16 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import ChargeActivity from "./ChargeActivity";
-import addChargeIcon from "/public/assets/icons/addChargeIcon.png";
-import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getPerUser } from "@/Backend/Transaction";
 import styles from "./HistoricActivity.module.css";
 
 type IncomeData = {
   User: number;
-  HistoryType: number;
 };
 
 type TransactionsData = {
@@ -30,88 +26,74 @@ const options = {
   day: "numeric",
 } as const;
 
-export default function HistoricActivity({ User, HistoryType }: IncomeData) {
+export default function HistoricActivity({ User }: IncomeData) {
   const [userTransactions, setUserTransactions] = useState<TransactionsData[]>(
     []
   );
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function getUserTransactions() {
+      setIsLoading(true);
       const userTrans = await getPerUser(User);
       setUserTransactions(userTrans);
+      setIsLoading(false);
     }
 
     getUserTransactions();
   }, [User]);
 
-  const dates = userTransactions.map((transaction) => {
-    const d = new Date(transaction.createdAt);
-    return d.toLocaleDateString(undefined, options);
-  });
+  const dates = useMemo(
+    () =>
+      userTransactions.map((transaction) => {
+        const d = new Date(transaction.createdAt);
+        return d.toLocaleDateString(undefined, options);
+      }),
+    [userTransactions]
+  );
 
-  const hours = userTransactions.map((transaction) => {
-    const d = new Date(transaction.createdAt);
-    return d.toLocaleTimeString("en-US");
-  });
+  const hours = useMemo(
+    () =>
+      userTransactions.map((transaction) => {
+        const d = new Date(transaction.createdAt);
+        return d.toLocaleTimeString("en-US");
+      }),
+    [userTransactions]
+  );
 
   // Creo un arreglo en date al Set(dates), solo guardando los valores unicos dentro de dates
-  const uniqueDates = Array.from(new Set(dates));
-  let currDay = new Date().toLocaleDateString(undefined, options);
+  const uniqueDates = useMemo(() => Array.from(new Set(dates)), [dates]);
+  const currDay = useMemo(
+    () => new Date().toLocaleDateString(undefined, options),
+    []
+  );
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Or some loading spinner
+  }
 
   return (
     <>
-      {HistoryType === 0 ? (
-        <div className={styles.recentAct}>
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl">Recent Activity</h1>
-            <Link href={"/addTransaction"}>
-              <Image src={addChargeIcon} alt="add charge icon" />
-            </Link>
+      <div className={`${styles.cashFlow} testing`}>
+        <div className={styles.header}>
+          <div>
+            <p>Transactions</p>
+            <h2>Complete History</h2>
           </div>
-
-          <div className={styles.scrollingClass}>
-            {uniqueDates.map(
-              (fecha, dtindex) =>
-                dtindex < 3 && (
-                  <div className="mb-10" key={dtindex}>
-                    {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
-                    {userTransactions.map(
-                      (transaction, transId) =>
-                        fecha ==
-                          new Date(transaction.createdAt).toLocaleDateString(
-                            undefined,
-                            options
-                          ) && (
-                          <ChargeActivity
-                            key={transaction.id}
-                            Name={transaction.description}
-                            Time={hours[transId]}
-                            Category={transaction.category.name}
-                            Amount={transaction.amount}
-                          />
-                        )
-                    )}
-                  </div>
-                )
-            )}
+          <div className={styles.buttons}>
+            <button className={styles.active}>Weekly</button>
+            <button>Monthly</button>
+            <button>All Time</button>
           </div>
         </div>
-      ) : (
-        <></>
-      )}
 
-      {HistoryType === 1 ? (
-        <div className={styles.actHistory}>
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl">Activity History</h1>
-            <Link href={"/addTransaction"}>
-              <Image src={addChargeIcon} alt="add charge icon" />
-            </Link>
-          </div>
-
+        <div className={`${styles.scrollingClass} testing`}>
           {uniqueDates.map((fecha, dtindex) => (
             <div className="mb-10" key={dtindex}>
-              {fecha == currDay ? <h4>Today</h4> : <h4>{fecha}</h4>}
+              <div className={styles.date}>
+                {fecha == currDay ? <p>Today</p> : <p>{fecha}</p>}
+              </div>
+
               {userTransactions.map(
                 (transaction, transId) =>
                   fecha ==
@@ -131,9 +113,13 @@ export default function HistoricActivity({ User, HistoryType }: IncomeData) {
             </div>
           ))}
         </div>
-      ) : (
-        <></>
-      )}
+
+        <div className={`${styles.footer} testing`}>
+          <div className={styles.buttons}>
+            <button className={styles.active}>New Transaction</button>
+          </div>
+        </div>
+      </div>
     </>
   );
 }
