@@ -5,17 +5,35 @@
   display: flex;
   align-items: center;
   border-radius: 5px;
+  box-shadow: inset 0 0 3px #8da9c4;
 }
 
 .chargeData {
   width: 40%;
 }
 
+.title {
+  color: #000000;
+}
+
+.time {
+  color: #6c6c6c;
+}
+
 .chargeCat {
   width: 20%;
+  color: #000000;
 }
 
 .chargeAmount {
   width: 40%;
   text-align: right;
+}
+
+.income {
+  color: #c9e8c4;
+}
+
+.expense {
+  color: #d7263d;
 }

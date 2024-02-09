@@ -17,17 +17,17 @@ export default function ChargeActivity({
     <>
       <div className={styles.charge}>
         <div className={styles.chargeData}>
-          <p className="text-lg">{Name}</p>
-          <p className="text-xs">{Time}</p>
+          <p className={`${styles.title} text-lg`}>{Name}</p>
+          <p className={`${styles.time} text-xs`}>{Time}</p>
         </div>
 
         <div className={styles.chargeCat}>{Category}</div>
         {Category == "Income" ? (
-          <div className={`${styles.chargeAmount} text-blue-600`}>
+          <div className={`${styles.chargeAmount} ${styles.income}`}>
             ${Amount} MXN
           </div>
         ) : (
-          <div className={`${styles.chargeAmount} text-red-600`}>
+          <div className={`${styles.chargeAmount} ${styles.expense}`}>
             ${Amount} MXN
           </div>
         )}

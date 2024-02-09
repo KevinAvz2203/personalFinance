@@ -52,6 +52,16 @@ export async function getPerUser(id: number): Promise<TransactionsData[]> {
   return data;
 }
 
+export async function getRecentPerUser(
+  id: number
+): Promise<TransactionsData[]> {
+  const res = await fetch(
+    "http://localhost:3000/api/transactions/user/recent/" + id
+  );
+  const data = await res.json();
+  return data;
+}
+
 export async function getIncomes(id: number): Promise<Amount> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/user/incomes/" + id

@@ -2,7 +2,7 @@
 
 import TopCard from "@/components/TopCard";
 import MonthSummary from "@/components/MonthSummary";
-import HistoricActivity from "@/components/HistoricActivity";
+import RecentActivity from "@/components/RecentActivity";
 import MonthCashFlow from "@/components/MonthCashFlow";
 import styles from "./home.module.css";
 import { useSession } from "next-auth/react";
@@ -43,7 +43,7 @@ export default function Home() {
 
         <section className={styles.genSummary}>
           {/* Componente grafica PIE summary Month */}
-          {/* <HistoricActivity User={UserID} HistoryType={0} /> */}
+          <RecentActivity User={UserID} />
         </section>
       </div>
     </>

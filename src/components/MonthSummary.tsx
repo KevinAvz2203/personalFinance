@@ -55,7 +55,6 @@ export default function MonthSummary({ User }: IncomeData) {
   useEffect(() => {
     async function getCateMonthSummary() {
       const transPerCat: TotalPerCategory[] = await getTotalPerCategory(User);
-
       let gastos: number[] = new Array(cateNames.length).fill(0);
 
       transPerCat.forEach((transaction) => {
@@ -114,7 +113,7 @@ export default function MonthSummary({ User }: IncomeData) {
             <button>Monthly</button>
           </div>
         </div>
-        <div className={`${styles.barChart}`}>
+        <div className={styles.pieChart}>
           <Doughnut
             data={pieChartData}
             options={{
