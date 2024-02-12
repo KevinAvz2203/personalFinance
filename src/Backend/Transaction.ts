@@ -62,6 +62,31 @@ export async function getRecentPerUser(
   return data;
 }
 
+/* ======================================== */
+export async function getHistoricPerUser(
+  id: number,
+  period: "Weekly" | "Monthly" | "Yearly"
+): Promise<TransactionsData[]> {
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/transactions/user/historic/${id}?period=${period}`
+    );
+
+    // Check if the request was successful
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    return [];
+  }
+}
+
+/* ========================================= */
+
 export async function getIncomes(id: number): Promise<Amount> {
   const res = await fetch(
     "http://localhost:3000/api/transactions/user/incomes/" + id

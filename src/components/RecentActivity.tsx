@@ -72,6 +72,8 @@ export default function RecentActivity({ User }: IncomeData) {
     return <div>Loading...</div>; // Or some loading spinner
   }
 
+  console.log(userTransactions);
+
   return (
     <>
       <div className={styles.cashFlow}>

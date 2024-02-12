@@ -27,7 +27,7 @@ export default function Stadistics() {
       <Header />
 
       <div className="content">
-        <div className={`${styles.container} testing`}>
+        <div className={styles.container}>
           {/* <div className={styles.dataGraphs}>
             <ExpPerCategory User={UserID} />
 
