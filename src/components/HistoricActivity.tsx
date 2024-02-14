@@ -1,5 +1,3 @@
-"use client";
-
 import ChargeActivity from "./ChargeActivity";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { getHistoricPerUser } from "@/Backend/Transaction";
@@ -37,7 +35,6 @@ export default function HistoricActivity({ User }: IncomeData) {
   const [activeButton, setActiveButton] = useState<
     "Weekly" | "Monthly" | "Yearly"
   >("Weekly");
-
   const [data, setData] = useState<DataState>({
     Weekly: null,
     Monthly: null,
@@ -66,26 +63,22 @@ export default function HistoricActivity({ User }: IncomeData) {
     }
   }, [User, activeButton, data]);
 
-  const dates = useMemo(
-    () =>
-      data[activeButton]?.map((transaction) => {
-        const d = new Date(transaction.createdAt);
-        return d.toLocaleDateString(undefined, options);
-      }),
-    [data, activeButton]
-  );
-
-  const hours = useMemo(
-    () =>
-      data[activeButton]?.map((transaction) => {
-        const d = new Date(transaction.createdAt);
-        return d.toLocaleTimeString("en-US");
-      }),
-    [data, activeButton]
-  );
-
   // Creo un arreglo en date al Set(dates), solo guardando los valores unicos dentro de dates
-  const uniqueDates = useMemo(() => Array.from(new Set(dates)), [dates]);
+  const uniqueDates = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          data[activeButton]?.map((transaction) =>
+            new Date(transaction.createdAt).toLocaleDateString(
+              undefined,
+              options
+            )
+          )
+        )
+      ),
+    [data, activeButton]
+  );
+
   const currDay = useMemo(
     () => new Date().toLocaleDateString(undefined, options),
     []
@@ -104,24 +97,17 @@ export default function HistoricActivity({ User }: IncomeData) {
             <h2>Complete History</h2>
           </div>
           <div className={styles.buttons}>
-            <button
-              className={activeButton === "Weekly" ? styles.active : ""}
-              onClick={() => handleClick("Weekly")}
-            >
-              Weekly
-            </button>
-            <button
-              className={activeButton === "Monthly" ? styles.active : ""}
-              onClick={() => handleClick("Monthly")}
-            >
-              Monthly
-            </button>
-            <button
-              className={activeButton === "Yearly" ? styles.active : ""}
-              onClick={() => handleClick("Yearly")}
-            >
-              Yearly
-            </button>
+            {["Weekly", "Monthly", "Yearly"].map((button) => (
+              <button
+                key={button}
+                className={activeButton === button ? styles.active : ""}
+                onClick={() =>
+                  handleClick(button as "Weekly" | "Monthly" | "Yearly")
+                }
+              >
+                {button}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -129,7 +115,7 @@ export default function HistoricActivity({ User }: IncomeData) {
           {uniqueDates.map((fecha, dtindex) => (
             <div className="mb-10" key={dtindex}>
               <div className={styles.date}>
-                {fecha == currDay ? <p>Today</p> : <p>{fecha}</p>}
+                <p>{fecha === currDay ? "Today" : fecha}</p>
               </div>
 
               {data[activeButton] &&
@@ -143,7 +129,9 @@ export default function HistoricActivity({ User }: IncomeData) {
                       <ChargeActivity
                         key={transaction.id}
                         Name={transaction.description}
-                        Time={hours[transId]}
+                        Time={new Date(
+                          transaction.createdAt
+                        ).toLocaleTimeString("en-US")}
                         Category={transaction.category.name}
                         Amount={transaction.amount}
                       />
