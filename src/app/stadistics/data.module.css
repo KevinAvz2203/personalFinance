@@ -1,16 +1,15 @@
 .container {
   display: flex;
+  justify-content: space-between;
   height: 100vh;
 }
 
 .dataGraphs {
   align-content: center;
-  width: 50%;
+  width: 49%;
 }
 
 .dataActivity {
-  /* display: flex;
-  justify-content: center; */
-  width: 50%;
+  width: 49%;
   height: 100%;
 }
