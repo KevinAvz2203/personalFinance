@@ -1,7 +1,5 @@
-"use client";
-
 import ChargeActivity from "./ChargeActivity";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { getRecentPerUser } from "@/Backend/Transaction";
 import styles from "./RecentActivity.module.css";
 
@@ -32,16 +30,16 @@ export default function RecentActivity({ User }: IncomeData) {
   );
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function getUserTransactions() {
-      setIsLoading(true);
-      const userTrans = await getRecentPerUser(User);
-      setUserTransactions(userTrans);
-      setIsLoading(false);
-    }
-
-    getUserTransactions();
+  const getUserTransactions = useCallback(async () => {
+    setIsLoading(true);
+    const userTrans = await getRecentPerUser(User);
+    setUserTransactions(userTrans);
+    setIsLoading(false);
   }, [User]);
+
+  useEffect(() => {
+    getUserTransactions();
+  }, [getUserTransactions]);
 
   const dates = useMemo(
     () =>

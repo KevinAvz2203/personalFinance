@@ -53,51 +53,56 @@ export default function MonthSummary({ User }: IncomeData) {
   });
 
   useEffect(() => {
-    async function getCateMonthSummary() {
-      const transPerCat: TotalPerCategory[] = await getTotalPerCategory(User);
-      let gastos: number[] = new Array(cateNames.length).fill(0);
+    async function fetchCategoryMonthSummary() {
+      try {
+        const transPerCat: TotalPerCategory[] = await getTotalPerCategory(User);
+        let gastos: number[] = new Array(cateNames.length).fill(0);
 
-      transPerCat.forEach((transaction) => {
-        let index = transaction.categoryId - 2;
-        let amount = Math.abs(transaction._sum.amount);
-        gastos[index] = amount;
-      });
+        transPerCat.forEach((transaction) => {
+          let index = transaction.categoryId - 2;
+          let amount = Math.abs(transaction._sum.amount);
+          gastos[index] = amount;
+        });
 
-      setPieChartData({
-        labels: cateNames,
-        datasets: [
-          {
-            label: "Total spend",
-            data: gastos,
-            backgroundColor: [
-              "rgba(19, 64, 116, 1)",
-              "rgba(19, 49, 92, 1)",
-              "rgba(11, 37, 69, 1)",
-              "rgba(141, 169, 196, 1)",
-              "rgba(238, 244, 237, 1)",
-              "rgba(241, 255, 235, 1)",
-              "rgba(240, 235, 216, 1)",
-              "rgba(201, 232, 196, 1)",
-              "rgba(203, 207, 201, 1)",
-            ],
-            borderColor: [
-              "rgba(19, 64, 116, 0.2)",
-              "rgba(19, 49, 92, 0.2)",
-              "rgba(11, 37, 69, 0.2)",
-              "rgba(141, 169, 196, 0.2)",
-              "rgba(238, 244, 237, 0.2)",
-              "rgba(241, 255, 235, 0.2)",
-              "rgba(240, 235, 216, 0.2)",
-              "rgba(201, 232, 196, 0.2)",
-              "rgba(203, 207, 201, 0.2)",
-            ],
-            borderWidth: 1,
-          },
-        ],
-      });
+        setPieChartData({
+          labels: cateNames,
+          datasets: [
+            {
+              label: "Total spend",
+              data: gastos,
+              backgroundColor: [
+                "rgba(19, 64, 116, 1)",
+                "rgba(19, 49, 92, 1)",
+                "rgba(11, 37, 69, 1)",
+                "rgba(141, 169, 196, 1)",
+                "rgba(238, 244, 237, 1)",
+                "rgba(241, 255, 235, 1)",
+                "rgba(240, 235, 216, 1)",
+                "rgba(201, 232, 196, 1)",
+                "rgba(203, 207, 201, 1)",
+              ],
+              borderColor: [
+                "rgba(19, 64, 116, 0.2)",
+                "rgba(19, 49, 92, 0.2)",
+                "rgba(11, 37, 69, 0.2)",
+                "rgba(141, 169, 196, 0.2)",
+                "rgba(238, 244, 237, 0.2)",
+                "rgba(241, 255, 235, 0.2)",
+                "rgba(240, 235, 216, 0.2)",
+                "rgba(201, 232, 196, 0.2)",
+                "rgba(203, 207, 201, 0.2)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Error fetching category month summary:", error);
+        // Handle error gracefully, e.g., show a message to the user
+      }
     }
 
-    getCateMonthSummary();
+    fetchCategoryMonthSummary();
   }, [User]);
 
   return (
@@ -120,7 +125,7 @@ export default function MonthSummary({ User }: IncomeData) {
               responsive: true,
               plugins: {
                 legend: {
-                  /* Cambiar proximamente a display: false */ position: "right",
+                  position: "right",
                 },
               },
               maintainAspectRatio: false,
