@@ -9,9 +9,7 @@ export default function ProgressBar({ completed }: IncomeData) {
 
   return (
     <div className="containerStyle">
-      <div className="fillerStyles" style={fillerStyles}>
-        <span className="labelStyles">{`${completed}%`}</span>
-      </div>
+      <div className="fillerStyles" style={fillerStyles}></div>
     </div>
   );
 }

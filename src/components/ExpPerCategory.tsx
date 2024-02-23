@@ -1,26 +1,8 @@
 import { getTotalPerCategory } from "@/Backend/Transaction";
 import { getCategories } from "@/Backend/Category";
 import { useState, useEffect, useCallback } from "react";
-import { Bar } from "react-chartjs-2";
+import ProgressBar from "@/components/ProgressBar";
 import styles from "./ExpPerCategory.module.css";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
 
 type IncomeData = {
   User: number;
@@ -38,68 +20,11 @@ interface TotalPerCategory {
   categoryId: number;
 }
 
-interface BarChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    backgroundColor: string;
-    borderColor: string;
-    hoverBackgroundColor: string;
-    borderRadius: { topRight: number; topLeft: number };
-  }[];
-}
+let roundedExpense: number = 0;
 
 export default function ExpPerCategory({ User }: IncomeData) {
-  const [barChartData, setBarChartData] = useState<BarChartData>({
-    labels: [],
-    datasets: [],
-  });
-
-  /* ===================== */
-  let delayed: any;
-  const options = {
-    responsive: true,
-    animation: {
-      onComplete: () => {
-        delayed = true;
-      },
-      delay: (context: any) => {
-        let delay = 0;
-        if (context.type === "data" && context.mode === "default" && !delayed) {
-          delay = context.dataIndex * 300 + context.datasetIndex * 100;
-        }
-        return delay;
-      },
-    },
-    scales: {
-      x: {
-        grid: {
-          display: false,
-        },
-      },
-      y: {
-        ticks: {
-          beginAtZero: true,
-          callback: function (value: any, index: any, values: any) {
-            return value / 1000 + "K";
-          },
-        },
-        border: {
-          dash: [10, 5],
-        },
-      },
-    },
-    plugins: {
-      tooltip: {
-        yAlign: "bottom",
-      },
-      legend: {
-        display: false,
-      },
-    },
-    maintainAspectRatio: false,
-  } as const;
+  const [expensesData, setExpensesData] = useState<number[]>([]);
+  const [categoriesLabels, setCategoriesLabels] = useState<String[]>([]);
 
   /* ===================== */
   const getCateMonthSummary = useCallback(async (): Promise<void> => {
@@ -111,7 +36,6 @@ export default function ExpPerCategory({ User }: IncomeData) {
       const filteredCategories = categories.filter(
         (cate) => cate.name !== "Income"
       );
-      const labels = filteredCategories.map((cate) => cate.name);
 
       const gastos: number[] = filteredCategories.map((category) => {
         const total = transPerCat.find(
@@ -120,19 +44,24 @@ export default function ExpPerCategory({ User }: IncomeData) {
         return total ? Math.abs(total._sum.amount) : 0;
       });
 
-      setBarChartData({
-        labels: labels,
-        datasets: [
-          {
-            label: "Total",
-            data: gastos,
-            borderColor: "rgba(141, 169, 196, 0.4)",
-            backgroundColor: "#8DA9C4",
-            hoverBackgroundColor: "#134074",
-            borderRadius: { topRight: 10, topLeft: 10 },
-          },
-        ],
-      });
+      const maxExpense: number = Math.max(...gastos);
+      roundedExpense = Math.ceil(maxExpense / 1000) * 1000;
+
+      // Sort gastos with their corresponding categories:
+      const sortedGastosWithCategories = gastos
+        .map((gasto, index) => ({
+          gasto,
+          category: filteredCategories[index],
+        }))
+        .sort((a, b) => b.gasto - a.gasto);
+
+      const gastosSorted = sortedGastosWithCategories.map(({ gasto }) => gasto);
+      const categoriesLabelsSorted = sortedGastosWithCategories.map(
+        ({ category }) => category.name
+      );
+
+      setExpensesData(gastosSorted);
+      setCategoriesLabels(categoriesLabelsSorted);
     } catch (error) {
       console.error("Error fetching data:", error);
       // Handle error, e.g., show a message to the user
@@ -157,7 +86,22 @@ export default function ExpPerCategory({ User }: IncomeData) {
           </div>
         </div>
         <div className={styles.barChart}>
-          <Bar options={options} data={barChartData} />
+          {categoriesLabels.map((category, index) => (
+            <div className={styles.goalInstance} key={index}>
+              <div className={styles.goalTitle}>
+                <p>{category} </p>
+                <p>{expensesData[index].toString()} MXN</p>
+              </div>
+
+              <ProgressBar
+                key={index}
+                completed={(
+                  (Number(expensesData[index]) / Number(roundedExpense)) *
+                  100
+                ).toString()}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </>

@@ -34,7 +34,8 @@ export default function Stadistics() {
             {/* <ExpPerCategoryExpected User={UserID} /> */}
           </div>
           <div className={styles.dataActivity}>
-            <HistoricActivity User={UserID} />
+            {/* <HistoricActivity User={UserID} /> */}
+            <ExpPerCategoryExpected User={UserID} />
           </div>
         </div>
       </div>
