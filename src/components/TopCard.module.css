@@ -38,3 +38,8 @@
 .topCards:nth-child(3) div p:last-child {
   color: #ff0000;
 }
+
+.separator {
+  height: 60px;
+  border: 1px solid #8da9c4;
+}

@@ -13,35 +13,51 @@ import {
 import { getTotalSavedGoals } from "@/Backend/Goal";
 import styles from "./TopCard.module.css";
 
+type TotalAmountsType = {
+  incomes: number;
+  expenses: number;
+  totalBalance: number;
+};
+
+type GoalsTotalSavedType = {
+  totalGoalsAmount: number;
+  totalSaved: number;
+};
+
 export default function TopCard({ User }: { User: number }) {
-  const [totalAmounts, setTotalAmounts] = useState({
+  const [totalAmounts, setTotalAmounts] = useState<TotalAmountsType>({
     incomes: 0,
     expenses: 0,
     totalBalance: 0,
   });
 
-  const [goalsTotalSaved, setGoalsTotalSaved] = useState({
+  const [goalsTotalSaved, setGoalsTotalSaved] = useState<GoalsTotalSavedType>({
     totalGoalsAmount: 0,
     totalSaved: 0,
   });
 
   useEffect(() => {
     async function getUserIncomeData() {
-      const [incomeTotal, expenseTotal, balanceTotal, savingTotal] =
-        await Promise.all([
-          getIncomes(User),
-          getExpenses(User),
-          getTotalBalance(User),
-          getTotalSavedGoals(User),
-        ]);
+      try {
+        const [incomeTotal, expenseTotal, balanceTotal, savingTotal] =
+          await Promise.all([
+            getIncomes(User),
+            getExpenses(User),
+            getTotalBalance(User),
+            getTotalSavedGoals(User),
+          ]);
 
-      setTotalAmounts({
-        incomes: incomeTotal.amount,
-        expenses: expenseTotal.amount,
-        totalBalance: balanceTotal.amount,
-      });
+        setTotalAmounts({
+          incomes: incomeTotal.amount,
+          expenses: expenseTotal.amount,
+          totalBalance: balanceTotal.amount,
+        });
 
-      setGoalsTotalSaved(savingTotal);
+        setGoalsTotalSaved(savingTotal);
+      } catch (error) {
+        console.error("Error fetching user income data:", error);
+        // Handle error here
+      }
     }
 
     getUserIncomeData();
@@ -83,14 +99,7 @@ export default function TopCard({ User }: { User: number }) {
                 <p>{label}</p>
               </div>
             </div>
-            {index !== 3 && (
-              <span
-                style={{
-                  height: 60,
-                  border: "1px #8DA9C4 solid",
-                }}
-              />
-            )}
+            {index !== 3 && <span className={styles.separator} />}
           </React.Fragment>
         ))}
       </div>
