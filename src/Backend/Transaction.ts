@@ -113,7 +113,7 @@ export async function getTotalBalance(id: number): Promise<Amount> {
 
 export async function getTotalPerCategory(
   id: number,
-  period: "Weekly" | "Monthly"
+  period: "Weekly" | "Monthly" | "Yearly"
 ): Promise<TotalPerCategory[]> {
   try {
     const res = await fetch(
@@ -134,7 +134,7 @@ export async function getTotalPerCategory(
 
 export async function getPerDate(
   id: number,
-  period: "Weekly" | "Monthly" | "Yearly"
+  period: "Weekly" | "Monthly"
 ): Promise<TransactionsByDate[]> {
   try {
     const res = await fetch(

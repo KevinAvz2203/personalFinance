@@ -3,7 +3,14 @@ import { getCategories } from "@/Backend/Category";
 import { useState, useEffect, useCallback } from "react";
 import styles from "./ExpPerCategory.module.css";
 import ProgressBar from "@/components/ProgressBar";
+import {
+  filterCategories,
+  calculateRoundedExpense,
+  sortGastosWithCategories,
+  extractSortedData,
+} from "@/utils/ExpPerCategory_HelperFunctions";
 
+// Define types and interfaces
 type IncomeData = {
   User: number;
 };
@@ -19,87 +26,116 @@ interface PrevMonthsTransaction {
   total_amount: number;
 }
 
-let roundedExpense: number = 0;
+interface ExpectedData {
+  expenses: number[];
+  categories: String[];
+  roundedTotal: number;
+}
 
+// Define weights for weighted moving average function
 const WEIGHTS = [0.1, 0.2, 0.3, 0.4, 0.5];
 
-function weightedMovingAverage(data: number[], weights: number[]) {
+// Calculate weighted moving average
+function weightedMovingAverage(data: number[]) {
   const weightedSum = data.reduce(
-    (acc, value, index) => acc + value * weights[index],
+    (acc, value, index) => acc + value * WEIGHTS[index],
     0
   );
-  const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
+  const totalWeight = WEIGHTS.reduce((acc, weight) => acc + weight, 0);
 
   return weightedSum / totalWeight;
 }
 
+// Main component function
 export default function ExpPerCategoryExpected({ User }: IncomeData) {
-  const [categoriesLabels, setCategoriesLabels] = useState<string[]>([]);
-  const [gastosPrevistos, setGastosPrevistos] = useState<number[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [expectedData, setExpectedData] = useState<ExpectedData>({
+    expenses: [],
+    categories: [],
+    roundedTotal: 0,
+  });
 
-  const fetchData = useCallback(async (): Promise<void> => {
+  const [loading, setLoading] = useState<boolean>(true);
+
+  // Group transactions by category
+  const groupTransactionsByCategory = (
+    prevMonthsTransaction: PrevMonthsTransaction[]
+  ) => {
+    const multiArray: number[][] = Array.from({ length: 9 }, () => []);
+
+    // Iterate over each transaction in the prevMonthsTransaction array
+    prevMonthsTransaction.forEach((transaction) => {
+      // Calculate the index based on the value of transaction.Categoria and subtract 2 (because our transaction.Categoria starts from 2, and out array index at 0)
+      const index = Number(transaction.Categoria) - 2;
+
+      // Check if the calculated index is within the bounds of multiArray
+      if (index >= 0 && index < multiArray.length) {
+        // Push the total_amount of the transaction into the corresponding Category sub-index of multiArray
+        multiArray[index].push(transaction.total_amount);
+      }
+    });
+
+    // Returns a 2D array with the transaction total for the prev 5 months of each category
+    return multiArray;
+  };
+
+  // Calculate expected expenses using weighted moving average for each category
+  const calculateExpectedExpenses = (multiArray: number[][]) => {
+    return multiArray.map((data) =>
+      Math.abs(Math.ceil(weightedMovingAverage(data)))
+    );
+  };
+
+  // Fetch data from backend when component mounts or User prop changes
+  const fetchData = useCallback(async () => {
     try {
-      // Fetch categories
+      // Fetch categories from backend
       const categories: Category[] = await getCategories();
+      // Fetch previous months transactions from backend
       const prevMonthsTransaction: PrevMonthsTransaction[] =
         await getPrevMonths(User);
 
-      const filteredCategories = categories.filter(
-        (cate) => cate.name !== "Income"
+      // Filter out 'Income' category
+      const filteredCategories = filterCategories(categories);
+
+      // Group transactions by category
+      const multiArray = groupTransactionsByCategory(prevMonthsTransaction);
+
+      // Calculate expected expenses using weighted moving average
+      const gastosPrevistos = calculateExpectedExpenses(multiArray);
+
+      // Calculate max value for the Progress Bar limit
+      const roundedExpense = calculateRoundedExpense(gastosPrevistos);
+
+      // Sort expenses with corresponding categories
+      const sortedGastosWithCategories = sortGastosWithCategories(
+        gastosPrevistos,
+        filteredCategories
       );
 
-      const multiArray: number[][] = Array.from({ length: 9 }, () => []);
+      // Extract sorted expenses and categories
+      const { gastosSorted, categoriesLabelsSorted } = extractSortedData(
+        sortedGastosWithCategories
+      );
 
-      prevMonthsTransaction.forEach((transaction) => {
-        const index = Number(transaction.Categoria) - 2;
-        if (index >= 0 && index < multiArray.length) {
-          multiArray[index].push(transaction.total_amount);
-        }
+      // Store fetched data
+      setExpectedData({
+        expenses: gastosSorted,
+        categories: categoriesLabelsSorted,
+        roundedTotal: roundedExpense,
       });
 
-      const gastosPrevistos = multiArray.map((data) =>
-        Math.abs(Math.ceil(weightedMovingAverage(data, WEIGHTS)))
-      );
-
-      const maxExpense: number = Math.max(...gastosPrevistos);
-      roundedExpense = Math.ceil(maxExpense / 1000) * 1000;
-
-      // Sort gastos with their corresponding categories:
-      const sortedGastosWithCategories = gastosPrevistos
-        .map((gasto, index) => ({
-          gasto,
-          category: filteredCategories[index],
-        }))
-        .sort((a, b) => b.gasto - a.gasto);
-
-      const gastosSorted = sortedGastosWithCategories.map(({ gasto }) => gasto);
-      const categoriesLabelsSorted = sortedGastosWithCategories.map(
-        ({ category }) => category.name
-      );
-
-      setCategoriesLabels(categoriesLabelsSorted);
-      setGastosPrevistos(gastosSorted);
       setLoading(false);
     } catch (error) {
-      setError("Error feching data");
-      setLoading(false);
+      console.error("Error fetching data:", error);
+      // Handle error, e.g., show a message to the user
     }
   }, [User]);
 
   useEffect(() => {
-    fetchData();
+    fetchData(); // Fetch data when component mounts or User prop changes
   }, [fetchData]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
+  // Render UI
   return (
     <>
       <div className={styles.cashFlow}>
@@ -110,17 +146,19 @@ export default function ExpPerCategoryExpected({ User }: IncomeData) {
           </div>
         </div>
         <div className={styles.barChart}>
-          {categoriesLabels.map((category, index) => (
+          {/* Render each category with its expected expense and progress bar */}
+          {expectedData.categories.map((category, index) => (
             <div className={styles.goalInstance} key={index}>
               <div className={styles.goalTitle}>
                 <p>{category}</p>
-                <p>{gastosPrevistos[index].toString()} MXN</p>
+                <p>{expectedData.expenses[index].toString()} MXN</p>
               </div>
 
               <ProgressBar
                 key={index}
                 completed={(
-                  (Number(gastosPrevistos[index]) / Number(roundedExpense)) *
+                  (Number(expectedData.expenses[index]) /
+                    Number(expectedData.roundedTotal)) *
                   100
                 ).toString()}
               />

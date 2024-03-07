@@ -3,6 +3,12 @@ import { getCategories } from "@/Backend/Category";
 import { useState, useEffect, useCallback } from "react";
 import ProgressBar from "@/components/ProgressBar";
 import styles from "./ExpPerCategory.module.css";
+import {
+  filterCategories,
+  calculateRoundedExpense,
+  sortGastosWithCategories,
+  extractSortedData,
+} from "@/utils/ExpPerCategory_HelperFunctions";
 
 type IncomeData = {
   User: number;
@@ -20,48 +26,70 @@ interface TotalPerCategory {
   categoryId: number;
 }
 
-let roundedExpense: number = 0;
+interface ExpenseData {
+  expenses: number[];
+  categories: String[];
+  roundedTotal: number;
+}
 
 export default function ExpPerCategory({ User }: IncomeData) {
-  const [expensesData, setExpensesData] = useState<number[]>([]);
-  const [categoriesLabels, setCategoriesLabels] = useState<String[]>([]);
+  const [expenseData, setExpenseData] = useState<ExpenseData>({
+    expenses: [],
+    categories: [],
+    roundedTotal: 0,
+  });
 
-  /* ===================== */
-  const getCateMonthSummary = useCallback(async (): Promise<void> => {
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const getGastosUnsorted = (
+    filteredCategories: Category[],
+    transPerCat: TotalPerCategory[]
+  ) => {
+    const gastos: number[] = filteredCategories.map((category) => {
+      const total = transPerCat.find(
+        (trans) => trans.categoryId === category.id
+      );
+      return total ? Math.abs(total._sum.amount) : 0;
+    });
+
+    return gastos;
+  };
+
+  const getCateMonthSummary = useCallback(async () => {
     try {
       // Fetch categories and totals
       const categories: Category[] = await getCategories();
-      const transPerCat: TotalPerCategory[] = await getTotalPerCategory(User);
-
-      const filteredCategories = categories.filter(
-        (cate) => cate.name !== "Income"
+      // Fetch Total per Category from backend
+      const transPerCat: TotalPerCategory[] = await getTotalPerCategory(
+        User,
+        "Monthly"
       );
 
-      const gastos: number[] = filteredCategories.map((category) => {
-        const total = transPerCat.find(
-          (trans) => trans.categoryId === category.id
-        );
-        return total ? Math.abs(total._sum.amount) : 0;
+      // Filter out 'Income' category
+      const filteredCategories = filterCategories(categories);
+
+      // Creates an array of Unsorted gastos
+      const gastos = getGastosUnsorted(filteredCategories, transPerCat);
+
+      // Calculate max value for the Progress Bar limit
+      const roundedExpense = calculateRoundedExpense(gastos);
+
+      // Sort expenses with corresponding categories
+      const sortedGastosWithCategories = sortGastosWithCategories(
+        gastos,
+        filteredCategories
+      );
+
+      // Extract sorted expenses and categories
+      const { gastosSorted, categoriesLabelsSorted } = extractSortedData(
+        sortedGastosWithCategories
+      );
+
+      setExpenseData({
+        expenses: gastosSorted,
+        categories: categoriesLabelsSorted,
+        roundedTotal: roundedExpense,
       });
-
-      const maxExpense: number = Math.max(...gastos);
-      roundedExpense = Math.ceil(maxExpense / 1000) * 1000;
-
-      // Sort gastos with their corresponding categories:
-      const sortedGastosWithCategories = gastos
-        .map((gasto, index) => ({
-          gasto,
-          category: filteredCategories[index],
-        }))
-        .sort((a, b) => b.gasto - a.gasto);
-
-      const gastosSorted = sortedGastosWithCategories.map(({ gasto }) => gasto);
-      const categoriesLabelsSorted = sortedGastosWithCategories.map(
-        ({ category }) => category.name
-      );
-
-      setExpensesData(gastosSorted);
-      setCategoriesLabels(categoriesLabelsSorted);
     } catch (error) {
       console.error("Error fetching data:", error);
       // Handle error, e.g., show a message to the user
@@ -80,23 +108,20 @@ export default function ExpPerCategory({ User }: IncomeData) {
             <p>Stadistics</p>
             <h2>Current Month</h2>
           </div>
-          <div className={styles.buttons}>
-            <button className={styles.active}>Monthly</button>
-            <button>Yearly</button>
-          </div>
         </div>
         <div className={styles.barChart}>
-          {categoriesLabels.map((category, index) => (
+          {expenseData.categories.map((category, index) => (
             <div className={styles.goalInstance} key={index}>
               <div className={styles.goalTitle}>
                 <p>{category} </p>
-                <p>{expensesData[index].toString()} MXN</p>
+                <p>{expenseData.expenses[index].toString()} MXN</p>
               </div>
 
               <ProgressBar
                 key={index}
                 completed={(
-                  (Number(expensesData[index]) / Number(roundedExpense)) *
+                  (Number(expenseData.expenses[index]) /
+                    Number(expenseData.roundedTotal)) *
                   100
                 ).toString()}
               />

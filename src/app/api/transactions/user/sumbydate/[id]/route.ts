@@ -12,17 +12,20 @@ export async function GET(request: NextRequest, { params }: Params) {
   let dateOffset;
   switch (period) {
     case "Monthly":
-      dateOffset = 30; // Last 30 days for yearly
+      dateOffset = 30;
+      break;
+    case "Yearly":
+      dateOffset = 3665;
       break;
     case "Weekly":
     default:
-      dateOffset = 7; // Last 7 days for monthly
+      dateOffset = 7;
       break;
   }
 
   try {
     const transaction = await prisma.transaction.groupBy({
-      by: ["createdAt", "typeId", "amount"],
+      by: ["createdAt", "amount"],
       where: {
         userId: Number(params.id),
         typeId: 2,
