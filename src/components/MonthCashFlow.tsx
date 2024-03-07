@@ -1,6 +1,6 @@
 import { getPerDate } from "@/Backend/Transaction";
 import styles from "./Month.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -75,17 +75,10 @@ interface TransactionsByDate {
   amount: number;
 }
 
-interface BarChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    backgroundColor: string;
-    borderColor: string;
-    hoverBackgroundColor: string;
-    borderRadius: { topRight: 10; topLeft: 10 };
-  }[];
-}
+type DataState = {
+  Weekly: TransactionsByDate[] | null;
+  Monthly: TransactionsByDate[] | null;
+};
 
 /* Dias de la semana */
 const labels = [
@@ -99,10 +92,19 @@ const labels = [
 ];
 
 export default function MonthCashFlow({ User }: IncomeData) {
-  const [barChartData, setBarChartData] = useState<BarChartData>({
-    labels: [],
-    datasets: [],
+  /* DIVISION */
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeButton, setActiveButton] = useState<"Weekly" | "Monthly">(
+    "Weekly"
+  );
+  const [data, setData] = useState<DataState>({
+    Weekly: null,
+    Monthly: null,
   });
+
+  const handleClick = useCallback((button: "Weekly" | "Monthly") => {
+    setActiveButton(button);
+  }, []);
 
   useEffect(() => {
     /* Esta funcion realiza el fetch por la informacion a desplegar
@@ -113,9 +115,10 @@ export default function MonthCashFlow({ User }: IncomeData) {
       realizaron, siendo de domingo - sabado
       
       Proximo update: Poder hacer fetch de la semana actual tambien */
-    async function getMonthCashflow() {
+    async function getMonthCashflow(period: "Weekly" | "Monthly") {
       try {
-        const perDate: TransactionsByDate[] = await getPerDate(User);
+        setIsLoading(true);
+        const perDate: TransactionsByDate[] = await getPerDate(User, period);
 
         /* forEach: Recorre el arreglo perDate y va asignando
         uno por uno en su POS del arreglo expenses correspondiente,
@@ -128,27 +131,18 @@ export default function MonthCashFlow({ User }: IncomeData) {
           expenses[dayOfWeekDigit] += amountToAdd;
         });
 
-        setBarChartData({
-          labels: labels,
-          datasets: [
-            {
-              label: "Total",
-              data: expenses.map((expense) => expense),
-              borderColor: "rgba(141, 169, 196, 0.4)",
-              backgroundColor: "#8DA9C4",
-              hoverBackgroundColor: "#134074",
-              borderRadius: { topRight: 10, topLeft: 10 },
-            },
-          ],
-        });
+        setData((prevData) => ({ ...prevData, [period]: expenses }));
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching transactions:", error);
         // Handle error gracefully, e.g., show a message to the user
       }
     }
 
-    getMonthCashflow();
-  }, [User]);
+    if (!data[activeButton]) {
+      getMonthCashflow(activeButton);
+    }
+  }, [User, activeButton, data]);
 
   return (
     <>
@@ -159,12 +153,36 @@ export default function MonthCashFlow({ User }: IncomeData) {
             <h2>Summary</h2>
           </div>
           <div className={styles.buttons}>
-            <button className={styles.active}>Weekly</button>
-            <button>Monthly</button>
+            {["Weekly", "Monthly"].map((button) => (
+              <button
+                key={button}
+                className={activeButton === button ? styles.active : ""}
+                onClick={() => handleClick(button as "Weekly" | "Monthly")}
+              >
+                {button}
+              </button>
+            ))}
           </div>
         </div>
         <div className={styles.barChart}>
-          <Bar options={options} data={barChartData} />
+          {data[activeButton] && (
+            <Bar
+              options={options}
+              data={{
+                labels: labels,
+                datasets: [
+                  {
+                    label: "Total",
+                    data: data[activeButton]?.map((expense) => expense),
+                    borderColor: "rgba(141, 169, 196, 0.4)",
+                    backgroundColor: "#8DA9C4",
+                    hoverBackgroundColor: "#134074",
+                    borderRadius: { topRight: 10, topLeft: 10 },
+                  },
+                ],
+              }}
+            />
+          )}
         </div>
       </div>
     </>

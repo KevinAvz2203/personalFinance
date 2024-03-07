@@ -1,28 +1,8 @@
-"use client";
-
 import { getPrevMonths } from "@/Backend/Transaction";
 import { getCategories } from "@/Backend/Category";
-import { useState, useEffect } from "react";
-import { Bar } from "react-chartjs-2";
+import { useState, useEffect, useCallback } from "react";
 import styles from "./ExpPerCategory.module.css";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import ProgressBar from "@/components/ProgressBar";
 
 type IncomeData = {
   User: number;
@@ -39,36 +19,29 @@ interface PrevMonthsTransaction {
   total_amount: number;
 }
 
-interface BarChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    borderColor: string;
-    backgroundColor: string;
-  }[];
+let roundedExpense: number = 0;
+
+const WEIGHTS = [0.1, 0.2, 0.3, 0.4, 0.5];
+
+function weightedMovingAverage(data: number[], weights: number[]) {
+  const weightedSum = data.reduce(
+    (acc, value, index) => acc + value * weights[index],
+    0
+  );
+  const totalWeight = weights.reduce((acc, weight) => acc + weight, 0);
+
+  return weightedSum / totalWeight;
 }
 
 export default function ExpPerCategoryExpected({ User }: IncomeData) {
-  const [barChartData, setBarChartData] = useState<BarChartData>({
-    labels: [],
-    datasets: [],
-  });
+  const [categoriesLabels, setCategoriesLabels] = useState<string[]>([]);
+  const [gastosPrevistos, setGastosPrevistos] = useState<number[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  function weightedMovingAverage(data: number[], weights: number[]) {
-    let weightedSum = 0;
-    let totalWeight = 0;
-
-    for (let i = 0; i < data.length; i++) {
-      weightedSum += data[i] * weights[i];
-      totalWeight += weights[i];
-    }
-
-    return weightedSum / totalWeight;
-  }
-
-  useEffect(() => {
-    async function fetchData() {
+  const fetchData = useCallback(async (): Promise<void> => {
+    try {
+      // Fetch categories
       const categories: Category[] = await getCategories();
       const prevMonthsTransaction: PrevMonthsTransaction[] =
         await getPrevMonths(User);
@@ -77,57 +50,82 @@ export default function ExpPerCategoryExpected({ User }: IncomeData) {
         (cate) => cate.name !== "Income"
       );
 
-      const multiArray: number[][] = [[], [], [], [], [], [], [], [], [], []];
-      for (let j = 0; j < prevMonthsTransaction.length; j++) {
-        multiArray[Number(prevMonthsTransaction[j].Categoria) - 2].push(
-          prevMonthsTransaction[j].total_amount
-        );
-      }
+      const multiArray: number[][] = Array.from({ length: 9 }, () => []);
 
-      console.log(multiArray);
-
-      const weights = [0.1, 0.2, 0.3, 0.4, 0.5];
-      const gastosPrevistos = multiArray.map((data) => {
-        const weightedAverage = weightedMovingAverage(data, weights);
-        return Math.abs(weightedAverage);
+      prevMonthsTransaction.forEach((transaction) => {
+        const index = Number(transaction.Categoria) - 2;
+        if (index >= 0 && index < multiArray.length) {
+          multiArray[index].push(transaction.total_amount);
+        }
       });
 
-      const labels = filteredCategories.map((cate) => cate.name);
+      const gastosPrevistos = multiArray.map((data) =>
+        Math.abs(Math.ceil(weightedMovingAverage(data, WEIGHTS)))
+      );
 
-      setBarChartData({
-        labels: labels,
-        datasets: [
-          {
-            label: "Total spend",
-            data: gastosPrevistos,
-            borderColor: "rgb(53, 162, 235)",
-            backgroundColor: "rgba(53, 162, 235, 0.5)",
-          },
-        ],
-      });
+      const maxExpense: number = Math.max(...gastosPrevistos);
+      roundedExpense = Math.ceil(maxExpense / 1000) * 1000;
+
+      // Sort gastos with their corresponding categories:
+      const sortedGastosWithCategories = gastosPrevistos
+        .map((gasto, index) => ({
+          gasto,
+          category: filteredCategories[index],
+        }))
+        .sort((a, b) => b.gasto - a.gasto);
+
+      const gastosSorted = sortedGastosWithCategories.map(({ gasto }) => gasto);
+      const categoriesLabelsSorted = sortedGastosWithCategories.map(
+        ({ category }) => category.name
+      );
+
+      setCategoriesLabels(categoriesLabelsSorted);
+      setGastosPrevistos(gastosSorted);
+      setLoading(false);
+    } catch (error) {
+      setError("Error feching data");
+      setLoading(false);
     }
-
-    fetchData();
   }, [User]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <>
-      <div className={styles.catPerMonth}>
-        <h1 className="text-2xl p-2">Expected expenses for next Month</h1>
-        <div className="w-full h-full">
-          <Bar
-            options={{
-              indexAxis: "y",
-              elements: {
-                bar: {
-                  borderWidth: 2,
-                },
-              },
-              responsive: true,
-              maintainAspectRatio: true,
-            }}
-            data={barChartData}
-          />
+      <div className={styles.cashFlow}>
+        <div className={styles.header}>
+          <div>
+            <p>Stadistics</p>
+            <h2>Upcoming Month Expectation</h2>
+          </div>
+        </div>
+        <div className={styles.barChart}>
+          {categoriesLabels.map((category, index) => (
+            <div className={styles.goalInstance} key={index}>
+              <div className={styles.goalTitle}>
+                <p>{category}</p>
+                <p>{gastosPrevistos[index].toString()} MXN</p>
+              </div>
+
+              <ProgressBar
+                key={index}
+                completed={(
+                  (Number(gastosPrevistos[index]) / Number(roundedExpense)) *
+                  100
+                ).toString()}
+              />
+            </div>
+          ))}
         </div>
       </div>
     </>

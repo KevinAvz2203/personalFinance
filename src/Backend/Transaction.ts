@@ -112,22 +112,45 @@ export async function getTotalBalance(id: number): Promise<Amount> {
 }
 
 export async function getTotalPerCategory(
-  id: number
+  id: number,
+  period: "Weekly" | "Monthly"
 ): Promise<TotalPerCategory[]> {
-  const res = await fetch(
-    "http://localhost:3000/api/transactions/user/percategory/" + id
-  );
-  const data = await res.json();
-  return data;
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/transactions/user/percategory/${id}?period=${period}`
+    );
+
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    return [];
+  }
 }
 
-export async function getPerDate(id: number): Promise<TransactionsByDate[]> {
-  const res = await fetch(
-    "http://localhost:3000/api/transactions/user/sumbydate/" + id
-  );
+export async function getPerDate(
+  id: number,
+  period: "Weekly" | "Monthly" | "Yearly"
+): Promise<TransactionsByDate[]> {
+  try {
+    const res = await fetch(
+      `http://localhost:3000/api/transactions/user/sumbydate/${id}?period=${period}`
+    );
 
-  const data = await res.json();
-  return data;
+    if (!res.ok) {
+      throw new Error(res.statusText);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    return [];
+  }
 }
 
 export async function getPrevMonths(

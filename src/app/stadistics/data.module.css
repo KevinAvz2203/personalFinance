@@ -9,6 +9,10 @@
   width: 49%;
 }
 
+.dataGraphs > * {
+  margin-bottom: 1rem;
+}
+
 .dataActivity {
   width: 49%;
   height: 100%;

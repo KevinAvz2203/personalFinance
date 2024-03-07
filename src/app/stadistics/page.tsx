@@ -31,11 +31,10 @@ export default function Stadistics() {
           <div className={styles.dataGraphs}>
             <ExpPerCategory User={UserID} />
 
-            {/* <ExpPerCategoryExpected User={UserID} /> */}
+            <ExpPerCategoryExpected User={UserID} />
           </div>
           <div className={styles.dataActivity}>
-            {/* <HistoricActivity User={UserID} /> */}
-            <ExpPerCategoryExpected User={UserID} />
+            <HistoricActivity User={UserID} />
           </div>
         </div>
       </div>
