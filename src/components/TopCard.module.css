@@ -1,7 +1,7 @@
 .container {
   background-color: white;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   align-items: center;
   width: 100%;
   border-radius: 20px;
@@ -16,6 +16,14 @@
   justify-content: center;
   height: 8rem;
   width: 25%;
+}
+
+.topCardsStadistics {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 8rem;
+  width: 50%;
 }
 
 .topCards div {

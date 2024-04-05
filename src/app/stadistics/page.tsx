@@ -3,6 +3,7 @@
 import ExpPerCategory from "@/components/ExpPerCategory";
 import ExpPerCategoryExpected from "@/components/ExpPerCategoryExpected";
 import HistoricActivity from "@/components/HistoricActivity";
+import TopCardStadistics from "@/components/TopCardStadistics";
 import styles from "./data.module.css";
 import { useSession } from "next-auth/react";
 import Header from "@/components/Header";
@@ -34,6 +35,8 @@ export default function Stadistics() {
             <ExpPerCategoryExpected User={UserID} />
           </div>
           <div className={styles.dataActivity}>
+            <TopCardStadistics User={UserID} />
+
             <HistoricActivity User={UserID} />
           </div>
         </div>

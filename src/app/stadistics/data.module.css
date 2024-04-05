@@ -16,3 +16,6 @@
   width: 49%;
   height: 100%;
 }
+.dataActivity > * {
+  margin-bottom: 1rem;
+}
