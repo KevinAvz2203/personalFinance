@@ -6,9 +6,10 @@ import savedGoalsIcon from "/public/assets/icons/piggy-bank.png";
 import { useState, useEffect } from "react";
 import React from "react";
 import {
-  getIncomes,
-  getExpenses,
+  getIncomes, // Borrar API
+  getExpenses, // Borrar API
   getTotalBalance,
+  getMonthlyGeneralBalance,
 } from "@/Backend/Transaction";
 import { getTotalSavedGoals } from "@/Backend/Goal";
 import styles from "./TopCard.module.css";
@@ -39,17 +40,15 @@ export default function TopCard({ User }: { User: number }) {
   useEffect(() => {
     async function getUserIncomeData() {
       try {
-        const [incomeTotal, expenseTotal, balanceTotal, savingTotal] =
-          await Promise.all([
-            getIncomes(User),
-            getExpenses(User),
-            getTotalBalance(User),
-            getTotalSavedGoals(User),
-          ]);
+        const [balanceTotal, savingTotal, generalBalance] = await Promise.all([
+          getTotalBalance(User),
+          getTotalSavedGoals(User),
+          getMonthlyGeneralBalance(User),
+        ]);
 
         setTotalAmounts({
-          incomes: incomeTotal.amount,
-          expenses: expenseTotal.amount,
+          incomes: generalBalance.t_incomes,
+          expenses: generalBalance.t_expenses,
           totalBalance: balanceTotal.amount,
         });
 

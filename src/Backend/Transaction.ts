@@ -4,6 +4,11 @@ type Amount = {
   amount: number;
 };
 
+type MonthAmount = {
+  t_incomes: number;
+  t_expenses: number;
+};
+
 type Balance = {
   amount: number;
   typeId: number;
@@ -110,6 +115,27 @@ export async function getTotalBalance(id: number): Promise<Amount> {
   const data: Amount = await res.json();
   return data;
 }
+
+/* New API call to delete previous extra calls for simple data */
+export async function getMonthlyGeneralBalance(
+  id: number
+): Promise<MonthAmount> {
+  const res = await fetch(
+    "http://localhost:3000/api/transactions/user/generalBalance/montly/" + id
+  );
+  const data: MonthAmount = await res.json();
+  return data;
+}
+
+export async function getGeneralBalance(id: number): Promise<MonthAmount> {
+  const res = await fetch(
+    "http://localhost:3000/api/transactions/user/generalBalance/allTime/" + id
+  );
+  const data: MonthAmount = await res.json();
+  return data;
+}
+
+/* =========================================================== */
 
 export async function getTotalPerCategory(
   id: number,

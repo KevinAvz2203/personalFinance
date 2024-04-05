@@ -28,7 +28,7 @@ export default function Stadistics() {
 
       <div className="content">
         <div className={styles.container}>
-          <div className={styles.dataGraphs}>
+          <div className={`${styles.dataGraphs}`}>
             <ExpPerCategory User={UserID} />
 
             <ExpPerCategoryExpected User={UserID} />
