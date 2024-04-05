@@ -1,8 +1,9 @@
 import ChargeActivity from "./ChargeActivity";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { getRecentPerUser } from "@/Backend/Transaction";
 import styles from "./RecentActivity.module.css";
 
+/* Types declaration */
 type IncomeData = {
   User: number;
 };
@@ -16,6 +17,7 @@ type TransactionsData = {
     name: string;
   };
 };
+/* ================= */
 
 const options = {
   weekday: "long",
@@ -24,7 +26,8 @@ const options = {
   day: "numeric",
 } as const;
 
-export default function RecentActivity({ User }: IncomeData) {
+const RecentActivity = ({ User }: IncomeData) => {
+  /* State declarations */
   const [userTransactions, setUserTransactions] = useState<TransactionsData[]>(
     []
   );
@@ -36,6 +39,7 @@ export default function RecentActivity({ User }: IncomeData) {
     setUserTransactions(userTrans);
     setIsLoading(false);
   }, [User]);
+  /* ================== */
 
   useEffect(() => {
     getUserTransactions();
@@ -66,10 +70,6 @@ export default function RecentActivity({ User }: IncomeData) {
     []
   );
 
-  if (isLoading) {
-    return <div>Loading...</div>; // Or some loading spinner
-  }
-
   return (
     <>
       <div className={styles.cashFlow}>
@@ -81,6 +81,20 @@ export default function RecentActivity({ User }: IncomeData) {
         </div>
 
         <div className={styles.scrollingClass}>
+          {isLoading ? (
+            <>
+              <div>Loading...</div>
+            </>
+          ) : (
+            <></>
+          )}
+          {uniqueDates.length === 0 && !isLoading ? (
+            <>
+              <div>No recent transactions to show</div>
+            </>
+          ) : (
+            <></>
+          )}
           {uniqueDates.map((fecha, dtindex) => (
             <div className="mb-10" key={dtindex}>
               <div className={styles.date}>
@@ -109,4 +123,6 @@ export default function RecentActivity({ User }: IncomeData) {
       </div>
     </>
   );
-}
+};
+
+export default React.memo(RecentActivity);

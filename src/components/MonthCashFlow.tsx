@@ -1,6 +1,6 @@
 import { getPerDate } from "@/Backend/Transaction";
 import styles from "./Month.module.css";
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -21,6 +21,7 @@ ChartJS.register(
   Legend
 );
 
+/* Option setting for the Vertical Bar Chart */
 let delayed: any;
 const options = {
   responsive: true,
@@ -65,6 +66,7 @@ const options = {
   maintainAspectRatio: false,
 } as const;
 
+/* Types declaration */
 type IncomeData = {
   User: number;
 };
@@ -79,9 +81,10 @@ type DataState = {
   Weekly: TransactionsByDate[] | null;
   Monthly: TransactionsByDate[] | null;
 };
+/* ================= */
 
-/* Dias de la semana */
-const labels = [
+/* Days of the week */
+const weekDays = [
   "Sunday",
   "Monday",
   "Tuesday",
@@ -91,12 +94,14 @@ const labels = [
   "Saturday",
 ];
 
-export default function MonthCashFlow({ User }: IncomeData) {
-  /* DIVISION */
+const MonthCashFlow = ({ User }: IncomeData) => {
+  /* States declarations */
   const [isLoading, setIsLoading] = useState(true);
   const [activeButton, setActiveButton] = useState<"Weekly" | "Monthly">(
     "Weekly"
   );
+
+  /* State that stores the total amount expend with its corresponding weekDays */
   const [data, setData] = useState<DataState>({
     Weekly: null,
     Monthly: null,
@@ -106,21 +111,19 @@ export default function MonthCashFlow({ User }: IncomeData) {
     setActiveButton(button);
   }, []);
 
-  useEffect(() => {
-    /* Esta funcion realiza el fetch por la informacion a desplegar
-      en la barra.
-      
-      Actualmente recibe todas las transacciones typeId = 2 del mes actual
-      y las guarda en un arreglo, la POS corresponde al dia de la semana cuando se 
-      realizaron, siendo de domingo - sabado
-      
-      Proximo update: Poder hacer fetch de la semana actual tambien */
-    async function getMonthCashflow(period: "Weekly" | "Monthly") {
+  /* Esta funcion realiza el fetch por la informacion a desplegar en la barra.
+  
+  Actualmente recibe todas las transacciones typeId = 2 del mes actual
+  y las guarda en un arreglo, la POS corresponde al dia de la semana cuando se 
+  realizaron, siendo de domingo - sabado  */
+  const getMonthCashflow = useCallback(
+    async (period: "Weekly" | "Monthly") => {
       try {
         setIsLoading(true);
+        /* Fetching transactions from backend based on the period specified */
         const perDate: TransactionsByDate[] = await getPerDate(User, period);
 
-        /* forEach: Recorre el arreglo perDate y va asignando
+        /*   forEach: Recorre el arreglo perDate y va asignando
         uno por uno en su POS del arreglo expenses correspondiente,
         es lo mismo que un FOR pero se lee mejor */
         const expenses = [0, 0, 0, 0, 0, 0, 0];
@@ -131,18 +134,24 @@ export default function MonthCashFlow({ User }: IncomeData) {
           expenses[dayOfWeekDigit] += amountToAdd;
         });
 
+        /* Update data with corresponding transactions */
         setData((prevData) => ({ ...prevData, [period]: expenses }));
         setIsLoading(false);
       } catch (error) {
+        /* Future modification to add a UI update */
         console.error("Error fetching transactions:", error);
-        // Handle error gracefully, e.g., show a message to the user
       }
-    }
+    },
+    [User]
+  );
 
+  useEffect(() => {
+    /* Fetch data ccorresponding on which button is pressed
+    and if it hasn't been pressed before */
     if (!data[activeButton]) {
       getMonthCashflow(activeButton);
     }
-  }, [User, activeButton, data]);
+  }, [getMonthCashflow, activeButton, data]);
 
   return (
     <>
@@ -169,7 +178,7 @@ export default function MonthCashFlow({ User }: IncomeData) {
             <Bar
               options={options}
               data={{
-                labels: labels,
+                labels: weekDays,
                 datasets: [
                   {
                     label: "Total",
@@ -187,4 +196,6 @@ export default function MonthCashFlow({ User }: IncomeData) {
       </div>
     </>
   );
-}
+};
+
+export default React.memo(MonthCashFlow);

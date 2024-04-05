@@ -1,11 +1,12 @@
 import { getTotalPerCategory } from "@/Backend/Transaction";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Doughnut } from "react-chartjs-2";
 import styles from "./Month.module.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
+/* Types declaration */
 type IncomeData = {
   User: number;
 };
@@ -21,7 +22,9 @@ type DataState = {
   Weekly: TotalPerCategory[] | null;
   Monthly: TotalPerCategory[] | null;
 };
+/* ================= */
 
+/* Existing categories */
 const cateNames = [
   "Home",
   "Food",
@@ -34,12 +37,14 @@ const cateNames = [
   "Other",
 ];
 
-export default function MonthSummary({ User }: IncomeData) {
-  /* DIVISION */
+const MonthSummary = ({ User }: IncomeData) => {
+  /* States declarations */
   const [isLoading, setIsLoading] = useState(true);
   const [activeButton, setActiveButton] = useState<"Weekly" | "Monthly">(
     "Weekly"
   );
+
+  /* State that stores the total amount expend with its corresponding weekDays */
   const [data, setData] = useState<DataState>({
     Weekly: null,
     Monthly: null,
@@ -49,13 +54,14 @@ export default function MonthSummary({ User }: IncomeData) {
     setActiveButton(button);
   }, []);
 
-  useEffect(() => {
-    async function fetchCategoryMonthSummary(period: "Weekly" | "Monthly") {
+  const fetchCategoryMonthSummary = useCallback(
+    async (period: "Weekly" | "Monthly") => {
       try {
+        /* Fetching transactions from backend based on the period specified */
         const transPerCat: TotalPerCategory[] = await getTotalPerCategory(
           User,
           period
-        ); /* Agregar period */
+        );
         let gastos: number[] = new Array(cateNames.length).fill(0);
 
         transPerCat.forEach((transaction) => {
@@ -64,18 +70,24 @@ export default function MonthSummary({ User }: IncomeData) {
           gastos[index] = amount;
         });
 
+        /* Update data with corresponding transactions */
         setData((prevData) => ({ ...prevData, [period]: gastos }));
         setIsLoading(false);
       } catch (error) {
+        /* Future modification to add a UI update */
         console.error("Error fetching category month summary:", error);
-        // Handle error gracefully, e.g., show a message to the user
       }
-    }
+    },
+    [User]
+  );
 
+  useEffect(() => {
+    /* Fetch data ccorresponding on which button is pressed
+    and if it hasn't been pressed before */
     if (!data[activeButton]) {
       fetchCategoryMonthSummary(activeButton);
     }
-  }, [User, activeButton, data]);
+  }, [fetchCategoryMonthSummary, activeButton, data]);
 
   return (
     <>
@@ -147,4 +159,6 @@ export default function MonthSummary({ User }: IncomeData) {
       </div>
     </>
   );
-}
+};
+
+export default React.memo(MonthSummary);

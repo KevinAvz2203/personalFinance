@@ -3,8 +3,7 @@ import incomeIcon from "/public/assets/icons/incomes-black.png";
 import expenseIcon from "/public/assets/icons/expenses-black.png";
 import totalBalanceIcon from "/public/assets/icons/balance-black.png";
 import savedGoalsIcon from "/public/assets/icons/piggy-bank.png";
-import { useState, useEffect } from "react";
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   getIncomes, // Borrar API
   getExpenses, // Borrar API
@@ -14,6 +13,7 @@ import {
 import { getTotalSavedGoals } from "@/Backend/Goal";
 import styles from "./TopCard.module.css";
 
+/* Types declaration */
 type TotalAmountsType = {
   incomes: number;
   expenses: number;
@@ -24,43 +24,48 @@ type GoalsTotalSavedType = {
   totalGoalsAmount: number;
   totalSaved: number;
 };
+/* ================= */
 
-export default function TopCard({ User }: { User: number }) {
+const TopCard = ({ User }: { User: number }) => {
+  /* State for setting total balances */
   const [totalAmounts, setTotalAmounts] = useState<TotalAmountsType>({
     incomes: 0,
     expenses: 0,
     totalBalance: 0,
   });
 
+  /* State that saves the goals data */
   const [goalsTotalSaved, setGoalsTotalSaved] = useState<GoalsTotalSavedType>({
     totalGoalsAmount: 0,
     totalSaved: 0,
   });
 
-  useEffect(() => {
-    async function getUserIncomeData() {
-      try {
-        const [balanceTotal, savingTotal, generalBalance] = await Promise.all([
-          getTotalBalance(User),
-          getTotalSavedGoals(User),
-          getMonthlyGeneralBalance(User),
-        ]);
+  /* Using state useCallback to avoid unnecesary re-rendering */
+  const fetchBalancesData = useCallback(async () => {
+    try {
+      /* Fetching all the necessary API calls */
+      const [balanceTotal, savingTotal, generalBalance] = await Promise.all([
+        getTotalBalance(User),
+        getTotalSavedGoals(User),
+        getMonthlyGeneralBalance(User),
+      ]);
 
-        setTotalAmounts({
-          incomes: generalBalance.t_incomes,
-          expenses: generalBalance.t_expenses,
-          totalBalance: balanceTotal.amount,
-        });
-
-        setGoalsTotalSaved(savingTotal);
-      } catch (error) {
-        console.error("Error fetching user income data:", error);
-        // Handle error here
-      }
+      /* Updating States with fetched data */
+      setTotalAmounts({
+        incomes: generalBalance.t_incomes,
+        expenses: generalBalance.t_expenses,
+        totalBalance: balanceTotal.amount,
+      });
+      setGoalsTotalSaved(savingTotal);
+    } catch (error) {
+      /* Future modification to add a UI update */
+      console.error("Error fetching user income data:", error);
     }
-
-    getUserIncomeData();
   }, [User]);
+
+  useEffect(() => {
+    fetchBalancesData();
+  }, [fetchBalancesData]);
 
   return (
     <>
@@ -104,4 +109,6 @@ export default function TopCard({ User }: { User: number }) {
       </div>
     </>
   );
-}
+};
+
+export default React.memo(TopCard);
