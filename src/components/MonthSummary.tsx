@@ -110,6 +110,13 @@ const MonthSummary = ({ User }: IncomeData) => {
           </div>
         </div>
         <div className={styles.pieChart}>
+          {isLoading ? (
+            <>
+              <div>Loading...</div>
+            </>
+          ) : (
+            <></>
+          )}
           {data[activeButton] && (
             <Doughnut
               data={{

@@ -174,6 +174,13 @@ const MonthCashFlow = ({ User }: IncomeData) => {
           </div>
         </div>
         <div className={styles.barChart}>
+          {isLoading ? (
+            <>
+              <div>Loading...</div>
+            </>
+          ) : (
+            <></>
+          )}
           {data[activeButton] && (
             <Bar
               options={options}
