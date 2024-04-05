@@ -84,10 +84,6 @@ export default function HistoricActivity({ User }: IncomeData) {
     []
   );
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <>
       <div className={styles.container}>
@@ -112,6 +108,20 @@ export default function HistoricActivity({ User }: IncomeData) {
         </div>
 
         <div className={styles.scrollingClass}>
+          {isLoading ? (
+            <>
+              <div>Loading...</div>
+            </>
+          ) : (
+            <></>
+          )}
+          {uniqueDates.length === 0 && !isLoading ? (
+            <>
+              <div>No recent transactions to show</div>
+            </>
+          ) : (
+            <></>
+          )}
           {uniqueDates.map((fecha, dtindex) => (
             <div className="mb-10" key={dtindex}>
               <div className={styles.date}>
