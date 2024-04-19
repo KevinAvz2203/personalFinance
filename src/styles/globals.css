@@ -45,20 +45,6 @@ header h3 {
 
 /* ================================ */
 
-.MainGoalsArea {
-  width: 100%;
-  height: 15rem;
-  border-radius: 10px;
-  background-color: #f9f9f9;
-}
-
-/* Main Goals */
-.mainGoals {
-  display: flex;
-  justify-content: space-around;
-  height: 85%;
-}
-
 /* Goals Table --  progress Bar */
 .containerStyle {
   height: 20px;

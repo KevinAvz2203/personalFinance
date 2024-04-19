@@ -1,42 +1,43 @@
 "use client";
 
-import MainGoals from "@/components/MainGoals";
+import FavGoals from "@/components/FavGoals";
 import GoalsTable from "@/components/GoalsTable";
 /* import TotalSavingCard from "@/components/TotalSavingCard"; */
-import GoalsActive from "@/components/GoalsActive";
-import GoalsCompleted from "@/components/GoalsCompleted";
+import Header from "@/components/Header";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import styles from "./goals.module.css";
 
 export default function Goals() {
-  const currMonth = new Date().toLocaleString([], { month: "long" });
-  const currYear = new Date().getFullYear();
   const { data: session } = useSession();
 
-  let UserID: number = 0;
-
-  if (session?.user) {
-    UserID = session.user.id || 0;
+  /* Mientras no se encuentra una session activa, se muestra la pantalla de carga */
+  /* Reemplazar mas adelante con el component para la pagina */
+  while (!session) {
+    return (
+      <>
+        <div>Loading...</div>
+      </>
+    );
   }
+
+  const UserID: number = session.user.id;
 
   return (
     <>
-      <header className="flex items-center">
-        <h1>Main Goals</h1>
-        <h3 className="absolute right-8" suppressHydrationWarning={true}>
-          {currMonth}, {currYear}
-        </h3>
-      </header>
+      <Header />
 
-      <div className="MainGoalsArea">
-        <MainGoals User={UserID} />
+      <div className="content">
+        <div className={styles.goalsFavorite}>
+          <FavGoals User={UserID} />
+        </div>
+
+        <section>
+          <GoalsTable User={UserID} />
+        </section>
       </div>
 
-      <section className="flex justify-center pt-4">
-        <GoalsTable User={UserID} />
-      </section>
-
-      <div className="pt-4">
+      {/* <div className="pt-4">
         <div className="flex justify-end pr-8">
           <Link href={"/addGoal"}>
             <button
@@ -47,13 +48,7 @@ export default function Goals() {
             </button>
           </Link>
         </div>
-      </div>
-
-      <div className="flex justify-around pt-4">
-        <GoalsActive User={UserID} />
-        <GoalsCompleted User={UserID} />
-        {/* <TotalSavingCard User={UserID} /> */}
-      </div>
+      </div> */}
     </>
   );
 }

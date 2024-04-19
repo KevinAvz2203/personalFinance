@@ -1,0 +1,5 @@
+.mainGoals {
+    display: flex;
+    justify-content: space-around;
+    height: 85%;
+  }

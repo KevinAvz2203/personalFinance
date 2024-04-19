@@ -1,13 +1,17 @@
-"use client";
-
 import { getUserGoals } from "@/Backend/Goal";
 import ProgressBar from "@/components/ProgressBar";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { getTotalSavedGoals } from "@/Backend/Goal";
 import styles from "./Goals.module.css";
 
 type IncomeData = {
   User: number;
+};
+
+type GoalsTotalSavedType = {
+  totalGoalsAmount: number;
+  totalSaved: number;
 };
 
 interface GoalData {
@@ -16,35 +20,53 @@ interface GoalData {
   totalAmount: number;
   currentAmount: number | null;
   isComplete: boolean;
-  isFavorite: boolean | null;
-  createdAt: Date;
-  updatedAt: Date;
-  userId: number;
+  isFavorite: boolean | null /* No lo necesito */;
+  createdAt: Date /* No lo necesito */;
+  updatedAt: Date /* No lo necesito */;
+  userId: number /* No lo necesito */;
 }
 
 export default function GoalsTable({ User }: IncomeData) {
   const [userGoals, setUserGoals] = useState<GoalData[]>([]);
-  const maxFavorites = 4;
-  let activeFavotires = 0;
+
+  /* State that saves the goals data */
+  const [goalsTotalSaved, setGoalsTotalSaved] = useState<GoalsTotalSavedType>({
+    totalGoalsAmount: 0,
+    totalSaved: 0,
+  });
 
   useEffect(() => {
     async function getSingleUserGoals() {
-      const existingGoals = await getUserGoals(User);
+      const [existingGoals, savingTotal] = await Promise.all([
+        getUserGoals(User),
+        getTotalSavedGoals(User),
+      ]);
       setUserGoals(existingGoals);
+      setGoalsTotalSaved(savingTotal);
     }
 
     getSingleUserGoals();
   }, [User]);
 
-  for (let i = 0; i < userGoals.length; i++) {
-    if (userGoals[i].isFavorite === true) {
-      activeFavotires++;
-    }
-  }
+  console.log(goalsTotalSaved);
 
   return (
     <>
-      <div className={styles.tableBox}>
+      <div className={styles.goalsContainer}>
+        <div className={styles.header}>
+          <div>
+            <p>Goals</p>
+            <h2>Active Goals</h2>
+          </div>
+          <div>
+            <p>Saved - MXN</p>
+            <h2>
+              ${goalsTotalSaved.totalSaved} of $
+              {goalsTotalSaved.totalGoalsAmount}
+            </h2>
+          </div>
+        </div>
+
         <div className={styles.goalsTable}>
           {userGoals.map(
             (goal) =>
@@ -72,9 +94,6 @@ export default function GoalsTable({ User }: IncomeData) {
                 </div>
               )
           )}
-          <p>
-            Active Favorites: {activeFavotires}/{maxFavorites}
-          </p>
         </div>
       </div>
     </>
