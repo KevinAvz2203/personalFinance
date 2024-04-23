@@ -8,7 +8,7 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const goal = await prisma.goal.findFirst({
+    const goal = await prisma.goals.findFirst({
       where: {
         id: Number(params.id),
       },
@@ -26,7 +26,7 @@ export async function GET(request: Request, { params }: Params) {
 
 export async function DELETE(request: Request, { params }: Params) {
   try {
-    const deleteGoal = await prisma.goal.delete({
+    const deleteGoal = await prisma.goals.delete({
       where: {
         id: Number(params.id),
       },
@@ -53,7 +53,7 @@ export async function PUT(request: Request, { params }: Params) {
     const { name, totalAmount, currentAmount, isComplete, isFavorite } =
       await request.json();
 
-    const updatedGoal = await prisma.goal.update({
+    const updatedGoal = await prisma.goals.update({
       where: {
         id: Number(params.id),
       },

@@ -8,7 +8,7 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const transaction = await prisma.transaction.findFirst({
+    const transaction = await prisma.transactions.findFirst({
       where: {
         id: Number(params.id),
       },
@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: Params) {
 
 export async function DELETE(request: Request, { params }: Params) {
   try {
-    const deleteTransaction = await prisma.transaction.delete({
+    const deleteTransaction = await prisma.transactions.delete({
       where: {
         id: Number(params.id),
       },

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const goals = await prisma.goal.findMany();
+    const goals = await prisma.goals.findMany();
     return NextResponse.json(goals);
   } catch (error) {
     if (error instanceof Error) {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const { name, totalAmount, currentAmount, isComplete, isFavorite, userId } =
       await request.json();
 
-    const newGoal = await prisma.goal.create({
+    const newGoal = await prisma.goals.create({
       data: {
         name,
         totalAmount,

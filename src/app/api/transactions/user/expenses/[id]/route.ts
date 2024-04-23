@@ -8,7 +8,7 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const transaction = await prisma.transaction.aggregate({
+    const transactions = await prisma.transactions.aggregate({
       _sum: {
         amount: true,
       },
@@ -18,12 +18,12 @@ export async function GET(request: Request, { params }: Params) {
       },
     });
 
-    if (!transaction)
+    if (!transactions)
       return NextResponse.json(
         { message: "Transaction not found" },
         { status: 404 }
       );
-    return NextResponse.json(transaction._sum);
+    return NextResponse.json(transactions._sum);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });

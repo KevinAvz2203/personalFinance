@@ -13,7 +13,7 @@ export const authOptions = {
       },
 
       async authorize(credentials) {
-        const userFound = await prisma.user.findUnique({
+        const userFound = await prisma.users.findUnique({
           where: {
             email: credentials.email,
           },
@@ -47,7 +47,7 @@ export const authOptions = {
   },
   callbacks: {
     async session({ session }: { session: any }) {
-      const userWithId = await prisma.user.findUnique({
+      const userWithId = await prisma.users.findUnique({
         where: { email: session.user.email },
         select: { id: true },
       });

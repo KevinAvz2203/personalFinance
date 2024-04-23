@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const users = await prisma.user.findMany();
+    const users = await prisma.users.findMany();
     return NextResponse.json(users);
   } catch (error) {
     if (error instanceof Error) {
@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { firstName, lastName, email, password, age } = await request.json();
-    const newUser = await prisma.user.create({
+    const newUser = await prisma.users.create({
       data: {
         firstName,
         lastName,

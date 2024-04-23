@@ -1,4 +1,4 @@
-import { Goal } from "@prisma/client";
+import { Goals } from "@prisma/client";
 
 type userSumGoals = {
   totalSaved: number;
@@ -30,7 +30,7 @@ export async function postGoal(goalData: any, isFavorite: Boolean) {
   console.log(data);
 }
 
-export async function getUserGoals(id: number): Promise<Goal[]> {
+export async function getUserGoals(id: number): Promise<Goals[]> {
   const res = await fetch("http://localhost:3000/api/goals/user/" + id);
   const data = await res.json();
   return data;
@@ -46,7 +46,7 @@ export async function getUserFavoriteGoals(
   return data;
 }
 
-export async function getGoal(id: number): Promise<Goal> {
+export async function getGoal(id: number): Promise<Goals> {
   const res = await fetch("http://localhost:3000/api/goals/" + id);
   const data = await res.json();
   return data;

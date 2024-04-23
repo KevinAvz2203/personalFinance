@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   try {
     const { firstName, lastName, email, password, age } = await request.json();
 
-    const userFound = await prisma.user.findUnique({
+    const userFound = await prisma.users.findUnique({
       where: {
         email: email,
       },
@@ -26,7 +26,7 @@ export async function POST(request: Request) {
     const salt = genSaltSync(10);
     const hashedPassword = hashSync(password, salt);
 
-    const newUser = await prisma.user.create({
+    const newUser = await prisma.users.create({
       data: {
         firstName: firstName,
         lastName: lastName,
@@ -36,9 +36,9 @@ export async function POST(request: Request) {
       },
     });
 
-    const { password: _, ...user } = newUser;
+    const { password: _, ...users } = newUser;
 
-    return NextResponse.json(user);
+    return NextResponse.json(users);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json(

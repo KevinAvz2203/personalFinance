@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const transactions = await prisma.transaction.findMany();
+    const transactions = await prisma.transactions.findMany();
     return NextResponse.json(transactions);
   } catch (error) {
     if (error instanceof Error) {
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const { description, amount, userId, categoryId, typeId } =
       await request.json();
 
-    const newTransaction = await prisma.transaction.create({
+    const newTransaction = await prisma.transactions.create({
       data: {
         description,
         amount,

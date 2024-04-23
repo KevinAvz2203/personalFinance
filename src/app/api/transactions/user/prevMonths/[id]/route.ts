@@ -7,7 +7,7 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const transactions = await prisma.transaction.findMany({
+    const transactions = await prisma.transactions.findMany({
       where: {
         createdAt: {
           gte: new Date(new Date().setMonth(new Date().getMonth() - 5)),
@@ -22,10 +22,10 @@ export async function GET(request: Request, { params }: Params) {
       },
     });
 
-    const result = transactions.map((transaction) => ({
-      month: transaction.createdAt.getMonth() + 1, // Add 1 because getMonth() returns 0-based index
-      total_amount: transaction.amount,
-      Categoria: transaction.categoryId,
+    const result = transactions.map((transactions) => ({
+      month: transactions.createdAt.getMonth() + 1, // Add 1 because getMonth() returns 0-based index
+      total_amount: transactions.amount,
+      Categoria: transactions.categoryId,
     }));
 
     const summedResult: Record<

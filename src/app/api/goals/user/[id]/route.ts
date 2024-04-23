@@ -7,7 +7,7 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const userGoals = await prisma.goal.findMany({
+    const userGoals = await prisma.goals.findMany({
       where: {
         userId: Number(params.id),
       },

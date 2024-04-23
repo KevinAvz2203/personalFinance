@@ -8,18 +8,18 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const category = await prisma.category.findFirst({
+    const categories = await prisma.categories.findFirst({
       where: {
         id: Number(params.id),
       },
     });
 
-    if (!category)
+    if (!categories)
       return NextResponse.json(
         { message: "Category not found" },
         { status: 404 }
       );
-    return NextResponse.json(category);
+    return NextResponse.json(categories);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });
@@ -29,7 +29,7 @@ export async function GET(request: Request, { params }: Params) {
 
 export async function DELETE(request: Request, { params }: Params) {
   try {
-    const deleteCategory = await prisma.category.delete({
+    const deleteCategory = await prisma.categories.delete({
       where: {
         id: Number(params.id),
       },

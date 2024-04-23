@@ -20,7 +20,7 @@ export async function GET(request: Request, { params }: Params) {
   try {
     const { lte, gte } = getCurrentMonthLength();
 
-    const transaction = await prisma.transaction.groupBy({
+    const transactions = await prisma.transactions.groupBy({
       by: ["typeId"],
       where: {
         userId: Number(params.id),
@@ -35,12 +35,12 @@ export async function GET(request: Request, { params }: Params) {
     });
 
     // Transform the result to match the expected format
-    const result: TransactionSum = transaction.reduce((acc, curr) => {
+    const result: TransactionSum = transactions.reduce((acc, curr) => {
       acc[curr.typeId === 1 ? "t_incomes" : "t_expenses"] = curr._sum.amount;
       return acc;
     }, {} as TransactionSum);
 
-    if (transaction.length === 0) {
+    if (transactions.length === 0) {
       return NextResponse.json(
         { t_incomes: 0, t_expenses: 0 },
         { status: 200 }

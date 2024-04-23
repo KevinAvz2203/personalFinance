@@ -8,11 +8,11 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const user = await prisma.user.findFirst({
+    const user = await prisma.users.findFirst({
       where: {
         id: Number(params.id),
       },
-/*       include: {
+      /*       include: {
         goal: true,
         transaction: true,
       }, */
@@ -30,7 +30,7 @@ export async function GET(request: Request, { params }: Params) {
 
 export async function DELETE(request: Request, { params }: Params) {
   try {
-    const deleteUser = await prisma.user.delete({
+    const deleteUser = await prisma.users.delete({
       where: {
         id: Number(params.id),
       },

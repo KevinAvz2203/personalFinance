@@ -7,7 +7,7 @@ interface Params {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const userGoals = await prisma.goal.groupBy({
+    const userGoals = await prisma.goals.groupBy({
       by: ["id", "name", "totalAmount", "currentAmount"],
       where: {
         userId: Number(params.id),

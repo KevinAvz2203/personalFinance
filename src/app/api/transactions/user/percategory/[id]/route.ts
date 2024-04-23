@@ -21,7 +21,7 @@ export async function GET(request: NextRequest, { params }: Params) {
   }
 
   try {
-    const transaction = await prisma.transaction.groupBy({
+    const transactions = await prisma.transactions.groupBy({
       by: ["categoryId"],
       _sum: {
         amount: true,
@@ -43,12 +43,12 @@ export async function GET(request: NextRequest, { params }: Params) {
       },
     });
 
-    if (!transaction)
+    if (!transactions)
       return NextResponse.json(
         { message: "Transaction not found" },
         { status: 404 }
       );
-    return NextResponse.json(transaction);
+    return NextResponse.json(transactions);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });

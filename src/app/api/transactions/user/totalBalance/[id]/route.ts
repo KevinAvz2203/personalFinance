@@ -13,7 +13,7 @@ type userSumGoals = {
 
 export async function GET(request: Request, { params }: Params) {
   try {
-    const transaction = await prisma.transaction.aggregate({
+    const transactions = await prisma.transactions.aggregate({
       _sum: {
         amount: true,
       },
@@ -22,13 +22,13 @@ export async function GET(request: Request, { params }: Params) {
       },
     });
 
-    if (!transaction)
+    if (!transactions)
       return NextResponse.json(
         { message: "Transaction not found" },
         { status: 404 }
       );
 
-    const userGoals = await prisma.goal.findMany({
+    const userGoals = await prisma.goals.findMany({
       where: {
         userId: Number(params.id),
       },
@@ -50,10 +50,11 @@ export async function GET(request: Request, { params }: Params) {
       data.totalGoalsAmount += userGoals[i].totalAmount || 0;
     }
 
-    // Subtract totalSaved from transaction sum
-    transaction._sum.amount = (transaction._sum.amount ?? 0) - data.totalSaved;
+    // Subtract totalSaved from transactions sum
+    transactions._sum.amount =
+      (transactions._sum.amount ?? 0) - data.totalSaved;
 
-    return NextResponse.json(transaction._sum);
+    return NextResponse.json(transactions._sum);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ message: error.message }, { status: 500 });

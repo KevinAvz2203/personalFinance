@@ -1,4 +1,4 @@
-import { Transaction } from "@prisma/client";
+import { Transactions } from "@prisma/client";
 
 type Amount = {
   amount: number;

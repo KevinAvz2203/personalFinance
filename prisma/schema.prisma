@@ -10,7 +10,7 @@ datasource db {
   url      = env("DATABASE_URL") 
 }
 
-model User {
+model Users {
   id Int @id @default(autoincrement())
   firstName String @db.VarChar(255) @map("first_name")
   lastName String @db.VarChar(255) @map("last_name")
@@ -20,49 +20,49 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  transaction Transaction[]
-  goal Goal[]
+  transaction Transactions[]
+  goal Goals[]
 }
 
-model Transaction {
+model Transactions {
   id Int @id @default(autoincrement())
   description String @db.VarChar(255) 
   amount Int 
   createdAt DateTime @default(now()) @map("date")
 
   userId Int
-  user User @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id])
 
   typeId Int 
-  type Type @relation(fields: [typeId], references: [id])
+  type Types @relation(fields: [typeId], references: [id])
 
   categoryId Int
-  category Category @relation(fields: [categoryId], references: [id])
+  category Categories @relation(fields: [categoryId], references: [id])
 }
 
-model Category {
+model Categories {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
 
-  transaction Transaction[]
+  transaction Transactions[]
 }
 
-model Type {
+model Types {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
 
-  transaction Transaction[]
+  transaction Transactions[]
 }
 
 
-model Goal {
+model Goals {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
   totalAmount Int
   currentAmount Int?
 
   userId Int
-  user User @relation(fields: [userId], references: [id])
+  user Users @relation(fields: [userId], references: [id])
 
   isComplete Boolean @default(false)
   isFavorite Boolean? @default(false)

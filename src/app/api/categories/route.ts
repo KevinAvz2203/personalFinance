@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const categories = await prisma.category.findMany();
+    const categories = await prisma.categories.findMany();
     return NextResponse.json(categories);
   } catch (error) {
     if (error instanceof Error) {
@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { name } = await request.json();
-    const newCategory = await prisma.category.create({
+    const newCategory = await prisma.categories.create({
       data: {
         name,
       },
