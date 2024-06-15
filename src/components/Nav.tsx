@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -12,11 +12,19 @@ import logoutWhite from "/public/assets/icons/logout-white.png";
 import registerWhite from "/public/assets/icons/register-white.png";
 
 import styles from "./Nav.module.css";
-import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export default function Nav() {
-  /* const session = await getServerSession(authOptions); */
-  const { data: session } = useSession();
+interface Session {
+  user?: {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+  };
+}
+
+export default async function Nav() {
+  const session: Session | null = await getServerSession(authOptions);
 
   return (
     <>

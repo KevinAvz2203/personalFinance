@@ -25,7 +25,7 @@ export default function Stadistics() {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
 
       <div className="content">
         <div className={styles.container}>

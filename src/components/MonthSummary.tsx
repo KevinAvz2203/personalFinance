@@ -1,3 +1,5 @@
+"use client";
+
 import { getTotalPerCategory } from "@/Backend/Transaction";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import React, { useState, useEffect, useCallback } from "react";
@@ -8,7 +10,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 /* Types declaration */
 type IncomeData = {
-  User: number;
+  User: string;
 };
 
 interface TotalPerCategory {

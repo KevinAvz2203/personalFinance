@@ -1,21 +1,10 @@
 import ChargeActivity from "./ChargeActivity";
-import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { getRecentPerUser } from "@/Backend/Transaction";
+import { getRecentPerUser } from "@/Backend/Transaction"; // BORRAR API
 import styles from "./RecentActivity.module.css";
 
 /* Types declaration */
 type IncomeData = {
-  User: number;
-};
-
-type TransactionsData = {
-  id: number;
-  description: string;
-  amount: number;
-  createdAt: Date;
-  category: {
-    name: string;
-  };
+  User: string;
 };
 /* ================= */
 
@@ -26,49 +15,21 @@ const options = {
   day: "numeric",
 } as const;
 
-const RecentActivity = ({ User }: IncomeData) => {
-  /* State declarations */
-  const [userTransactions, setUserTransactions] = useState<TransactionsData[]>(
-    []
-  );
-  const [isLoading, setIsLoading] = useState(true);
+const RecentActivity: React.FC<IncomeData> = async ({ User }) => {
+  const { transactions } = await getRecentPerUser(User);
 
-  const getUserTransactions = useCallback(async () => {
-    setIsLoading(true);
-    const userTrans = await getRecentPerUser(User);
-    setUserTransactions(userTrans);
-    setIsLoading(false);
-  }, [User]);
-  /* ================== */
+  const dates = transactions.map((transaction) => {
+    const d = new Date(transaction.createdAt);
+    return d.toLocaleDateString(undefined, options);
+  });
 
-  useEffect(() => {
-    getUserTransactions();
-  }, [getUserTransactions]);
+  const hours = transactions.map((transaction) => {
+    const d = new Date(transaction.createdAt);
+    return d.toLocaleTimeString("en-US");
+  });
 
-  const dates = useMemo(
-    () =>
-      userTransactions.map((transaction) => {
-        const d = new Date(transaction.createdAt);
-        return d.toLocaleDateString(undefined, options);
-      }),
-    [userTransactions]
-  );
-
-  const hours = useMemo(
-    () =>
-      userTransactions.map((transaction) => {
-        const d = new Date(transaction.createdAt);
-        return d.toLocaleTimeString("en-US");
-      }),
-    [userTransactions]
-  );
-
-  // Creo un arreglo en date al Set(dates), solo guardando los valores unicos dentro de dates
-  const uniqueDates = useMemo(() => Array.from(new Set(dates)), [dates]);
-  const currDay = useMemo(
-    () => new Date().toLocaleDateString(undefined, options),
-    []
-  );
+  const uniqueDates = Array.from(new Set(dates));
+  const currDay = new Date().toLocaleDateString(undefined, options);
 
   return (
     <>
@@ -81,48 +42,42 @@ const RecentActivity = ({ User }: IncomeData) => {
         </div>
 
         <div className={styles.scrollingClass}>
-          {isLoading ? (
-            <>
-              <div>Loading...</div>
-            </>
-          ) : (
-            <></>
-          )}
-          {uniqueDates.length === 0 && !isLoading ? (
+          {uniqueDates.length === 0 ? (
             <>
               <div>No recent transactions to show</div>
             </>
           ) : (
-            <></>
-          )}
-          {uniqueDates.map((fecha, dtindex) => (
-            <div className="mb-10" key={dtindex}>
-              <div className={styles.date}>
-                {fecha == currDay ? <p>Today</p> : <p>{fecha}</p>}
-              </div>
+            <>
+              {uniqueDates.map((fecha, dtindex) => (
+                <div className="mb-10" key={dtindex}>
+                  <div className={styles.date}>
+                    {fecha == currDay ? <p>Today</p> : <p>{fecha}</p>}
+                  </div>
 
-              {userTransactions.map(
-                (transaction, transId) =>
-                  fecha ==
-                    new Date(transaction.createdAt).toLocaleDateString(
-                      undefined,
-                      options
-                    ) && (
-                    <ChargeActivity
-                      key={transaction.id}
-                      Name={transaction.description}
-                      Time={hours[transId]}
-                      Category={transaction.category.name}
-                      Amount={transaction.amount}
-                    />
-                  )
-              )}
-            </div>
-          ))}
+                  {transactions.map(
+                    (transaction, transId) =>
+                      fecha ==
+                        new Date(transaction.createdAt).toLocaleDateString(
+                          undefined,
+                          options
+                        ) && (
+                        <ChargeActivity
+                          key={transaction.id}
+                          Name={transaction.description}
+                          Time={hours[transId]}
+                          Category={transaction.category.name}
+                          Amount={transaction.amount}
+                        />
+                      )
+                  )}
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </>
   );
 };
 
-export default React.memo(RecentActivity);
+export default RecentActivity;

@@ -26,17 +26,18 @@ export const authOptions = {
           },
         });
 
+        if (!userFound) throw new Error("User not found");
+
         const matchPassword = await compare(
           credentials.password,
           userFound.password
         );
 
-        if (!userFound || !matchPassword)
-          throw new Error("Email or Password are incorrect");
+        if (!matchPassword) throw new Error("Email or Password are incorrect");
 
         return {
           id: userFound.id,
-          name: userFound.firstName + " " + userFound.lastName,
+          name: `${userFound.firstName} ${userFound.lastName}`,
           email: userFound.email,
         };
       },
@@ -51,7 +52,7 @@ export const authOptions = {
         where: { email: session.user.email },
         select: { id: true },
       });
-      session.user.id = userWithId.id;
+      session.user.id = userWithId?.id;
       return session;
     },
   },

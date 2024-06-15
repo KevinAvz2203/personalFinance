@@ -25,7 +25,7 @@ export default function Goals() {
 
   return (
     <>
-      <Header />
+      {/* <Header /> */}
 
       <div className="content">
         <div className={styles.goalsFavorite}>

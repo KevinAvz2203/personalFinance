@@ -1,16 +1,29 @@
-"use client";
+// "use client";
 
 import TopCard from "@/components/TopCard";
 import MonthSummary from "@/components/MonthSummary";
 import RecentActivity from "@/components/RecentActivity";
 import MonthCashFlow from "@/components/MonthCashFlow";
 import styles from "./home.module.css";
-import { useSession } from "next-auth/react";
 import Header from "@/components/Header";
 import Loading from "./loading";
 
-export default function Home() {
-  const { data: session } = useSession();
+// import { useSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+/* session?.user?.id */
+interface Session {
+  user?: {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+  };
+}
+
+export default async function Home() {
+  // const { data: session } = useSession();
+  const session: Session | null = await getServerSession(authOptions);
 
   /* Mientras no se encuentra una session activa, se muestra la pantalla de carga */
   while (!session) {
@@ -21,7 +34,11 @@ export default function Home() {
     );
   }
 
-  const UserID: number = session.user.id;
+  const UserID: string = session?.user?.id || "pending";
+
+  while (UserID === "pending") {
+    return <></>;
+  }
 
   return (
     <>

@@ -1,4 +1,4 @@
-import { Transactions } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
 type Amount = {
   amount: number;
@@ -51,25 +51,45 @@ type TotalPerCategory = {
   categoryId: number;
 };
 
-export async function getPerUser(id: number): Promise<TransactionsData[]> {
-  const res = await fetch("http://localhost:3000/api/transactions/user/" + id);
+export async function getPerUser(id: string): Promise<TransactionsData[]> {
+  const res = await fetch(`http://localhost:3000/api/transactions/user/${id}`);
   const data = await res.json();
   return data;
 }
 
-export async function getRecentPerUser(
-  id: number
-): Promise<TransactionsData[]> {
+/* ===== Borrar API ROUTE WHEN NEEDED ====== */
+/* export async function getRecentPerUser(id: string) {
   const res = await fetch(
-    "http://localhost:3000/api/transactions/user/recent/" + id
+    `http://localhost:3000/api/transactions/user/recent/${id}`
   );
   const data = await res.json();
   return data;
+} */
+
+export async function getRecentPerUser(id: string) {
+  const transactions = await prisma.transactions.findMany({
+    where: {
+      userId: Number(id),
+      createdAt: {
+        gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+      },
+    },
+    include: {
+      category: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  if (!transactions) throw new Error("Transaction not found");
+  return { transactions };
 }
+/* ========================================= */
 
 /* ======================================== */
 export async function getHistoricPerUser(
-  id: number,
+  id: string,
   period: "Weekly" | "Monthly" | "Yearly"
 ): Promise<TransactionsData[]> {
   try {
@@ -92,44 +112,138 @@ export async function getHistoricPerUser(
 
 /* ========================================= */
 
-export async function getIncomes(id: number): Promise<Amount> {
+export async function getIncomes(id: string): Promise<Amount> {
   const res = await fetch(
-    "http://localhost:3000/api/transactions/user/incomes/" + id
+    `http://localhost:3000/api/transactions/user/incomes/${id}`
   );
   const data: Amount = await res.json();
   return data;
 }
 
-export async function getExpenses(id: number): Promise<Amount> {
+export async function getExpenses(id: string): Promise<Amount> {
   const res = await fetch(
-    "http://localhost:3000/api/transactions/user/expenses/" + id
+    `http://localhost:3000/api/transactions/user/expenses/${id}`
   );
   const data: Amount = await res.json();
   return data;
 }
 
-export async function getTotalBalance(id: number): Promise<Amount> {
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+/* export async function getTotalBalance(id: string): Promise<Amount> {
   const res = await fetch(
-    "http://localhost:3000/api/transactions/user/totalBalance/" + id
+    `http://localhost:3000/api/transactions/user/totalBalance/${id}`
   );
   const data: Amount = await res.json();
   return data;
+} */
+
+type UserSumGoals = {
+  totalSaved: number;
+  totalGoalsAmount: number;
+};
+
+export async function getTotalBalance(id: string) {
+  const transactions = await prisma.transactions.aggregate({
+    _sum: {
+      amount: true,
+    },
+    where: {
+      userId: Number(id),
+    },
+  });
+
+  if (!transactions) {
+    throw new Error("Transaction not found");
+  }
+
+  const userGoals = await prisma.goals.findMany({
+    where: {
+      userId: Number(id),
+    },
+  });
+
+  if (!userGoals) {
+    throw new Error("User goals not found");
+  }
+
+  const data = userGoals.reduce<UserSumGoals>(
+    (acc, goal) => {
+      acc.totalSaved += goal.currentAmount || 0;
+      acc.totalGoalsAmount += goal.totalAmount || 0;
+      return acc;
+    },
+    { totalSaved: 0, totalGoalsAmount: 0 }
+  );
+
+  transactions._sum.amount = (transactions._sum.amount ?? 0) - data.totalSaved;
+
+  return { totalBalance: transactions._sum.amount, ...data };
 }
 
 /* New API call to delete previous extra calls for simple data */
-export async function getMonthlyGeneralBalance(
-  id: number
+/* export async function getMonthlyGeneralBalance(
+  id: string
 ): Promise<MonthAmount> {
   const res = await fetch(
-    "http://localhost:3000/api/transactions/user/generalBalance/montly/" + id
+    `http://localhost:3000/api/transactions/user/generalBalance/montly/${id}`
   );
   const data: MonthAmount = await res.json();
   return data;
+} */
+
+type TransactionSum = {
+  t_incomes: number | null;
+  t_expenses: number | null;
+};
+
+export async function getMonthlyGeneralBalance(
+  id: string
+): Promise<TransactionSum> {
+  const { lte, gte } = getCurrentMonthLength();
+
+  const transactions = await prisma.transactions.groupBy({
+    by: ["typeId"],
+    where: {
+      userId: Number(id),
+      createdAt: {
+        lte,
+        gte,
+      },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  const result = transactions.reduce<TransactionSum>(
+    (acc, curr) => {
+      if (curr.typeId === 1) {
+        acc.t_incomes = curr._sum.amount || 0;
+      } else {
+        acc.t_expenses = curr._sum.amount || 0;
+      }
+      return acc;
+    },
+    { t_incomes: 0, t_expenses: 0 }
+  );
+
+  return result;
 }
 
-export async function getGeneralBalance(id: number): Promise<MonthAmount> {
+function getCurrentMonthLength() {
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  return { lte: endOfMonth.toISOString(), gte: startOfMonth.toISOString() };
+}
+
+/* =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- */
+
+export async function getGeneralBalance(id: string): Promise<MonthAmount> {
   const res = await fetch(
-    "http://localhost:3000/api/transactions/user/generalBalance/allTime/" + id
+    `http://localhost:3000/api/transactions/user/generalBalance/allTime/${id}`
   );
   const data: MonthAmount = await res.json();
   return data;
@@ -138,7 +252,7 @@ export async function getGeneralBalance(id: number): Promise<MonthAmount> {
 /* =========================================================== */
 
 export async function getTotalPerCategory(
-  id: number,
+  id: string,
   period: "Weekly" | "Monthly" | "Yearly"
 ): Promise<TotalPerCategory[]> {
   try {
@@ -159,7 +273,7 @@ export async function getTotalPerCategory(
 }
 
 export async function getPerDate(
-  id: number,
+  id: string,
   period: "Weekly" | "Monthly"
 ): Promise<TransactionsByDate[]> {
   try {
@@ -180,10 +294,10 @@ export async function getPerDate(
 }
 
 export async function getPrevMonths(
-  id: number
+  id: string
 ): Promise<PrevMonthsTransaction[]> {
   const res = await fetch(
-    "http://localhost:3000/api/transactions/user/prevMonths/" + id
+    `http://localhost:3000/api/transactions/user/prevMonths/${id}`
   );
 
   const data = await res.json();

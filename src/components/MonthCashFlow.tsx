@@ -1,3 +1,5 @@
+"use client";
+
 import { getPerDate } from "@/Backend/Transaction";
 import styles from "./Month.module.css";
 import React, { useState, useEffect, useCallback } from "react";
@@ -68,7 +70,7 @@ const options = {
 
 /* Types declaration */
 type IncomeData = {
-  User: number;
+  User: string;
 };
 
 interface TransactionsByDate {

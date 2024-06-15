@@ -1,19 +1,27 @@
-import { useSession } from "next-auth/react";
 import styles from "./Header.module.css";
 import userIcon from "/public/assets/icons/user-placeholder.png";
-
 import Image from "next/image";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export default function Header() {
+interface Session {
+  user?: {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+  };
+}
+
+export default async function Header() {
   const currMonth = new Date().toLocaleString([], { month: "long" });
   const currYear = new Date().getFullYear();
-  const { data: session } = useSession();
+  const session: Session | null = await getServerSession(authOptions);
 
-  let UserName = "";
+  let UserName;
 
-  if (session?.user) {
-    UserName = session.user.name;
-  }
+  if (session) {
+    UserName = session?.user?.name;
+  } else UserName = "";
 
   return (
     <>
