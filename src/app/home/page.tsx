@@ -1,5 +1,3 @@
-// "use client";
-
 import TopCard from "@/components/TopCard";
 import MonthSummary from "@/components/MonthSummary";
 import RecentActivity from "@/components/RecentActivity";
@@ -8,11 +6,9 @@ import styles from "./home.module.css";
 import Header from "@/components/Header";
 import Loading from "./loading";
 
-// import { useSession } from "next-auth/react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-/* session?.user?.id */
 interface Session {
   user?: {
     id?: string;

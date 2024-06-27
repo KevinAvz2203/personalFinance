@@ -1,5 +1,12 @@
 .genSummary {
   display: flex;
-  /* margin-top: 1.5rem; */
   justify-content: space-between;
 }
+
+/* Responsive design */
+/* @media (max-width: 992px) {
+  .genSummary {
+    flex-direction: column;
+    align-items: center;
+  }
+} */
