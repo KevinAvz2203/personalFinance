@@ -49,15 +49,15 @@ const TopCard: React.FC<TopCardProps> = async ({ User }) => {
   return (
     <div className={styles.container}>
       {[
-        { icon: incomeIcon, amount: totalAmounts.incomes, label: "Incomes" },
+        { icon: incomeIcon, amount: totalAmounts.incomes.toFixed(2), label: "Incomes" },
         {
           icon: expenseIcon,
-          amount: totalAmounts.expenses,
+          amount: totalAmounts.expenses.toFixed(2),
           label: "Expenses",
         },
         {
           icon: totalBalanceIcon,
-          amount: totalAmounts.totalBalance,
+          amount: totalAmounts.totalBalance.toFixed(2),
           label: "Total Balance",
         },
         {

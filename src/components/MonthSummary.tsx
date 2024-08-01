@@ -1,6 +1,6 @@
 "use client";
 
-import { getTotalPerCategory } from "@/Backend/Transaction";
+import { getTotalPerCategoryClient } from "@/Backend/Transaction";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import React, { useState, useEffect, useCallback } from "react";
 import { Doughnut } from "react-chartjs-2";
@@ -60,7 +60,7 @@ const MonthSummary = ({ User }: IncomeData) => {
     async (period: "Weekly" | "Monthly") => {
       try {
         /* Fetching transactions from backend based on the period specified */
-        const transPerCat: TotalPerCategory[] = await getTotalPerCategory(
+        const transPerCat: TotalPerCategory[] = await getTotalPerCategoryClient(
           User,
           period
         );

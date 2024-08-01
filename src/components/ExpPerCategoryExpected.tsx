@@ -1,3 +1,5 @@
+"use client";
+
 import { getPrevMonths } from "@/Backend/Transaction";
 import { getCategories } from "@/Backend/Category";
 import { useState, useEffect, useCallback } from "react";

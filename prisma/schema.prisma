@@ -27,7 +27,7 @@ model Users {
 model Transactions {
   id Int @id @default(autoincrement())
   description String @db.VarChar(255) 
-  amount Int 
+  amount Float 
   createdAt DateTime @default(now()) @map("date")
 
   userId Int
@@ -58,8 +58,8 @@ model Types {
 model Goals {
   id Int @id @default(autoincrement())
   name String @db.VarChar(255)
-  totalAmount Int
-  currentAmount Int?
+  totalAmount Float
+  currentAmount Float?
 
   userId Int
   user Users @relation(fields: [userId], references: [id])

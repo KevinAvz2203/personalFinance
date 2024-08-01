@@ -1,5 +1,3 @@
-"use client";
-
 import ExpPerCategory from "@/components/ExpPerCategory";
 import ExpPerCategoryExpected from "@/components/ExpPerCategoryExpected";
 import HistoricActivity from "@/components/HistoricActivity";
@@ -9,8 +7,19 @@ import { useSession } from "next-auth/react";
 import Header from "@/components/Header";
 import Loading from "./loading";
 
-export default function Stadistics() {
-  const { data: session } = useSession();
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+interface Session {
+  user?: {
+    id?: string;
+    name?: string | null;
+    email?: string | null;
+  };
+}
+
+export default async function Stadistics() {
+  const session: Session | null = await getServerSession(authOptions);
 
   /* Mientras no se encuentra una session activa, se muestra la pantalla de carga */
   while (!session) {
@@ -21,23 +30,27 @@ export default function Stadistics() {
     );
   }
 
-  const UserID: number = session.user.id;
+  const UserID: string = session?.user?.id || "pending";
+
+  while (UserID === "pending") {
+    return <></>;
+  }
 
   return (
     <>
-      {/* <Header /> */}
+      <Header />
 
       <div className="content">
         <div className={styles.container}>
           <div className={`${styles.dataGraphs}`}>
             <ExpPerCategory User={UserID} />
 
-            <ExpPerCategoryExpected User={UserID} />
+            {/* <ExpPerCategoryExpected User={UserID} /> */}
           </div>
           <div className={styles.dataActivity}>
-            <TopCardStadistics User={UserID} />
+            {/* <TopCardStadistics User={UserID} /> */}
 
-            <HistoricActivity User={UserID} />
+            {/* <HistoricActivity User={UserID} /> */}
           </div>
         </div>
       </div>

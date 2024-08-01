@@ -6,7 +6,7 @@ import styles from "./RecentActivity.module.css";
 type IncomeData = {
   User: string;
 };
-/* ================= */
+/* ================== */
 
 const options = {
   weekday: "long",
@@ -17,6 +17,7 @@ const options = {
 
 const RecentActivity: React.FC<IncomeData> = async ({ User }) => {
   const { transactions } = await getRecentPerUser(User);
+  console.log(transactions);
 
   const dates = transactions.map((transaction) => {
     const d = new Date(transaction.createdAt);
