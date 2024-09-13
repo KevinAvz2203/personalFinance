@@ -17,10 +17,18 @@ body {
 .content {
   margin: 0rem 1.5em;
   margin-bottom: 1.5rem;
+  height: 100vh;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .content > * {
   margin-top: 1.5rem;
+}
+
+.content::-webkit-scrollbar {
+  display: none;
 }
 
 /* ================================ */

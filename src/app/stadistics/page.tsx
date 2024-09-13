@@ -45,7 +45,7 @@ export default async function Stadistics() {
           <div className={`${styles.dataGraphs}`}>
             <ExpPerCategory User={UserID} />
 
-            {/* <ExpPerCategoryExpected User={UserID} /> */}
+            <ExpPerCategoryExpected User={UserID} />
           </div>
           <div className={styles.dataActivity}>
             {/* <TopCardStadistics User={UserID} /> */}

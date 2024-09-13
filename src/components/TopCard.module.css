@@ -30,10 +30,6 @@
   padding-left: 1rem;
 }
 
-.topCards div p {
-  font-size: x-large;
-}
-
 .topCards div p:last-child {
   font-size: 1rem;
   font-weight: 700;
@@ -50,4 +46,28 @@
 .separator {
   height: 60px;
   border: 1px solid #8da9c4;
+}
+
+@media screen and (max-width: 1024px) {
+  .container {
+    flex-wrap: wrap;
+  }
+  .topCards {
+    width: 50%;
+  }
+  .separator {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+  .topCards {
+    width: 100%;
+  }
+  .separator {
+    display: none;
+  }
 }

@@ -49,7 +49,11 @@ const TopCard: React.FC<TopCardProps> = async ({ User }) => {
   return (
     <div className={styles.container}>
       {[
-        { icon: incomeIcon, amount: totalAmounts.incomes.toFixed(2), label: "Incomes" },
+        {
+          icon: incomeIcon,
+          amount: totalAmounts.incomes.toFixed(2),
+          label: "Incomes",
+        },
         {
           icon: expenseIcon,
           amount: totalAmounts.expenses.toFixed(2),
@@ -72,11 +76,13 @@ const TopCard: React.FC<TopCardProps> = async ({ User }) => {
             <Image src={icon} alt={`${label} Icon`} width={50} height={50} />
             <div>
               {icon === savedGoalsIcon ? (
-                <p>
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">
                   ${amount || 0} of ${total || 0}
                 </p>
               ) : (
-                <p>${amount || 0} MXN</p>
+                <p className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">
+                  ${amount || 0} MXN
+                </p>
               )}
               <p>{label}</p>
             </div>

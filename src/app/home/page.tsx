@@ -18,7 +18,6 @@ interface Session {
 }
 
 export default async function Home() {
-  // const { data: session } = useSession();
   const session: Session | null = await getServerSession(authOptions);
 
   /* Mientras no se encuentra una session activa, se muestra la pantalla de carga */
