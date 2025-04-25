@@ -32,7 +32,7 @@ const TopCard: React.FC<TopCardProps> = async ({ User }) => {
   const [balanceTotal, generalBalance, goalsTotal] = await Promise.all([
     getTotalBalance(User),
     getMonthlyGeneralBalance(User),
-    getTotalSavedGoals(User),
+    getTotalSavedGoals(Number(User)),
   ]);
 
   const totalAmounts: TotalAmountsType = {

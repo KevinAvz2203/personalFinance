@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 
+const API_BASE_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
+
 type Amount = {
   amount: number;
 };
@@ -7,11 +9,6 @@ type Amount = {
 type MonthAmount = {
   t_incomes: number;
   t_expenses: number;
-};
-
-type Balance = {
-  amount: number;
-  typeId: number;
 };
 
 type TransactionSum = {
@@ -23,8 +20,8 @@ type TransactionsData = {
   id: number;
   description: string;
   amount: number;
-  createdAt: Date;
-  category: {
+  date: Date;
+  categories: {
     name: string;
   };
 };
@@ -38,14 +35,14 @@ type PostTransactionData = {
 };
 
 type TransactionsByDate = {
-  createdAt: Date;
+  date: Date;
   typeId: number;
   amount: number;
 };
 
 type PrevMonthsTransaction = {
   month: number;
-  Categoria: string;
+  categoria: string;
   total_amount: number;
 };
 
@@ -71,325 +68,241 @@ function getCurrentMonthLength() {
   return { lte: endOfMonth.toISOString(), gte: startOfMonth.toISOString() };
 }
 
+function getStartDateFromPeriod(period: "Weekly" | "Monthly" | "Yearly"): Date {
+  let dateOffset;
+  switch (period) {
+    case "Monthly":
+      dateOffset = 30;
+      break;
+    case "Yearly":
+      dateOffset = 365;
+      break;
+    case "Weekly":
+    default:
+      dateOffset = 7;
+      break;
+  }
+  return new Date(new Date().setDate(new Date().getDate() - dateOffset));
+}
+
+// * Template para manejar errores de fetch y parseo de JSON
+async function fetchFromApi<T>(
+  url: string,
+  options?: RequestInit
+): Promise<T | null> {
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) {
+      console.error(`API Error (${url}): ${res.status} ${res.statusText}`);
+      return null; // O lanzar un error específico
+    }
+    // Solo intentar parsear JSON si la respuesta fue OK
+    return (await res.json()) as T;
+  } catch (error) {
+    console.error(`Network or fetch error (${url}):`, error);
+    return null;
+  }
+}
+
 /* =========================== UTILS FUNCTIONS ENDS  =========================== */
 
 /* =========================== API CALLS START =========================== */
 
 export async function getPerUser(id: string): Promise<TransactionsData[]> {
-  const res = await fetch(`http://localhost:3000/api/transactions/user/${id}`);
-  const data = await res.json();
-  return data;
+  const data = await fetchFromApi<TransactionsData[]>(
+    `${API_BASE_URL}/api/transactions/user/${id}`
+  );
+  return data ?? []; // Devolver array vacío si fetch falla o devuelve null
 }
 
 export async function getHistoricPerUser(
   id: string,
   period: "Weekly" | "Monthly" | "Yearly"
 ): Promise<TransactionsData[]> {
-  try {
-    const res = await fetch(
-      `http://localhost:3000/api/transactions/user/historic/${id}?period=${period}`
-    );
-
-    // Check if the request was successful
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching transactions:", error);
-    return [];
-  }
+  const data = await fetchFromApi<TransactionsData[]>(
+    `${API_BASE_URL}/api/transactions/user/historic/${id}?period=${period}`
+  );
+  return data ?? [];
 }
 
-export async function getIncomes(id: string): Promise<Amount> {
-  const res = await fetch(
-    `http://localhost:3000/api/transactions/user/incomes/${id}`
+export async function getIncomes(id: string): Promise<Amount | null> {
+  return await fetchFromApi<Amount>(
+    `${API_BASE_URL}/api/transactions/user/incomes/${id}`
   );
-  const data: Amount = await res.json();
-  return data;
 }
 
-export async function getExpenses(id: string): Promise<Amount> {
-  const res = await fetch(
-    `http://localhost:3000/api/transactions/user/expenses/${id}`
+export async function getExpenses(id: string): Promise<Amount | null> {
+  return await fetchFromApi<Amount>(
+    `${API_BASE_URL}/api/transactions/user/expenses/${id}`
   );
-  const data: Amount = await res.json();
-  return data;
 }
 
-export async function getGeneralBalance(id: string): Promise<MonthAmount> {
-  const res = await fetch(
-    `http://localhost:3000/api/transactions/user/generalBalance/allTime/${id}`
+export async function getGeneralBalance(
+  id: string
+): Promise<MonthAmount | null> {
+  return await fetchFromApi<MonthAmount>(
+    `${API_BASE_URL}/api/transactions/user/generalBalance/allTime/${id}`
   );
-  const data: MonthAmount = await res.json();
-  return data;
 }
 
 export async function getTotalPerCategoryClient(
   id: string,
   period: "Weekly" | "Monthly" | "Yearly"
 ): Promise<TotalPerCategory[]> {
-  try {
-    const res = await fetch(
-      `http://localhost:3000/api/transactions/user/percategory/${id}?period=${period}`
-    );
-
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching transactions:", error);
-    return [];
-  }
+  const data = await fetchFromApi<TotalPerCategory[]>(
+    `${API_BASE_URL}/api/transactions/user/percategory/${id}?period=${period}`
+  );
+  return data ?? [];
 }
 
 export async function getPerDate(
   id: string,
   period: "Weekly" | "Monthly"
 ): Promise<TransactionsByDate[]> {
-  try {
-    const res = await fetch(
-      `http://localhost:3000/api/transactions/user/sumbydate/${id}?period=${period}`
-    );
-
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching transactions:", error);
-    return [];
-  }
+  const data = await fetchFromApi<TransactionsByDate[]>(
+    `${API_BASE_URL}/api/transactions/user/sumbydate/${id}?period=${period}`
+  );
+  return data ?? [];
 }
 
 export async function getPrevMonths(
   id: string
 ): Promise<PrevMonthsTransaction[]> {
-  const res = await fetch(
-    `http://localhost:3000/api/transactions/user/prevMonths/${id}`
+  const data = await fetchFromApi<PrevMonthsTransaction[]>(
+    `${API_BASE_URL}/api/transactions/user/prevMonths/${id}`
   );
-
-  const data = await res.json();
-  return data;
+  return data ?? [];
 }
 
-export async function postTransaction(transactionData: PostTransactionData) {
-  transactionData.amount = Number(transactionData.amount);
-  transactionData.categoryId = Number(transactionData.categoryId);
+export async function postTransaction(
+  transactionData: PostTransactionData
+): Promise<TransactionsData | null> {
+  const payload = { ...transactionData };
 
-  if (transactionData.typeId === 2) {
-    transactionData.typeId = 2;
-    transactionData.amount = transactionData.amount * -1;
+  payload.amount = Number(payload.amount);
+  payload.categoryId = Number(payload.categoryId);
+  payload.userId = Number(payload.userId);
+
+  if (payload.typeId === 2) {
+    payload.amount = Math.abs(payload.amount) * -1;
+  } else {
+    payload.amount = Math.abs(payload.amount);
   }
 
-  console.log(transactionData);
-
-  const res = await fetch("http://localhost:3000/api/transactions/", {
-    method: "POST",
-    body: JSON.stringify(transactionData),
-  });
-  const data = await res.json();
-  console.log(data);
+  return await fetchFromApi<TransactionsData>(
+    `${API_BASE_URL}/api/transactions/`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    }
+  );
 }
 
 /* =========================== API CALLS ENDS  =========================== */
 
-/* =========================== API ROUTES TO BE DELETED  =========================== */
-
-/* export async function getRecentPerUser(id: string) {
-  const res = await fetch(
-    `http://localhost:3000/api/transactions/user/recent/${id}`
-  );
-  const data = await res.json();
-  return data;
-} */
-
-/* export async function getTotalBalance(id: string): Promise<Amount> {
-  const res = await fetch(
-    `http://localhost:3000/api/transactions/user/totalBalance/${id}`
-  );
-  const data: Amount = await res.json();
-  return data;
-} */
-
-/* export async function getMonthlyGeneralBalance(
-  id: string
-): Promise<MonthAmount> {
-  const res = await fetch(
-    `http://localhost:3000/api/transactions/user/generalBalance/montly/${id}`
-  );
-  const data: MonthAmount = await res.json();
-  return data;
-} */
-
-/* ================================================================================= */
+/* =========================== FUNCIONES PRISMA  =========================== */
 
 export async function getRecentPerUser(id: string) {
-  const transactions = await prisma.transactions.findMany({
-    where: {
-      userId: Number(id),
-      createdAt: {
-        gte: new Date(new Date().setDate(new Date().getDate() - 7)),
+  try {
+    const transactions = await prisma.transactions.findMany({
+      where: {
+        userId: Number(id),
+        date: { gte: getStartDateFromPeriod("Weekly") },
       },
-    },
-    include: {
-      category: true,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+      include: { categories: true },
+      orderBy: { date: "desc" },
+    });
 
-  if (!transactions) throw new Error("Transaction not found");
-  return { transactions };
+    if (!transactions) throw new Error("Transaction not found");
+    return { transactions };
+  } catch (error) {
+    console.error("Error fetching recent transactions:", error);
+    return [];
+  }
 }
 
 export async function getTotalBalance(id: string) {
-  const transactions = await prisma.transactions.aggregate({
-    _sum: {
-      amount: true,
-    },
-    where: {
-      userId: Number(id),
-    },
-  });
+  try {
+    const balanceAgg = await prisma.transactions.aggregate({
+      _sum: { amount: true },
+      where: { userId: Number(id) },
+    });
 
-  if (!transactions) {
-    throw new Error("Transaction not found");
+    const goalsAgg = await prisma.goals.aggregate({
+      _sum: { currentAmount: true, totalAmount: true },
+      where: { userId: Number(id) },
+    });
+
+    const totalBalance =
+      (balanceAgg._sum.amount ?? 0) - (goalsAgg._sum.currentAmount ?? 0);
+    const totalGoalsAmount = goalsAgg._sum.totalAmount ?? 0;
+    const totalSaved = goalsAgg._sum.currentAmount ?? 0;
+
+    return { totalBalance, totalSaved, totalGoalsAmount };
+  } catch (error) {
+    console.error("Error calculating total balance:", error);
+    return { totalBalance: 0, totalSaved: 0, totalGoalsAmount: 0 };
   }
-
-  const userGoals = await prisma.goals.findMany({
-    where: {
-      userId: Number(id),
-    },
-  });
-
-  if (!userGoals) {
-    throw new Error("User goals not found");
-  }
-
-  const data = userGoals.reduce<UserSumGoals>(
-    (acc, goal) => {
-      acc.totalSaved += goal.currentAmount || 0;
-      acc.totalGoalsAmount += goal.totalAmount || 0;
-      return acc;
-    },
-    { totalSaved: 0, totalGoalsAmount: 0 }
-  );
-
-  transactions._sum.amount = (transactions._sum.amount ?? 0) - data.totalSaved;
-
-  return { totalBalance: transactions._sum.amount, ...data };
 }
 
 export async function getMonthlyGeneralBalance(
   id: string
 ): Promise<TransactionSum> {
-  const { lte, gte } = getCurrentMonthLength();
-
-  const transactions = await prisma.transactions.groupBy({
-    by: ["typeId"],
-    where: {
-      userId: Number(id),
-      createdAt: {
-        lte,
-        gte,
-      },
-    },
-    _sum: {
-      amount: true,
-    },
-  });
-
-  const result = transactions.reduce<TransactionSum>(
-    (acc, curr) => {
-      if (curr.typeId === 1) {
-        acc.t_incomes = curr._sum.amount || 0;
-      } else {
-        acc.t_expenses = curr._sum.amount || 0;
-      }
-      return acc;
-    },
-    { t_incomes: 0, t_expenses: 0 }
-  );
-
-  return result;
-}
-
-/* export async function getTotalPerCategoryServer(
-  id: string,
-  period: "Weekly" | "Monthly" | "Yearly"
-): Promise<TotalPerCategory[]> {
   try {
-    const res = await fetch(
-      `http://localhost:3000/api/transactions/user/percategory/${id}?period=${period}`
-    );
+    const { lte, gte } = getCurrentMonthLength();
+    const monthlyAgg = await prisma.transactions.groupBy({
+      by: ["typeId"],
+      where: { userId: Number(id), date: { lte, gte } },
+      _sum: { amount: true },
+    });
 
-    if (!res.ok) {
-      throw new Error(res.statusText);
-    }
-
-    const data = await res.json();
-    return data;
+    const result: TransactionSum = { t_incomes: 0, t_expenses: 0 };
+    monthlyAgg.forEach((group) => {
+      if (group.typeId === 1) {
+        result.t_incomes = group._sum.amount ?? 0;
+      } else {
+        result.t_expenses = group._sum.amount ?? 0;
+      }
+    });
+    return result;
   } catch (error) {
-    console.error("Error fetching transactions:", error);
-    return [];
+    console.error("Error fetching monthly balance:", error);
+    return { t_incomes: 0, t_expenses: 0 };
   }
-} */
+}
 
 export async function getTotalPerCategoryServer(
   id: string,
   period: "Weekly" | "Monthly" | "Yearly"
 ) {
-  let dateOffset;
-  switch (period) {
-    case "Monthly":
-      dateOffset = 30; // Last 30 days
-      break;
-    case "Yearly":
-      dateOffset = 365; // Last 365 days
-      break;
-    case "Weekly":
-    default:
-      dateOffset = 7; // Last 7 days
-      break;
-  }
-
-  const startDate = new Date(
-    new Date().setDate(new Date().getDate() - dateOffset)
-  );
-  console.log("User ID:", id);
-  console.log("Date Offset:", dateOffset);
-  console.log("Start Date:", startDate);
-
-  const transactions = await prisma.transactions.groupBy({
-    by: ["categoryId"],
-    _sum: {
-      amount: true,
-    },
-    where: {
-      userId: Number(id),
-      typeId: 2,
-      createdAt: {
-        gte: startDate,
+  try {
+    const startDate = getStartDateFromPeriod(period);
+    const transactions = await prisma.transactions.groupBy({
+      by: ["categoryId"],
+      _sum: {
+        amount: true,
       },
-    },
-    orderBy: {
-      categoryId: "asc",
-    },
-  });
+      where: {
+        userId: Number(id),
+        typeId: 2, // Solo gastos
+        date: {
+          gte: startDate,
+        },
+      },
+      orderBy: {
+        categoryId: "asc",
+      },
+    });
 
-  console.log("Transactions:", transactions);
+    if (!transactions || transactions.length === 0)
+      throw new Error("Transaction not found");
 
-  if (!transactions || transactions.length === 0)
-    throw new Error("Transaction not found");
-
-  return transactions;
+    return transactions;
+  } catch (error) {
+    console.error(`Error fetching total per category (${period}):`, error);
+    return [];
+  }
 }

@@ -15,8 +15,8 @@ type TransactionsData = {
   id: number;
   description: string;
   amount: number;
-  createdAt: Date;
-  category: {
+  date: Date;
+  categories: {
     name: string;
   };
 };
@@ -73,10 +73,7 @@ export default function HistoricActivity({ User }: IncomeData) {
       Array.from(
         new Set(
           data[activeButton]?.map((transaction) =>
-            new Date(transaction.createdAt).toLocaleDateString(
-              undefined,
-              options
-            )
+            new Date(transaction.date).toLocaleDateString(undefined, options)
           )
         )
       ),
@@ -136,17 +133,17 @@ export default function HistoricActivity({ User }: IncomeData) {
                 data[activeButton]?.map(
                   (transaction, transId) =>
                     fecha ==
-                      new Date(transaction.createdAt).toLocaleDateString(
+                      new Date(transaction.date).toLocaleDateString(
                         undefined,
                         options
                       ) && (
                       <ChargeActivity
                         key={transaction.id}
                         Name={transaction.description}
-                        Time={new Date(
-                          transaction.createdAt
-                        ).toLocaleTimeString("en-US")}
-                        Category={transaction.category.name}
+                        Time={new Date(transaction.date).toLocaleTimeString(
+                          "en-US"
+                        )}
+                        Category={transaction.categories.name}
                         Amount={transaction.amount}
                       />
                     )

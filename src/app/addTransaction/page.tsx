@@ -69,7 +69,6 @@ export default function AddTransaction() {
   };
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    console.log(data);
     postTransaction(data).then(pageRefresher);
   };
 

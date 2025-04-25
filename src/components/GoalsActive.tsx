@@ -26,7 +26,9 @@ export default function GoalsActive({ User }: IncomeData) {
 
   useEffect(() => {
     async function getCompletedGoals() {
-      const [existingGoals]: any[] = await Promise.all([getUserGoals(User)]);
+      const [existingGoals]: any[] = await Promise.all([
+        getUserGoals(User.toString()),
+      ]);
       setUserGoals(existingGoals);
     }
 

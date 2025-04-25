@@ -74,7 +74,7 @@ type IncomeData = {
 };
 
 interface TransactionsByDate {
-  createdAt: Date;
+  date: Date;
   typeId: number;
   amount: number;
 }
@@ -130,7 +130,7 @@ const MonthCashFlow = ({ User }: IncomeData) => {
         es lo mismo que un FOR pero se lee mejor */
         const expenses = [0, 0, 0, 0, 0, 0, 0];
         perDate.forEach((item) => {
-          const d = new Date(item.createdAt);
+          const d = new Date(item.date);
           const dayOfWeekDigit = d.getDay();
           const amountToAdd = Math.abs(item.amount);
           expenses[dayOfWeekDigit] += amountToAdd;

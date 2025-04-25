@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const transactions = await prisma.transactions.findMany();
+    const transactions = await prisma.transactions.findMany(); // Modelo `transactions` en minúsculas
     return NextResponse.json(transactions);
   } catch (error) {
     if (error instanceof Error) {

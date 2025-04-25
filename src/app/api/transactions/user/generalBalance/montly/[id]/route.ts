@@ -24,7 +24,7 @@ export async function GET(request: Request, { params }: Params) {
       by: ["typeId"],
       where: {
         userId: Number(params.id),
-        createdAt: {
+        date: {
           lte,
           gte,
         },

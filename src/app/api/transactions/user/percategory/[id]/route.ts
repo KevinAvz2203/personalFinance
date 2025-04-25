@@ -29,7 +29,7 @@ export async function GET(request: NextRequest, { params }: Params) {
       where: {
         userId: Number(params.id),
         typeId: 2,
-        createdAt:
+        date:
           dateOffset === Infinity
             ? {}
             : {

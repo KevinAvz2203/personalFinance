@@ -1,73 +1,65 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL") 
+  url      = env("DATABASE_URL")
 }
 
-model Users {
-  id Int @id @default(autoincrement())
-  firstName String @db.VarChar(255) @map("first_name")
-  lastName String @db.VarChar(255) @map("last_name")
-  email String @unique
-  password String  
-  age Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  transaction Transactions[]
-  goal Goals[]
+model categories {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  transactions transactions[]
 }
 
-model Transactions {
-  id Int @id @default(autoincrement())
-  description String @db.VarChar(255) 
-  amount Float 
-  createdAt DateTime @default(now()) @map("date")
-
-  userId Int
-  user Users @relation(fields: [userId], references: [id])
-
-  typeId Int 
-  type Types @relation(fields: [typeId], references: [id])
-
-  categoryId Int
-  category Categories @relation(fields: [categoryId], references: [id])
-}
-
-model Categories {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-
-  transaction Transactions[]
-}
-
-model Types {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-
-  transaction Transactions[]
-}
-
-
-model Goals {
-  id Int @id @default(autoincrement())
-  name String @db.VarChar(255)
-  totalAmount Float
+model goals {
+  id            Int      @id @default(autoincrement())
+  name          String   @db.VarChar(255)
+  totalAmount   Float
   currentAmount Float?
+  userId        Int
+  isComplete    Boolean  @default(false)
+  isFavorite    Boolean? @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime
+  users         users    @relation(fields: [userId], references: [id], map: "Goals_userId_fkey")
 
-  userId Int
-  user Users @relation(fields: [userId], references: [id])
+  @@index([userId], map: "Goals_userId_fkey")
+}
 
-  isComplete Boolean @default(false)
-  isFavorite Boolean? @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model transactions {
+  id          Int        @id @default(autoincrement())
+  description String     @db.VarChar(255)
+  amount      Float
+  date        DateTime   @default(now())
+  userId      Int
+  typeId      Int
+  categoryId  Int
+  categories  categories @relation(fields: [categoryId], references: [id], map: "Transactions_categoryId_fkey")
+  types       types      @relation(fields: [typeId], references: [id], map: "Transactions_typeId_fkey")
+  users       users      @relation(fields: [userId], references: [id], map: "Transactions_userId_fkey")
 
-  
+  @@index([categoryId], map: "Transactions_categoryId_fkey")
+  @@index([typeId], map: "Transactions_typeId_fkey")
+  @@index([userId], map: "Transactions_userId_fkey")
+}
+
+model types {
+  id           Int            @id @default(autoincrement())
+  name         String         @db.VarChar(255)
+  transactions transactions[]
+}
+
+model users {
+  id           Int            @id @default(autoincrement())
+  first_name   String         @db.VarChar(255)
+  last_name    String         @db.VarChar(255)
+  email        String         @unique(map: "Users_email_key")
+  password     String
+  age          Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  goals        goals[]
+  transactions transactions[]
 }

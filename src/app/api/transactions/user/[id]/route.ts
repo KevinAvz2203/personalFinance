@@ -13,10 +13,10 @@ export async function GET(request: Request, { params }: Params) {
         userId: Number(params.id),
       },
       include: {
-        category: true,
+        categories: true,
       },
       orderBy: {
-        createdAt: "desc",
+        date: "desc",
       },
     });
 

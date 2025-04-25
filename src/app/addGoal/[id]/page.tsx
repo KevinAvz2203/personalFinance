@@ -24,7 +24,7 @@ export default function AddGoal({ params }: Params) {
 
   async function getUserSetFormData() {
     /* EDITAR */
-    const [goalData] = await Promise.all([getGoal(params.id)]);
+    const [goalData] = await Promise.all([getGoal(params.id.toString())]);
 
     setFormData({
       name: goalData.name,
@@ -58,7 +58,7 @@ export default function AddGoal({ params }: Params) {
 
   const handleSubmit = (event: any) => {
     event.preventDefault();
-    updateGoal(params.id, formData, isFavorite).then(() =>
+    updateGoal(params.id.toString(), formData, isFavorite).then(() =>
       router.push("/goals")
     );
   };

@@ -4,8 +4,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useRouter } from "next/navigation";
 
 type FormValues = {
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   age: number;
   email: string;
   password: string;
@@ -25,8 +25,8 @@ export default function RegisterPage() {
     const res = await fetch("/api/auth/registration", {
       method: "POST",
       body: JSON.stringify({
-        firstName: data.firstName,
-        lastName: data.lastName,
+        first_name: data.first_name,
+        last_name: data.last_name,
         age: Number(data.age),
         email: data.email,
         password: data.password,
@@ -44,15 +44,15 @@ export default function RegisterPage() {
         <h1 className="text-slate-200 font-bold text-4xl mb-4">Register</h1>
 
         <label
-          htmlFor="firstName"
+          htmlFor="first_name"
           className="text-slate-500 mb-2 block text-sm"
         >
           First Name:
         </label>
         <input
           type="text"
-          id="firstName"
-          {...register("firstName", {
+          id="first_name"
+          {...register("first_name", {
             required: {
               value: true,
               message: "First Name is required",
@@ -61,19 +61,22 @@ export default function RegisterPage() {
           className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
           placeholder="Insert First Name"
         />
-        {errors.firstName && (
+        {errors.first_name && (
           <span className="text-red-500 text-xs">
-            {errors.firstName.message}
+            {errors.first_name.message}
           </span>
         )}
 
-        <label htmlFor="lastName" className="text-slate-500 mb-2 block text-sm">
+        <label
+          htmlFor="last_name"
+          className="text-slate-500 mb-2 block text-sm"
+        >
           Last Name:
         </label>
         <input
           type="text"
-          id="lastName"
-          {...register("lastName", {
+          id="last_name"
+          {...register("last_name", {
             required: {
               value: true,
               message: "Last Name is required",
@@ -82,9 +85,9 @@ export default function RegisterPage() {
           className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
           placeholder="Insert Last Name"
         />
-        {errors.lastName && (
+        {errors.last_name && (
           <span className="text-red-500 text-xs">
-            {errors.lastName.message}
+            {errors.last_name.message}
           </span>
         )}
 

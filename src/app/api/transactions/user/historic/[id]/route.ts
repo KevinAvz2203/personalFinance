@@ -28,7 +28,7 @@ export async function GET(request: NextRequest, { params }: Params) {
     const transactions = await prisma.transactions.findMany({
       where: {
         userId: Number(params.id),
-        createdAt:
+        date:
           dateOffset === Infinity
             ? {}
             : {
@@ -38,10 +38,10 @@ export async function GET(request: NextRequest, { params }: Params) {
               },
       },
       include: {
-        category: true,
+        categories: true,
       },
       orderBy: {
-        createdAt: "desc",
+        date: "desc",
       },
     });
 

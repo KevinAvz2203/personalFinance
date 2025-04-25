@@ -20,10 +20,10 @@ interface GoalData {
   totalAmount: number;
   currentAmount: number | null;
   isComplete: boolean;
-  isFavorite: boolean | null /* No lo necesito */;
-  createdAt: Date /* No lo necesito */;
-  updatedAt: Date /* No lo necesito */;
-  userId: number /* No lo necesito */;
+  isFavorite: boolean | null;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: number;
 }
 
 export default function GoalsTable({ User }: IncomeData) {
@@ -38,7 +38,7 @@ export default function GoalsTable({ User }: IncomeData) {
   useEffect(() => {
     async function getSingleUserGoals() {
       const [existingGoals, savingTotal] = await Promise.all([
-        getUserGoals(User),
+        getUserGoals(User.toString()),
         getTotalSavedGoals(User),
       ]);
       setUserGoals(existingGoals);
@@ -47,8 +47,6 @@ export default function GoalsTable({ User }: IncomeData) {
 
     getSingleUserGoals();
   }, [User]);
-
-  console.log(goalsTotalSaved);
 
   return (
     <>

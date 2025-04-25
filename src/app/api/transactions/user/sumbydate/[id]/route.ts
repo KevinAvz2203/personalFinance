@@ -15,7 +15,7 @@ export async function GET(request: NextRequest, { params }: Params) {
       dateOffset = 30;
       break;
     case "Yearly":
-      dateOffset = 3665;
+      dateOffset = 365;
       break;
     case "Weekly":
     default:
@@ -25,11 +25,11 @@ export async function GET(request: NextRequest, { params }: Params) {
 
   try {
     const transactions = await prisma.transactions.groupBy({
-      by: ["createdAt", "amount"],
+      by: ["date", "amount"],
       where: {
         userId: Number(params.id),
         typeId: 2,
-        createdAt:
+        date:
           dateOffset === Infinity
             ? {}
             : {

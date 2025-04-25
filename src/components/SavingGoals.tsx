@@ -10,7 +10,7 @@ import { getUserFavoriteGoals } from "@/Backend/Goal";
 Chart.register(ArcElement, Tooltip, Legend);
 
 type IncomeData = {
-  User: number;
+  User: string;
 };
 
 type FavoriteGoals = {

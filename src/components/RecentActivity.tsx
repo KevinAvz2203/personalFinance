@@ -1,5 +1,5 @@
 import ChargeActivity from "./ChargeActivity";
-import { getRecentPerUser } from "@/Backend/Transaction"; // BORRAR API
+import { getRecentPerUser } from "@/Backend/Transaction";
 import styles from "./RecentActivity.module.css";
 
 /* Types declaration */
@@ -17,15 +17,14 @@ const options = {
 
 const RecentActivity: React.FC<IncomeData> = async ({ User }) => {
   const { transactions } = await getRecentPerUser(User);
-  console.log(transactions);
 
   const dates = transactions.map((transaction) => {
-    const d = new Date(transaction.createdAt);
+    const d = new Date(transaction.date);
     return d.toLocaleDateString(undefined, options);
   });
 
   const hours = transactions.map((transaction) => {
-    const d = new Date(transaction.createdAt);
+    const d = new Date(transaction.date);
     return d.toLocaleTimeString("en-US");
   });
 
@@ -58,7 +57,7 @@ const RecentActivity: React.FC<IncomeData> = async ({ User }) => {
                   {transactions.map(
                     (transaction, transId) =>
                       fecha ==
-                        new Date(transaction.createdAt).toLocaleDateString(
+                        new Date(transaction.date).toLocaleDateString(
                           undefined,
                           options
                         ) && (
@@ -66,7 +65,7 @@ const RecentActivity: React.FC<IncomeData> = async ({ User }) => {
                           key={transaction.id}
                           Name={transaction.description}
                           Time={hours[transId]}
-                          Category={transaction.category.name}
+                          Category={transaction.categories.name}
                           Amount={transaction.amount}
                         />
                       )

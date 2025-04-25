@@ -24,7 +24,7 @@ export default function FavGoals({ User }: IncomeData) {
 
   useEffect(() => {
     async function getFavoriteGoalsProgress() {
-      const existingGoals = await getUserFavoriteGoals(User);
+      const existingGoals = await getUserFavoriteGoals(User.toString());
       setUserGoals(existingGoals);
     }
 

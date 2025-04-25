@@ -11,15 +11,15 @@ export async function GET(request: Request, { params }: Params) {
     const transactions = await prisma.transactions.findMany({
       where: {
         userId: Number(params.id),
-        createdAt: {
+        date: {
           gte: new Date(new Date().setDate(new Date().getDate() - 7)),
         },
       },
       include: {
-        category: true,
+        categories: true,
       },
       orderBy: {
-        createdAt: "desc",
+        date: "desc",
       },
     });
 

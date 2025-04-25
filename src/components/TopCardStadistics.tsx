@@ -3,8 +3,6 @@
 import Image from "next/image";
 import incomeIcon from "/public/assets/icons/incomes-black.png";
 import expenseIcon from "/public/assets/icons/expenses-black.png";
-import totalBalanceIcon from "/public/assets/icons/balance-black.png";
-import savedGoalsIcon from "/public/assets/icons/piggy-bank.png";
 import React, { useState, useEffect, useCallback } from "react";
 import { getGeneralBalance } from "@/Backend/Transaction";
 import styles from "./TopCard.module.css";
@@ -34,10 +32,14 @@ const TopCardStadistics = ({ User }: { User: string }) => {
       /* Fetching all the necessary API calls */
       const [generalBalance] = await Promise.all([getGeneralBalance(User)]);
 
+      if (!generalBalance) {
+        throw new Error("No data found for the user.");
+      }
+
       /* Updating States with fetched data */
       setTotalAmounts({
-        incomes: generalBalance.t_incomes,
-        expenses: generalBalance.t_expenses,
+        incomes: generalBalance.t_incomes || 0,
+        expenses: generalBalance.t_expenses || 0,
       });
     } catch (error) {
       /* Future modification to add a UI update */

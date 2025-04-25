@@ -41,7 +41,6 @@ const ExpPerCategory: React.FC<IncomeData> = async ({ User }) => {
   try {
     const categories: Category[] = await getCategories();
     const transPerCat = await getTotalPerCategoryServer(User, "Monthly");
-    console.log(transPerCat);
 
     const filteredCategories = filterCategories(categories);
 
@@ -102,7 +101,7 @@ const ExpPerCategory: React.FC<IncomeData> = async ({ User }) => {
     );
   } catch (error) {
     console.error("Error fetching transactions:", error);
-    return <div>Error loading expense data. Please try again later.</div>;
+    return <div>No data available for this month.</div>;
   }
 };
 

@@ -22,11 +22,11 @@ interface Category {
   name: string;
 }
 
-interface PrevMonthsTransaction {
+type PrevMonthsTransaction = {
   month: number;
-  Categoria: string;
+  categoria: string;
   total_amount: number;
-}
+};
 
 interface ExpectedData {
   expenses: number[];
@@ -67,7 +67,7 @@ export default function ExpPerCategoryExpected({ User }: IncomeData) {
     // Iterate over each transaction in the prevMonthsTransaction array
     prevMonthsTransaction.forEach((transaction) => {
       // Calculate the index based on the value of transaction.Categoria and subtract 2 (because our transaction.Categoria starts from 2, and out array index at 0)
-      const index = Number(transaction.Categoria) - 2;
+      const index = Number(transaction.categoria) - 2;
 
       // Check if the calculated index is within the bounds of multiArray
       if (index >= 0 && index < multiArray.length) {
@@ -129,7 +129,6 @@ export default function ExpPerCategoryExpected({ User }: IncomeData) {
       setLoading(false);
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Handle error, e.g., show a message to the user
     }
   }, [User]);
 

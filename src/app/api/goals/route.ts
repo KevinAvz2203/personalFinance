@@ -25,10 +25,9 @@ export async function POST(request: Request) {
         isComplete,
         isFavorite,
         userId,
+        updatedAt: new Date(),
       },
     });
-
-    console.log(newGoal);
 
     return NextResponse.json(newGoal);
   } catch (error) {

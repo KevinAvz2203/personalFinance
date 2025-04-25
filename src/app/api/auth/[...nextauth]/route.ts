@@ -13,31 +13,35 @@ export const authOptions = {
       },
 
       async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Email and Password are required");
+        }
+
         const userFound = await prisma.users.findUnique({
           where: {
             email: credentials.email,
           },
           select: {
             id: true,
-            firstName: true,
-            lastName: true,
+            first_name: true,
+            last_name: true,
             email: true,
             password: true,
           },
         });
 
-        if (!userFound) throw new Error("User not found");
+        if (!userFound) throw new Error("Invalid credentials");
 
         const matchPassword = await compare(
           credentials.password,
           userFound.password
         );
 
-        if (!matchPassword) throw new Error("Email or Password are incorrect");
+        if (!matchPassword) throw new Error("Invalid credentials");
 
         return {
-          id: userFound.id,
-          name: `${userFound.firstName} ${userFound.lastName}`,
+          id: userFound.id.toString(), // Convert id to string
+          name: `${userFound.first_name} ${userFound.last_name}`,
           email: userFound.email,
         };
       },
@@ -48,11 +52,20 @@ export const authOptions = {
   },
   callbacks: {
     async session({ session }: { session: any }) {
+      if (!session?.user?.email) {
+        throw new Error("Session is missing user email");
+      }
+
       const userWithId = await prisma.users.findUnique({
         where: { email: session.user.email },
         select: { id: true },
       });
-      session.user.id = userWithId?.id;
+
+      if (!userWithId) {
+        throw new Error("User not found in session callback");
+      }
+
+      session.user.id = userWithId.id.toString(); // Convert id to string
       return session;
     },
   },

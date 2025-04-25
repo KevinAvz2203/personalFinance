@@ -9,21 +9,21 @@ export async function GET(request: Request, { params }: Params) {
   try {
     const transactions = await prisma.transactions.findMany({
       where: {
-        createdAt: {
+        date: {
           gte: new Date(new Date().setMonth(new Date().getMonth() - 5)),
         },
         userId: Number(params.id),
         typeId: 2,
       },
       select: {
-        createdAt: true,
+        date: true,
         amount: true,
         categoryId: true,
       },
     });
 
     const result = transactions.map((transactions) => ({
-      month: transactions.createdAt.getMonth() + 1, // Add 1 because getMonth() returns 0-based index
+      month: transactions.date.getMonth() + 1, // Add 1 because getMonth() returns 0-based index
       total_amount: transactions.amount,
       Categoria: transactions.categoryId,
     }));

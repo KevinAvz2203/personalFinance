@@ -1,7 +1,24 @@
-import { Users } from "@prisma/client";
+import { users } from "@prisma/client";
 
-export async function getUserData(id: number): Promise<Users> {
-  const res = await fetch("http://localhost:3000/api/users/" + id);
-  const data = await res.json();
-  return data;
+const API_BASE_URL = process.env.NEXTAUTH_URL || "http://localhost:3000";
+
+export async function getUserData(id: number): Promise<users | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/users/${id}`);
+
+    if (!res.ok) {
+      console.error(
+        `Error fetching user ${id}: ${res.status} ${res.statusText}`
+      );
+
+      return null;
+    }
+
+    const data: users = await res.json();
+    return data;
+  } catch (error) {
+    console.error("Network or other error fetching user data:", error);
+
+    return null;
+  }
 }
