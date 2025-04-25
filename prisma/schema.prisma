@@ -10,6 +10,9 @@ datasource db {
 model categories {
   id           Int            @id @default(autoincrement())
   name         String         @db.VarChar(255)
+
+  // Relacion: Una categoria puede estar asociada a muchas transacciones
+  // One-to-Many
   transactions transactions[]
 }
 
@@ -22,7 +25,10 @@ model goals {
   isComplete    Boolean  @default(false)
   isFavorite    Boolean? @default(false)
   createdAt     DateTime @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime @default(now()) @updatedAt
+
+  // Relacion: Muchos objetivos pueden pertenecer a un usuario
+  // Many-to-One
   users         users    @relation(fields: [userId], references: [id], map: "Goals_userId_fkey")
 
   @@index([userId], map: "Goals_userId_fkey")
@@ -36,9 +42,19 @@ model transactions {
   userId      Int
   typeId      Int
   categoryId  Int
+
+  // Relacion: Muchas transacciones pueden tener una misma categoria
+  // Many-to-One
   categories  categories @relation(fields: [categoryId], references: [id], map: "Transactions_categoryId_fkey")
+  
+  // Relacion: Muchas transacciones pueden tener un mismo tipo
+  // Many-to-One
   types       types      @relation(fields: [typeId], references: [id], map: "Transactions_typeId_fkey")
+  
+  // Relacion: Muchas transacciones pueden pertenecer a un mismo usuario
+  // Many-to-One
   users       users      @relation(fields: [userId], references: [id], map: "Transactions_userId_fkey")
+
 
   @@index([categoryId], map: "Transactions_categoryId_fkey")
   @@index([typeId], map: "Transactions_typeId_fkey")
@@ -48,6 +64,9 @@ model transactions {
 model types {
   id           Int            @id @default(autoincrement())
   name         String         @db.VarChar(255)
+
+  // Relacion: Un tipo puede estar asociado a muchas transacciones
+  // One-to-Many
   transactions transactions[]
 }
 
@@ -60,6 +79,12 @@ model users {
   age          Int
   createdAt    DateTime       @default(now())
   updatedAt    DateTime
+
+  // Relacion: Un usuario puede tener muchos objetivos
+  // One-to-Many
   goals        goals[]
+  
+  // Relacion: Un usuario puede tener muchas transacciones
+  // One-to-Many
   transactions transactions[]
 }
