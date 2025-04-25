@@ -362,6 +362,13 @@ export async function getTotalPerCategoryServer(
       break;
   }
 
+  const startDate = new Date(
+    new Date().setDate(new Date().getDate() - dateOffset)
+  );
+  console.log("User ID:", id);
+  console.log("Date Offset:", dateOffset);
+  console.log("Start Date:", startDate);
+
   const transactions = await prisma.transactions.groupBy({
     by: ["categoryId"],
     _sum: {
@@ -371,13 +378,15 @@ export async function getTotalPerCategoryServer(
       userId: Number(id),
       typeId: 2,
       createdAt: {
-        gte: new Date(new Date().setDate(new Date().getDate() - dateOffset)),
+        gte: startDate,
       },
     },
     orderBy: {
       categoryId: "asc",
     },
   });
+
+  console.log("Transactions:", transactions);
 
   if (!transactions || transactions.length === 0)
     throw new Error("Transaction not found");

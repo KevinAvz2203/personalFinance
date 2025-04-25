@@ -1,10 +1,14 @@
+"use client";
+
 import ChargeActivity from "./ChargeActivity";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { getHistoricPerUser } from "@/Backend/Transaction";
 import styles from "./HistoricActivity.module.css";
 
+import Link from "next/link";
+
 type IncomeData = {
-  User: number;
+  User: string;
 };
 
 type TransactionsData = {
@@ -153,7 +157,9 @@ export default function HistoricActivity({ User }: IncomeData) {
 
         <div className={styles.footer}>
           <div className={styles.newTransactionButton}>
-            <button className={styles.active}>New Transaction</button>
+            <Link href="/addTransaction">
+              <button className={styles.active}>New Transaction</button>
+            </Link>
           </div>
         </div>
       </div>

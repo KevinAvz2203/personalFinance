@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import incomeIcon from "/public/assets/icons/incomes-black.png";
 import expenseIcon from "/public/assets/icons/expenses-black.png";
@@ -19,7 +21,7 @@ type GoalsTotalSavedType = {
 };
 /* ================= */
 
-const TopCardStadistics = ({ User }: { User: number }) => {
+const TopCardStadistics = ({ User }: { User: string }) => {
   /* State for setting total balances */
   const [totalAmounts, setTotalAmounts] = useState<TotalAmountsType>({
     incomes: 0,
@@ -62,7 +64,7 @@ const TopCardStadistics = ({ User }: { User: number }) => {
             <div className={`${styles.topCards} ${styles.topCardsStadistics}`}>
               <Image src={icon} alt={`${label} Icon`} width={50} height={50} />
               <div>
-                <p>${amount || 0} MXN</p>
+                <p>${amount.toFixed(2) || 0} MXN</p>
                 <p>{label}</p>
               </div>
             </div>

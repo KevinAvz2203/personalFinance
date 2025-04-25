@@ -94,7 +94,7 @@ export default function ExpPerCategoryExpected({ User }: IncomeData) {
       const categories: Category[] = await getCategories();
       // Fetch previous months transactions from backend
       const prevMonthsTransaction: PrevMonthsTransaction[] =
-        await getPrevMonths(User);
+        await getPrevMonths(User.toString());
 
       // Filter out 'Income' category
       const filteredCategories = filterCategories(categories);

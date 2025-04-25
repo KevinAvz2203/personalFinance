@@ -38,67 +38,72 @@ const getGastosUnsorted = (
 };
 
 const ExpPerCategory: React.FC<IncomeData> = async ({ User }) => {
-  const categories: Category[] = await getCategories();
-  const transPerCat = await getTotalPerCategoryServer(User, "Monthly");
-  console.log(transPerCat);
+  try {
+    const categories: Category[] = await getCategories();
+    const transPerCat = await getTotalPerCategoryServer(User, "Monthly");
+    console.log(transPerCat);
 
-  const filteredCategories = filterCategories(categories);
+    const filteredCategories = filterCategories(categories);
 
-  // Creates an array of Unsorted gastos
-  const gastos = getGastosUnsorted(filteredCategories, transPerCat);
+    // Creates an array of Unsorted gastos
+    const gastos = getGastosUnsorted(filteredCategories, transPerCat);
 
-  // Calculate max value for the Progress Bar limit
-  const roundedExpense = calculateRoundedExpense(gastos);
+    // Calculate max value for the Progress Bar limit
+    const roundedExpense = calculateRoundedExpense(gastos);
 
-  // Sort expenses with corresponding categories
-  const sortedGastosWithCategories = sortGastosWithCategories(
-    gastos,
-    filteredCategories
-  );
+    // Sort expenses with corresponding categories
+    const sortedGastosWithCategories = sortGastosWithCategories(
+      gastos,
+      filteredCategories
+    );
 
-  // Extract sorted expenses and categories
-  const { gastosSorted, categoriesLabelsSorted } = extractSortedData(
-    sortedGastosWithCategories
-  );
+    // Extract sorted expenses and categories
+    const { gastosSorted, categoriesLabelsSorted } = extractSortedData(
+      sortedGastosWithCategories
+    );
 
-  // Filter out 'Income' category
-  const expenseData = {
-    expenses: gastosSorted,
-    categories: categoriesLabelsSorted,
-    roundedTotal: roundedExpense,
-  };
+    // Filter out 'Income' category
+    const expenseData = {
+      expenses: gastosSorted,
+      categories: categoriesLabelsSorted,
+      roundedTotal: roundedExpense,
+    };
 
-  return (
-    <>
-      <div className={styles.cashFlow}>
-        <div className={styles.header}>
-          <div>
-            <p>Stadistics</p>
-            <h2>Current Month</h2>
+    return (
+      <>
+        <div className={styles.cashFlow}>
+          <div className={styles.header}>
+            <div>
+              <p>Stadistics</p>
+              <h2>Current Month</h2>
+            </div>
+          </div>
+          <div className={styles.barChart}>
+            {expenseData.categories.map((category, index) => (
+              <div className={styles.goalInstance} key={index}>
+                <div className={styles.goalTitle}>
+                  <p>{category} </p>
+                  <p>{expenseData.expenses[index].toString()} MXN</p>
+                </div>
+
+                <ProgressBar
+                  key={index}
+                  completed={(
+                    (Number(expenseData.expenses[index]) /
+                      Number(expenseData.roundedTotal)) *
+                    100
+                  ).toString()}
+                />
+              </div>
+            ))}
           </div>
         </div>
-        <div className={styles.barChart}>
-          {expenseData.categories.map((category, index) => (
-            <div className={styles.goalInstance} key={index}>
-              <div className={styles.goalTitle}>
-                <p>{category} </p>
-                <p>{expenseData.expenses[index].toString()} MXN</p>
-              </div>
-
-              <ProgressBar
-                key={index}
-                completed={(
-                  (Number(expenseData.expenses[index]) /
-                    Number(expenseData.roundedTotal)) *
-                  100
-                ).toString()}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    return <div>Error loading expense data. Please try again later.</div>;
+  }
 };
 
 export default ExpPerCategory;

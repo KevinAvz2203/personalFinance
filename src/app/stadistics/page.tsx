@@ -45,12 +45,12 @@ export default async function Stadistics() {
           <div className={`${styles.dataGraphs}`}>
             <ExpPerCategory User={UserID} />
 
-            <ExpPerCategoryExpected User={UserID} />
+            <ExpPerCategoryExpected User={Number(UserID)} />
           </div>
           <div className={styles.dataActivity}>
-            {/* <TopCardStadistics User={UserID} /> */}
+            <TopCardStadistics User={UserID} />
 
-            {/* <HistoricActivity User={UserID} /> */}
+            <HistoricActivity User={UserID} />
           </div>
         </div>
       </div>
