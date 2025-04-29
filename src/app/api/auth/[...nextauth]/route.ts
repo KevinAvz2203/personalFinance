@@ -40,7 +40,7 @@ export const authOptions = {
         if (!matchPassword) throw new Error("Invalid credentials");
 
         return {
-          id: userFound.id.toString(), // Convert id to string
+          id: userFound.id.toString(),
           name: `${userFound.first_name} ${userFound.last_name}`,
           email: userFound.email,
         };
@@ -65,7 +65,7 @@ export const authOptions = {
         throw new Error("User not found in session callback");
       }
 
-      session.user.id = userWithId.id.toString(); // Convert id to string
+      session.user.id = userWithId.id.toString();
       return session;
     },
   },

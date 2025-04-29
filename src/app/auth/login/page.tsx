@@ -12,7 +12,7 @@ type FormValues = {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [error, setError] = useState("" || null);
+  const [error, setError] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -26,7 +26,7 @@ export default function LoginPage() {
       redirect: false,
     });
 
-    if (res.error) {
+    if (res?.error) {
       setError(res.error);
     } else {
       router.push("/home");
